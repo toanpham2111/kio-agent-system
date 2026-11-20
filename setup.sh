@@ -1,0 +1,430 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Kio: Open Source AI Skills Installer & Manager
+# ------------------------------------------------------------------------------
+# Principles:
+# 1. Install Skills: Install all 7 skills or specific selected skills.
+# 2. Preserve Existing Skills: Never delete or overwrite user's own skills.
+# 3. Update Skills: Only refresh symlinks that strictly verify to Kio repo.
+# 4. Uninstall Kio: Safely remove ONLY components verified to belong to Kio.
+# 5. Ownership Manifest: Track all Kio-created symlinks in ~/.kio/manifest.json.
+# ==============================================================================
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILLS_SRC_DIR="$SCRIPT_DIR/skills"
+KIO_CONFIG_DIR="$HOME/.kio"
+MANIFEST_FILE="$KIO_CONFIG_DIR/manifest.json"
+
+# 7 Core Kio Skills
+ALL_KIO_SKILLS=(
+  "kio-core-delivery"
+  "kio-frontend-craft"
+  "kio-backend-cloud"
+  "kio-qa-security"
+  "kio-growth-marketing"
+  "kio-wordpress-fse"
+  "kio-cognitive"
+)
+
+# AI Tool skill destinations
+TARGET_SKILLS_DIRS=(
+  "$HOME/.claude/skills"
+  "$HOME/.cursor/skills"
+  "$HOME/.gemini/config/skills"
+  "$HOME/.codex/skills"
+  "$HOME/.agents/skills"
+)
+
+# Resolve real path portably (Linux / macOS)
+resolve_path() {
+  local target="$1"
+  if command -v realpath >/dev/null 2>&1; then
+    realpath "$target" 2>/dev/null || echo "$target"
+  elif command -v readlink >/dev/null 2>&1; then
+    readlink -f "$target" 2>/dev/null || readlink "$target" 2>/dev/null || echo "$target"
+  else
+    python3 -c "import os, sys; print(os.path.realpath(sys.argv[1]))" "$target" 2>/dev/null || echo "$target"
+  fi
+}
+
+# Ownership Manifest Management
+init_manifest() {
+  mkdir -p "$KIO_CONFIG_DIR"
+  if [ ! -f "$MANIFEST_FILE" ]; then
+    echo '{"version":"1.0","managed_links":[]}' > "$MANIFEST_FILE"
+  fi
+}
+
+record_manifest() {
+  local link_path="$1"
+  local target_path="$2"
+  init_manifest
+  python3 -c "
+import json, os, sys
+m_path = sys.argv[1]
+l_path = os.path.abspath(sys.argv[2])
+t_path = os.path.abspath(sys.argv[3])
+try:
+    with open(m_path, 'r') as f:
+        data = json.load(f)
+except Exception:
+    data = {'version': '1.0', 'managed_links': []}
+
+links = [entry for entry in data.get('managed_links', []) if entry.get('link') != l_path]
+links.append({'link': l_path, 'target': t_path})
+data['managed_links'] = links
+
+with open(m_path, 'w') as f:
+    json.dump(data, f, indent=2)
+" "$MANIFEST_FILE" "$link_path" "$target_path" 2>/dev/null || true
+}
+
+remove_from_manifest() {
+  local link_path="$1"
+  [ -f "$MANIFEST_FILE" ] || return 0
+  python3 -c "
+import json, os, sys
+m_path = sys.argv[1]
+l_path = os.path.abspath(sys.argv[2])
+try:
+    with open(m_path, 'r') as f:
+        data = json.load(f)
+    data['managed_links'] = [e for e in data.get('managed_links', []) if e.get('link') != l_path]
+    with open(m_path, 'w') as f:
+        json.dump(data, f, indent=2)
+except Exception:
+    pass
+" "$MANIFEST_FILE" "$link_path" 2>/dev/null || true
+}
+
+is_in_manifest() {
+  local link_path="$1"
+  [ -f "$MANIFEST_FILE" ] || return 1
+  python3 -c "
+import json, os, sys
+m_path = sys.argv[1]
+l_path = os.path.abspath(sys.argv[2])
+try:
+    with open(m_path, 'r') as f:
+        data = json.load(f)
+    match = any(e.get('link') == l_path for e in data.get('managed_links', []))
+    sys.exit(0 if match else 1)
+except Exception:
+    sys.exit(1)
+" "$MANIFEST_FILE" "$link_path" 2>/dev/null
+}
+
+# Strict Ownership Verification:
+# A symlink is ONLY considered Kio-owned if its actual destination points exactly
+# to the expected Kio skill folder. If user replaced it or target points elsewhere,
+# we prune any stale manifest entry and return 1 (PRESERVE).
+verify_kio_ownership() {
+  local link_path="$1"
+  local skill_name="$2"
+
+  [ -L "$link_path" ] || return 1
+
+  local actual_dest
+  actual_dest=$(resolve_path "$link_path")
+  local expected_dest
+  expected_dest=$(resolve_path "$SKILLS_SRC_DIR/$skill_name")
+
+  # Exact target match with boundary check
+  if [ -n "$actual_dest" ] && [ "$actual_dest" = "$expected_dest" ]; then
+    return 0
+  else
+    # Mismatch: User pointed this link elsewhere! Prune stale manifest entry.
+    remove_from_manifest "$link_path"
+    return 1
+  fi
+}
+
+# Helper: Resolve skill shortcut or name
+resolve_skill_name() {
+  local input="$1"
+  case "$input" in
+    frontend|fe|craft|kio-frontend-craft)
+      echo "kio-frontend-craft" ;;
+    backend|be|cloud|kio-backend-cloud)
+      echo "kio-backend-cloud" ;;
+    qa|test|security|kio-qa-security)
+      echo "kio-qa-security" ;;
+    core|delivery|sdd|kio-core-delivery)
+      echo "kio-core-delivery" ;;
+    marketing|growth|seo|kio-growth-marketing)
+      echo "kio-growth-marketing" ;;
+    wordpress|wp|fse|kio-wordpress-fse)
+      echo "kio-wordpress-fse" ;;
+    cognitive|think|why|kio-cognitive)
+      echo "kio-cognitive" ;;
+    *)
+      if [ -d "$SKILLS_SRC_DIR/$input" ]; then
+        echo "$input"
+      else
+        echo ""
+      fi
+      ;;
+  esac
+}
+
+# Action: List available skills
+list_skills() {
+  echo "================================================================="
+  echo "🧰 Kio: Available Engineering Skills (7 Master Skills)"
+  echo "================================================================="
+  echo "1. kio-frontend-craft   (shortcut: frontend, fe)  - UI/UX, 79 styles, 192 palettes, Lenis"
+  echo "2. kio-backend-cloud    (shortcut: backend, be)   - REST/GraphQL APIs, RLS, Docker, Cloud"
+  echo "3. kio-qa-security      (shortcut: qa, test)      - Test matrix, Unit tests (Vitest/Pytest), Playwright"
+  echo "4. kio-core-delivery    (shortcut: core)          - Atomic tasks (2-5m), SDD spec-kit templates"
+  echo "5. kio-growth-marketing (shortcut: growth, seo)   - 53 CRO frameworks, technical SEO modules"
+  echo "6. kio-wordpress-fse    (shortcut: wp, fse)       - S0-S8 clean Gutenberg block themes pipeline"
+  echo "7. kio-cognitive        (shortcut: cognitive)     - First-principles, architecture rationale"
+  echo "================================================================="
+}
+
+# Action: Install / Update selected skills
+install_skills() {
+  local selected_skills=("$@")
+  echo "================================================================="
+  echo "⬇️  Kio Skills Installer: Safe & Non-Destructive Mode"
+  echo "================================================================="
+
+  init_manifest
+
+  for target_dir in "${TARGET_SKILLS_DIRS[@]}"; do
+    mkdir -p "$target_dir"
+    echo "📦 Checking directory: $target_dir"
+
+    for skill_name in "${selected_skills[@]}"; do
+      local skill_path="$SKILLS_SRC_DIR/$skill_name"
+      if [ ! -d "$skill_path" ]; then
+        echo "   └── ⚠️ Skill source not found: $skill_name"
+        continue
+      fi
+
+      local target_skill="$target_dir/$skill_name"
+
+      # Preserve Existing Skills Rule:
+      if [ -L "$target_skill" ]; then
+        # Strictly verify ownership by comparing real target
+        if verify_kio_ownership "$target_skill" "$skill_name"; then
+          ln -sfn "$skill_path" "$target_skill"
+          record_manifest "$target_skill" "$skill_path"
+          echo "   └── 🔄 Updated verified Kio symlink: $skill_name"
+        else
+          local external_dest
+          external_dest=$(readlink "$target_skill" 2>/dev/null || true)
+          echo "   └── 🛡️ PRESERVED: $target_skill is a custom user symlink -> '$external_dest' (Skipped, not modified)"
+        fi
+      elif [ -e "$target_skill" ]; then
+        # Regular directory or file owned by user - NEVER OVERWRITE
+        echo "   └── 🛡️ PRESERVED: $target_skill is a user folder (Skipped, not modified)"
+      else
+        # Target does not exist, create safe symlink and record in manifest
+        ln -s "$skill_path" "$target_skill"
+        record_manifest "$target_skill" "$skill_path"
+        echo "   └── 🔗 Linked skill: $skill_name"
+      fi
+    done
+  done
+
+  echo ""
+  echo "================================================================="
+  echo "✅ SUCCESS: Selected Kio skills installed/updated!"
+  echo "   Ownership: Tracked in $MANIFEST_FILE"
+  echo "   Preserved: All existing user skills untouched."
+  echo "================================================================="
+}
+
+# Action: Uninstall only Kio skills
+uninstall_kio() {
+  echo "================================================================="
+  echo "🗑️  Uninstalling Kio Skills..."
+  echo "   (Only components strictly verified to belong to Kio will be removed)"
+  echo "================================================================="
+
+  local removed_count=0
+
+  for target_dir in "${TARGET_SKILLS_DIRS[@]}"; do
+    [ -d "$target_dir" ] || continue
+    echo "🔍 Checking: $target_dir"
+
+    for skill_name in "${ALL_KIO_SKILLS[@]}"; do
+      local target_skill="$target_dir/$skill_name"
+
+      if [ -L "$target_skill" ]; then
+        # Strictly verify that actual target points to Kio
+        if verify_kio_ownership "$target_skill" "$skill_name"; then
+          rm -f "$target_skill"
+          remove_from_manifest "$target_skill"
+          echo "   └── 🗑️ Removed verified Kio symlink: $skill_name"
+          removed_count=$((removed_count + 1))
+        else
+          local external_dest
+          external_dest=$(readlink "$target_skill" 2>/dev/null || true)
+          echo "   └── 🛡️ PRESERVED: $target_skill points to external location '$external_dest' (Not touched)"
+        fi
+      elif [ -e "$target_skill" ]; then
+        echo "   └── 🛡️ PRESERVED: $target_skill is a regular folder (Not touched)"
+      fi
+    done
+  done
+
+  echo ""
+  echo "================================================================="
+  echo "✅ SUCCESS: Kio skills uninstalled ($removed_count symlinks removed)."
+  echo "   All other user skills remain completely untouched."
+  echo "================================================================="
+}
+
+# Action: Interactive Menu
+interactive_menu() {
+  list_skills
+  echo ""
+  echo "Please select an option:"
+  echo "  1) Install All 7 Kio Skills (Recommended)"
+  echo "  2) Choose Specific Skill(s) to Install"
+  echo "  3) Update Existing Kio Skills"
+  echo "  4) Uninstall Kio Skills"
+  echo "  5) Exit"
+  echo ""
+  read -r -p "Enter choice [1-5]: " choice
+
+  case "$choice" in
+    1)
+      install_skills "${ALL_KIO_SKILLS[@]}"
+      ;;
+    2)
+      echo "Enter skill name(s) or shortcuts (e.g. frontend, backend, qa, all):"
+      read -r -p "Skills to install: " input_skills
+      parse_and_install "$input_skills"
+      ;;
+    3)
+      install_skills "${ALL_KIO_SKILLS[@]}"
+      ;;
+    4)
+      read -r -p "Are you sure you want to remove Kio skills? [y/N]: " confirm
+      if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        uninstall_kio
+      else
+        echo "Canceled."
+      fi
+      ;;
+    5|*)
+      echo "Exiting."
+      exit 0
+      ;;
+  esac
+}
+
+# Parse comma-separated or space-separated skill list
+parse_and_install() {
+  local raw_input="$1"
+  local resolved_skills=()
+  
+  # Replace commas with spaces
+  raw_input="${raw_input//,/ }"
+
+  for item in $raw_input; do
+    [ -n "$item" ] || continue
+    if [ "$item" = "all" ]; then
+      resolved_skills=("${ALL_KIO_SKILLS[@]}")
+      break
+    fi
+    local resolved
+    resolved=$(resolve_skill_name "$item")
+    if [ -n "$resolved" ]; then
+      resolved_skills+=("$resolved")
+    else
+      echo "⚠️ Unknown skill shortcut: '$item'. Run './setup.sh --list' to see valid names."
+    fi
+  done
+
+  if [ ${#resolved_skills[@]} -eq 0 ]; then
+    echo "No valid skills selected for installation."
+    exit 1
+  fi
+
+  install_skills "${resolved_skills[@]}"
+}
+
+# Print CLI help
+show_help() {
+  echo "Kio Skills Installer & Manager"
+  echo ""
+  echo "Usage:"
+  echo "  ./setup.sh                         Install / update all 7 skills safely"
+  echo "  ./setup.sh --skill <name>          Install specific skill(s) (comma-separated)"
+  echo "  ./setup.sh --list                  List all available skills & shortcuts"
+  echo "  ./setup.sh --uninstall             Safely remove Kio skills (preserves user skills)"
+  echo "  ./setup.sh --interactive           Open interactive menu"
+  echo "  ./setup.sh --help                  Show this help"
+  echo ""
+  echo "Examples:"
+  echo "  ./setup.sh --skill frontend"
+  echo "  ./setup.sh --skill frontend,qa,backend"
+  echo "  ./setup.sh --uninstall"
+}
+
+# Argument parsing
+DO_LIST=false
+DO_UNINSTALL=false
+DO_INTERACTIVE=false
+SKILL_ARGS=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --list|-l)
+      DO_LIST=true
+      shift
+      ;;
+    --uninstall|-u)
+      DO_UNINSTALL=true
+      shift
+      ;;
+    --interactive|-i)
+      DO_INTERACTIVE=true
+      shift
+      ;;
+    --skill|-s)
+      SKILL_ARGS="$2"
+      shift 2
+      ;;
+    --help|-h)
+      show_help
+      exit 0
+      ;;
+    *)
+      # Treat raw arguments like 'frontend,qa' as --skill
+      if [ -z "$SKILL_ARGS" ]; then
+        SKILL_ARGS="$1"
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [ "$DO_LIST" = true ]; then
+  list_skills
+  exit 0
+fi
+
+if [ "$DO_UNINSTALL" = true ]; then
+  uninstall_kio
+  exit 0
+fi
+
+if [ "$DO_INTERACTIVE" = true ]; then
+  interactive_menu
+  exit 0
+fi
+
+if [ -n "$SKILL_ARGS" ]; then
+  parse_and_install "$SKILL_ARGS"
+  exit 0
+fi
+
+# Default: install all skills non-destructively
+install_skills "${ALL_KIO_SKILLS[@]}"
