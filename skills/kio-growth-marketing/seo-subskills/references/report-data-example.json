@@ -1,0 +1,65 @@
+{
+  "project": "Example Project",
+  "domain": "example.com",
+  "auditDate": "2026-11-03",
+  "scope": "Example only; replace with actual audit scope",
+  "sources": [
+    "Local code review (example only)"
+  ],
+  "limitations": [
+    "Example data. No live audit performed."
+  ],
+  "summary": "EXAMPLE DATA — do not submit without replacing",
+  "findings": [
+    {
+      "severity": "High",
+      "category": "On-page SEO",
+      "location": "/example",
+      "issue": "EXAMPLE finding — replace",
+      "evidence": "EXAMPLE ONLY",
+      "recommendation": "Verify actual page metadata before recommending a fix",
+      "status": "Not verified"
+    }
+  ],
+  "sections": [
+    {
+      "title": "Technical SEO",
+      "details": "Describe tested results and limitations"
+    },
+    {
+      "title": "On-page SEO",
+      "details": "Describe tested results and limitations"
+    },
+    {
+      "title": "Content & architecture",
+      "details": "Describe tested results and limitations"
+    },
+    {
+      "title": "Local SEO",
+      "details": "Not tested unless location and GBP data exist"
+    },
+    {
+      "title": "Performance",
+      "details": "Not tested without measurements"
+    },
+    {
+      "title": "AEO readiness",
+      "details": "Describe accessible answer content and limitations"
+    }
+  ],
+  "roadmap": [
+    {
+      "phase": "Phase 1 — Critical fixes",
+      "actions": [
+        "Example only; replace"
+      ]
+    }
+  ],
+  "validation": {
+    "passed": [],
+    "failed": [],
+    "notTested": [
+      "Live site, GSC, GA4"
+    ]
+  }
+}
