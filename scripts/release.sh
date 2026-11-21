@@ -130,9 +130,9 @@ sed -i -E "s/Release-v[0-9]+\.[0-9]+\.[0-9]+-blue\.svg/Release-$VERSION-blue.svg
 sed -i -E "s/Release-v[0-9]+\.[0-9]+\.[0-9]+-blue\.svg/Release-$VERSION-blue.svg/g" README.en.md 2>/dev/null || true
 
 # 5. Commit any pending release metadata
-if ! git diff --quiet || ! git diff --cached --quiet; then
+if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$(git status --porcelain)" ]; then
   echo "💾 Committing release metadata updates..."
-  git add README.md README.en.md CHANGELOG.md 2>/dev/null || true
+  git add -A
   git commit -m "chore(release): bump version to $VERSION"
   git push origin main
 else

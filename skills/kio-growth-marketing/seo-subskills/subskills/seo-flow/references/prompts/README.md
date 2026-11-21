@@ -1,7 +1,7 @@
 <!--
 FLOW Framework — Operational Prompt Library
 © Kio SEO Engine | License: CC BY 4.0
-Source: github.com/AgriciDaniel/flow
+Source: github.com/toanpham2111/kio-agent-system
 Attribution required when reproducing or adapting these prompts.
 -->
 

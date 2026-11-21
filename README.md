@@ -3,7 +3,7 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Release](https://img.shields.io/badge/Release-v1.0.1-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
+[![Release](https://img.shields.io/badge/Release-v1.0.2-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
 [![Supported Tools](https://img.shields.io/badge/Compatible_With-Claude_Code_|_Cursor_|_Codex_|_Antigravity_|_Windsurf-blue)](https://github.com/toanpham2111/kio-agent-system)
 [![Skills](https://img.shields.io/badge/Skills-7_Modular_Master_Skills-green)](skills/)
 [![Standard](https://img.shields.io/badge/Format-Agent_Skill_Standard-orange)](skills/)
@@ -378,9 +378,17 @@ A simple file-based memory system allowing your local tools to remember:
 
 ---
 
-## 📄 License & Contributing
+## 📄 License, Credits & Contributing
 
 Kio is open source and licensed under the **[MIT License](LICENSE)**.
+
+### 🙏 Credits & Third-Party Open Source Acknowledgments
+
+Kio unifies, adapts, and extends open-source agent skill specifications, datasets, and tooling under the MIT License. We gratefully acknowledge the original authors and contributors of the following upstream open-source projects (full copyright notices are preserved in **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**):
+- **Marketing & CRO Frameworks**: Adapted and modularized from `marketingskills` by Corey Haines (`coreyhaines31/marketingskills`, MIT License).
+- **Technical SEO & GEO Sub-skills**: Adapted and integrated from `claude-seo` & `claude-ads` by Daniel Agrici (`AgriciDaniel/claude-seo`, MIT License), Ivan Kuznetsov (`ivankuznetsov/claude-seo`, MIT License), and `flow` framework prompts (CC BY 4.0).
+- **Frontend UI/UX Datasets**: Style, typography, and palette datasets in `skills/kio-frontend-craft/data/` adapted from `ui-ux-pro-max-skill` (`nextlevelbuilder/ui-ux-pro-max-skill`, MIT License), Google Fonts metadata, and Phosphor Icons.
+- **SDD & Agent Workflows**: Inspired by `superpowers` by Jesse Vincent (`obra/superpowers`, MIT License) and GitHub Spec-Kit (`github/spec-kit`, MIT License).
 
 Contributions, new skill modules, and bug fixes are welcome via GitHub pull requests:
 - **Repository**: [https://github.com/toanpham2111/kio-agent-system](https://github.com/toanpham2111/kio-agent-system)

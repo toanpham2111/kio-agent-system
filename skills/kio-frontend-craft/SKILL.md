@@ -1,26 +1,26 @@
 ---
 name: kio-frontend-craft
-description: "Kio Master Frontend, UI/UX & Motion Powerhouse — Unifies Anti-Slop aesthetics, 79 UI styles, 192 palettes, 3-layer Design Tokens, the 9-Pass De-Slopping SOP (/unslop), Lenis 60fps Smooth Scroll (lenis.dev), Core Web Vitals optimization (95-100 PageSpeed), Pixel-Perfect PDF-to-HTML conversion with Base64 asset inlining, React Native / Expo Mobile, and React 19 / Next.js App Router best practices."
+description: "Build high-craft, accessible frontend UI/UX with defensive spacing, WCAG contrast palettes, and Core Web Vitals optimization. Use when designing, building, or refactoring web and mobile interfaces."
 author: Toan Pham / Kio System
-version: 2.0.0
+version: 1.0.2
 ---
 
-# 🎨 Kio Master Frontend, UI/UX & Motion Powerhouse (`kio-frontend-craft`)
+# 🎨 Kio Frontend Craft — UI/UX & Motion Engineering (`kio-frontend-craft`)
 
-The unified frontend engineering and client-side design powerhouse of the Kio System. Integrates 6 core client-side modules:
+The unified frontend engineering and client-side design skill of the Kio System. Integrates 6 core client-side modules:
 
 ---
 
-## 🧭 Core 6 Frontend Engines Matrix
+## 🧭 Core 6 Frontend Modules Matrix
 
-| Engine | Functional Module | Core Mission & Deliverables |
+| Module | Resource / Tooling | Core Mission & Deliverables |
 | :--- | :--- | :--- |
-| **1. Anti-Slop UI/UX** | `kio-ui-ux` | 79 UI Styles, 192 Palettes, 74 Font Pairings, 3-layer Design Tokens. Strict ban on cliche AI neon gradients and cookie-cutter 3-card bento grids. CLI lookup: `scripts/search.py`. |
-| **2. 9-Pass De-Slopping** | `/unslop` | Systematic 9-step legacy UI refactoring: Spacing ➔ Color (80/15/5 ratio) ➔ Icons (no emojis as icons) ➔ Copy (anti-AI buzzwords) ➔ Typography ➔ Layout (asymmetry) ➔ Details ➔ Visuals ➔ Motion. |
-| **3. Motion & Smooth Scroll** | `lenis.dev` | Enterprise 60fps **Lenis Smooth Scroll** integration (RAF loop, GSAP ScrollTrigger ticker synchronization, mandatory `data-lenis-prevent` for nested scrolls/modals, prefers-reduced-motion compliance). |
-| **4. Peak Web Performance** | `kio-web-perf` | Core Web Vitals optimization targeting **95–100 PageSpeed**: `LCP < 2.5s` (fetchpriority, dimensions), `CLS = 0.00` (aspect-ratio reserving), `INP < 200ms` (unblocked main thread). |
-| **5. PDF to Responsive Web** | `kio-pdf2html` | Pixel-perfect 1:1 PDF-to-HTML conversion. `scripts/extract_sections.py` extracts embedded Base64 imagery into `images/` and outputs structured `design_spec.md`. Maps fixed presentation slides into modern responsive CSS Grid/Flexbox layouts. |
-| **6. Mobile & React Modern** | `kio-mobile` & `react` | React Native, Expo Router, SwiftUI, 60fps gesture physics, React 19 Server Components by default with Client Components isolated at leaves. |
+| **1. Anti-Slop UI/UX** | `data/` & `scripts/search.py` | 79 UI Styles, 192 Palettes, 74 Font Pairings, 3-layer Design Tokens. Strict ban on cliche AI neon gradients and cookie-cutter 3-card bento grids. |
+| **2. 9-Pass De-Slopping** | 9-Step Refactoring SOP | Systematic 9-step legacy UI refactoring: Spacing ➔ Color (80/15/5 ratio) ➔ Icons (no emojis as icons) ➔ Copy (anti-AI buzzwords) ➔ Typography ➔ Layout (asymmetry) ➔ Details ➔ Visuals ➔ Motion. |
+| **3. Motion & Smooth Scroll** | Lenis Smooth Scroll | Enterprise 60fps **Lenis Smooth Scroll** integration (RAF loop, GSAP ScrollTrigger ticker synchronization, mandatory `data-lenis-prevent` for nested scrolls/modals, prefers-reduced-motion compliance). |
+| **4. Peak Web Performance** | Core Web Vitals | Core Web Vitals optimization targeting **95–100 PageSpeed**: `LCP < 2.5s` (fetchpriority, dimensions), `CLS = 0.00` (aspect-ratio reserving), `INP < 200ms` (unblocked main thread). |
+| **5. PDF to Responsive Web** | `scripts/extract_sections.py` | Pixel-perfect 1:1 PDF-to-HTML conversion. Extracts embedded Base64 imagery into `images/` and outputs structured `design_spec.md`. Maps fixed presentation slides into modern responsive CSS Grid/Flexbox layouts. |
+| **6. Mobile & React Modern** | `data/stacks/` | React Native, Expo Router, SwiftUI, 60fps gesture physics, React 19 Server Components by default with Client Components isolated at leaves. |
 
 ---
 

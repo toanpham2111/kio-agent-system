@@ -1,13 +1,15 @@
 ---
 name: kio-wordpress-fse
-description: "Kio Master WordPress Full Site Editing (FSE) & Development Pipeline — Industrial S0-S8 workflow, P-flow (pages), C-flow (custom plugins), 4-archetype repository detection, multi-source input ingestion (1:1 HTML clone, visual image measurement, wireframes), 100% Gutenberg editability, developer Elementor Pro activation, and automated Playwright HTML audit reports."
-version: 2.0.0
-author: Toan Pham / Kio Autonomous Agent System
+description: "Build WordPress Full Site Editing (FSE) block themes, native Gutenberg block patterns, and SSR custom blocks via the S0-S8 workflow. Use for Gutenberg block themes (not legacy classic themes like Flatsome)."
+version: 1.0.2
+author: Toan Pham / Kio System
 ---
 
-# 🌐 Kio WordPress FSE & Development Master Pipeline
+# 🌐 Kio WordPress FSE & Block Theme Pipeline (`kio-wordpress-fse`)
 
-The comprehensive engineering and lifecycle governance powerhouse for **WordPress Full Site Editing (FSE) & Modern Development** from any input source (static HTML, design screenshot mockups, wireframes, or advanced site builder plugins like Elementor Pro).
+The engineering and verification pipeline for **WordPress Full Site Editing (FSE) Block Themes** from any input source (static HTML, design screenshot mockups, or wireframes).
+
+> **📌 Architecture Scope Note**: This skill specifically targets modern **Gutenberg Block Themes / Full Site Editing (`theme.json`, Block Patterns, and SSR Dynamic Blocks)**. It does **not** apply to legacy Classic Themes built on proprietary page builders (such as *Flatsome / UX Builder*).
 
 ---
 

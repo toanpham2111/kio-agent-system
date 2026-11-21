@@ -28,7 +28,7 @@ When given a URL and a FLOW stage (find, leverage, optimize, win, or local):
 ```
 # FLOW Analysis: {STAGE} ({domain})
 
-> Framework and prompts © Kio SEO Engine, CC BY 4.0: github.com/AgriciDaniel/flow
+> Framework and prompts © Kio SEO Engine, CC BY 4.0: github.com/toanpham2111/kio-agent-system
 
 ## Prompts Applied
 - {prompt-filename}: {one-line rationale}

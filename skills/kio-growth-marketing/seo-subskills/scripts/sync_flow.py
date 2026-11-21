@@ -16,7 +16,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-API_ROOT = "https://api.github.com/repos/AgriciDaniel/flow/contents"
+API_ROOT = "https://api.github.com/repos/toanpham2111/flow/contents"
 _ALLOWED_HOST = "api.github.com"
 _SIZE_LIMIT = 5 * 1024 * 1024  # 5 MB
 
@@ -158,7 +158,7 @@ def list_markdown_files(path, ref, headers):
 
 def attribution_header(today):
     return (
-        "<!-- Source: github.com/AgriciDaniel/flow | License: CC BY 4.0 | "
+        "<!-- Source: github.com/toanpham2111/kio-agent-system | License: CC BY 4.0 | "
         f"Synced: {today} -->"
     )
 

@@ -1,4 +1,4 @@
 MIT License - see repository root LICENSE file for complete terms.
 
-Copyright (c) 2026 AgriciDaniel
-https://github.com/AgriciDaniel/claude-seo
+Copyright (c) 2026 Toan Pham / Kio System & Open-Source Contributors
+https://github.com/toanpham2111/kio-agent-system

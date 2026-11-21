@@ -1,25 +1,25 @@
 ---
 name: kio-qa-security
-description: "Kio Master QA, Deep Review, Security & Verification Powerhouse — Unifies TDD Red-Green-Refactor, Systematic Debugging (Iron Law & Rule of 3), Zero-False-Completion Evidence Gates, Mandatory Feature Test Cases, Deep Review & Adversarial Suite (Blast Radius analysis outside diff, adversarial interrogation >300 lines, multi-solution arena, permanent bug elimination), Two-Stage Code Reviews, SAST Static Analysis (Semgrep & CodeQL), 4-Layer Anti-Bot Spam Defense, and Playwright Headless Browser Visual E2E Verification across 1440px / 768px / 375px."
+description: "Generate 4-quadrant test matrices, write unit tests (Vitest, Pytest, Go) with disciplined mocking, run Playwright E2E checks, and perform security reviews. Use when writing tests, debugging, or auditing code."
 author: Toan Pham / Kio System
-version: 2.0.0
+version: 1.0.2
 ---
 
-# 🧪 Kio Master QA, Deep Review, Security & Verification Powerhouse (`kio-qa-security`)
+# 🧪 Kio QA, Code Review & Security Verification (`kio-qa-security`)
 
-The unified quality gatekeeper, adversarial code reviewer, and security testing powerhouse of the Kio System. Integrates 5 core verification engines:
+The quality assurance, code review, and security testing skill of the Kio System. Integrates 5 core verification modules:
 
 ---
 
-## 🧭 Core 5 Verification Engines Matrix
+## 🧭 Core 5 Verification Modules Matrix
 
-| Engine | Functional Module | Core Mission & Deliverables |
+| Module | Reference / Methodology | Core Mission & Deliverables |
 | :--- | :--- | :--- |
-| **1. Unit Test & Test Cases**| `kio-test-craft` | Automated **4-Quadrant Test Case Matrix** generation (Happy Path, Boundary Value, Edge Case, Failure Mode, Security Auth). Automated **standardized Unit Tests** (Vitest/Jest, Pytest, Go test, PHPUnit) enforcing Disciplined Mocking (mock only external side-effects, never mock the unit under test). See details in `references/unit-testing-and-test-cases.md`. |
-| **2. Kio QA Engine** | `kio-qa` | TDD Red-Green-Refactor, Systematic Debugging (`NO FIXES WITHOUT ROOT CAUSE FIRST`), **Zero-False-Completion** gate (absolute ban on declaring tasks done without live test execution), **Mandatory Feature Test Cases** (100% of new features must ship with comprehensive test suites). |
-| **3. Deep Review Suite** | `kio-deep-review` | Blast radius impact analysis outside the git diff (**`blast-radius`**), adversarial interrogation on diffs >300 lines (**`interrogate`**), multi-solution performance competitions (**`arena`**), and permanent bug elimination across architecture and types (**`correct`**). |
-| **4. Security & SAST Audit** | `kio-security-review` | Two-stage code review (Spec Compliance ➔ Code Quality), Kio Enterprise 5-layer quality standards, SAST static analysis (Semgrep & CodeQL taint tracking), **4-Layer Anti-Bot Spam Defense** (Honeypot, Timestamp <3s check, IP Rate Limiting, Nonce/Turnstile). |
-| **5. Playwright Browser E2E** | `playwright` | Real headless Chromium browser simulating user journeys E2E, side-by-side 1:1 visual diffing against design mockups, and responsive defensive spacing checks across 3 viewports: **Desktop (1440px), Tablet (768px), Mobile (375px)**. |
+| **1. Unit Test & Test Cases**| `references/unit-testing-and-test-cases.md` | Automated **4-Quadrant Test Case Matrix** generation (Happy Path, Boundary Value, Edge Case, Failure Mode, Security Auth). Automated **standardized Unit Tests** (Vitest/Jest, Pytest, Go test, PHPUnit) enforcing Disciplined Mocking (mock only external side-effects, never mock the unit under test). |
+| **2. TDD & Root-Cause QA** | TDD & Systematic Debugging | TDD Red-Green-Refactor, Systematic Debugging (`NO FIXES WITHOUT ROOT CAUSE FIRST`), **Zero-False-Completion** gate (absolute ban on declaring tasks done without live test execution), **Mandatory Feature Test Cases** (100% of new features must ship with comprehensive test suites). |
+| **3. Deep Code Review** | Blast Radius & Adversarial Review | Blast radius impact analysis outside the git diff (**`blast-radius`**), adversarial review on diffs >300 lines (**`interrogate`**), multi-solution performance comparisons (**`arena`**), and permanent bug elimination across architecture and types (**`correct`**). |
+| **4. Security & SAST Audit** | OWASP & SAST Verification | Two-stage code review (Spec Compliance ➔ Code Quality), SAST static analysis (Semgrep & CodeQL taint tracking), **4-Layer Anti-Bot Spam Defense** (Honeypot, Timestamp <3s check, IP Rate Limiting, Nonce/Turnstile). |
+| **5. Playwright Browser E2E** | Headless Chromium Visual QA | Real headless Chromium browser simulating user journeys E2E, side-by-side 1:1 visual diffing against design mockups, and responsive defensive spacing checks across 3 viewports: **Desktop (1440px), Tablet (768px), Mobile (375px)**. |
 
 ---
 

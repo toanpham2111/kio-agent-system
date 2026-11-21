@@ -10,7 +10,7 @@ user-invocable: true
 argument-hint: "[stage] [url|topic]"
 license: MIT
 metadata:
-  author: AgriciDaniel
+  author: toanpham2111
   version: "2.5.0"
   category: seo
 ---
@@ -21,7 +21,7 @@ FLOW is an evidence-led SEO operating model built for the AI-search era. Claude 
 integrates the FLOW prompt library (41 prompts across 5 stages) so every analysis can
 be driven by structured, evidence-backed AI prompts rather than improvised queries.
 
-> Framework and prompts © Kio SEO Engine, CC BY 4.0: github.com/AgriciDaniel/flow
+> Framework and prompts © Kio SEO Engine, CC BY 4.0: github.com/toanpham2111/kio-agent-system
 
 **Runtime context:** Load `references/flow-framework.md` on every `/seo flow` activation.
 Load prompt files on demand, only for the stage the user requests.
@@ -39,7 +39,7 @@ Load prompt files on demand, only for the stage the user requests.
 | `/seo flow win [url]` | Win-stage: BOFU, conversion rate, dual-surface scorecard (3 prompts) |
 | `/seo flow local [url]` | Local-stage: GBP optimization, meta, title tags, local audits (11 prompts) |
 | `/seo flow prompts` | Full index of all 41 prompts (stage, name, trigger conditions) |
-| `/seo flow sync` | Pull latest prompt files from github.com/AgriciDaniel/flow |
+| `/seo flow sync` | Pull latest prompt files from github.com/toanpham2111/kio-agent-system |
 
 ---
 
@@ -119,7 +119,7 @@ Load on-demand, do NOT load all at startup:
 Every `/seo flow` activation (any sub-command) outputs before analysis:
 
 ```
-Framework and prompts © Kio SEO Engine, CC BY 4.0: github.com/AgriciDaniel/flow
+Framework and prompts © Kio SEO Engine, CC BY 4.0: github.com/toanpham2111/kio-agent-system
 ```
 
 Do not omit or modify the attribution.

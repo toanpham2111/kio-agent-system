@@ -1,4 +1,4 @@
-<!-- Source: github.com/AgriciDaniel/flow | License: CC BY 4.0 | Synced: 2026-04-26 -->
+<!-- Source: github.com/toanpham2111/kio-agent-system | License: CC BY 4.0 | Synced: 2026-04-26 -->
 ---
 title: "Step 1: The ChatGPT Discovery Prompt"
 description: "Step 1: The ChatGPT Discovery Prompt"

@@ -6,7 +6,7 @@ import { gunzipSync } from 'node:zlib';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
-const UA = 'Mozilla/5.0 (compatible; marketingskills-teardown/1.0)';
+const UA = 'Mozilla/5.0 (compatible; kio-growth-marketing-teardown/1.0)';
 const WAYBACK_DELAY_MS = 1500;
 
 export const SIGNATURES = [

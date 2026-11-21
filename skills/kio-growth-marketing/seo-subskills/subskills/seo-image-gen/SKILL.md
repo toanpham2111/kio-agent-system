@@ -6,7 +6,7 @@ user-invocable: true
 license: MIT
 compatibility: "Requires nanobanana MCP server"
 metadata:
-  author: AgriciDaniel
+  author: toanpham2111
   version: "2.5.0"
   category: seo
 ---
@@ -19,7 +19,7 @@ aspect ratios, and resolution defaults.
 
 ## Architecture Note
 
-This extension is built on [Claude Banana](https://github.com/AgriciDaniel/banana-claude),
+This extension is built on [Claude Banana](https://github.com/toanpham2111/kio-agent-system),
 the standalone AI image generation skill for Claude Code.
 
 This skill has two components with distinct roles:

@@ -67,11 +67,68 @@ if ($List) {
     exit 0
 }
 
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$SkillsSrcDir = [System.IO.Path]::GetFullPath((Join-Path $ScriptDir "skills"))
 $HomeDir = [System.Environment]::GetFolderPath('UserProfile')
 $KioConfigDir = Join-Path $HomeDir ".kio"
+$KioRepoDir = Join-Path $KioConfigDir "repo"
+$KioRepoUrl = if ($env:KIO_REPO_URL) { $env:KIO_REPO_URL } else { "https://github.com/toanpham2111/kio-agent-system.git" }
+$KioZipUrl = if ($env:KIO_ZIP_URL) { $env:KIO_ZIP_URL } else { "https://github.com/toanpham2111/kio-agent-system/archive/refs/heads/main.zip" }
 $ManifestFile = Join-Path $KioConfigDir "manifest.json"
+
+$ScriptPath = $PSCommandPath
+if (-not $ScriptPath -and $MyInvocation.MyCommand.Path) {
+    $ScriptPath = $MyInvocation.MyCommand.Path
+}
+
+$UsingManagedRepo = $false
+if ($ScriptPath -and (Test-Path $ScriptPath)) {
+    $CandidateDir = Split-Path -Parent $ScriptPath
+    $CandidateSkills = Join-Path $CandidateDir "skills"
+    if (Test-Path (Join-Path $CandidateSkills "kio-frontend-craft")) {
+        $ScriptDir = $CandidateDir
+        $SkillsSrcDir = [System.IO.Path]::GetFullPath($CandidateSkills)
+    } else {
+        $UsingManagedRepo = $true
+        $ScriptDir = $KioRepoDir
+        $SkillsSrcDir = [System.IO.Path]::GetFullPath((Join-Path $KioRepoDir "skills"))
+    }
+} else {
+    $UsingManagedRepo = $true
+    $ScriptDir = $KioRepoDir
+    $SkillsSrcDir = [System.IO.Path]::GetFullPath((Join-Path $KioRepoDir "skills"))
+}
+
+function Ensure-KioRepoSource {
+    if (-not $UsingManagedRepo -and (Test-Path (Join-Path $SkillsSrcDir "kio-frontend-craft"))) {
+        return
+    }
+    if (-not (Test-Path $KioConfigDir)) {
+        New-Item -ItemType Directory -Path $KioConfigDir -Force | Out-Null
+    }
+    $ManagedGitDir = Join-Path $KioRepoDir ".git"
+    $ManagedCheck = Join-Path $KioRepoDir "skills\kio-frontend-craft"
+    if ((Test-Path $ManagedGitDir) -and (Get-Command git -ErrorAction SilentlyContinue)) {
+        Write-Host "🔄 Syncing managed Kio repository in $KioRepoDir..." -ForegroundColor Cyan
+        git -C $KioRepoDir pull --ff-only origin main 2>$null | Out-Null
+    } elseif (-not (Test-Path $ManagedCheck)) {
+        Write-Host "🌐 Piped/standalone install detected — fetching Kio repository to $KioRepoDir..." -ForegroundColor Cyan
+        if (Test-Path $KioRepoDir) {
+            Remove-Item $KioRepoDir -Recurse -Force
+        }
+        if (Get-Command git -ErrorAction SilentlyContinue) {
+            git clone --depth 1 $KioRepoUrl $KioRepoDir
+        } else {
+            $TempZip = Join-Path $KioConfigDir "kio-main.zip"
+            $TempExtract = Join-Path $KioConfigDir "kio-extract"
+            if (Test-Path $TempExtract) { Remove-Item $TempExtract -Recurse -Force }
+            Invoke-WebRequest -Uri $KioZipUrl -OutFile $TempZip -UseBasicParsing
+            Expand-Archive -Path $TempZip -DestinationPath $TempExtract -Force
+            $InnerFolder = Get-ChildItem -Path $TempExtract -Directory | Select-Object -First 1
+            Move-Item -Path $InnerFolder.FullName -Destination $KioRepoDir -Force
+            Remove-Item $TempZip -Force -ErrorAction SilentlyContinue
+            Remove-Item $TempExtract -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+}
 
 $TargetSkillsDirs = @(
     (Join-Path $HomeDir ".claude\skills"),
@@ -187,8 +244,31 @@ function Get-JunctionTarget ([string]$Path) {
     return $null
 }
 
+function Test-RecordedKioTarget ([string]$LinkPath, [string]$ActualTarget, [string]$SkillName) {
+    if (-not (Test-Path $ManifestFile)) { return $false }
+    try {
+        $Json = Get-Content $ManifestFile -Raw -Encoding UTF8 | ConvertFrom-Json
+        $NormalizedLink = [System.IO.Path]::GetFullPath($LinkPath)
+        $NormalizedActual = [System.IO.Path]::GetFullPath($ActualTarget).TrimEnd('\', '/')
+        if ($Json.managed_links) {
+            foreach ($Entry in $Json.managed_links) {
+                if ($Entry.link -eq $NormalizedLink -and $Entry.target) {
+                    $RecTarget = [System.IO.Path]::GetFullPath($Entry.target).TrimEnd('\', '/')
+                    $Leaf = Split-Path -Leaf $NormalizedActual
+                    if ($RecTarget -eq $NormalizedActual -and $Leaf -eq $SkillName) {
+                        return $true
+                    }
+                }
+            }
+        }
+    } catch {
+        return $false
+    }
+    return $false
+}
+
 # Strict Ownership Verification:
-# Compares actual destination with expected Kio skill folder.
+# Compares actual destination with expected Kio skill folder (local clone, ~/.kio/repo, or recorded manifest target).
 # If target points elsewhere, cleans up stale manifest and returns false (PRESERVE).
 function Verify-KioOwnership ([string]$LinkPath, [string]$SkillName) {
     if (-not (Test-Path $LinkPath)) { return $false }
@@ -201,11 +281,13 @@ function Verify-KioOwnership ([string]$LinkPath, [string]$SkillName) {
     if (-not $ActualTarget) { return $false }
     
     $ExpectedSkillPath = [System.IO.Path]::GetFullPath((Join-Path $SkillsSrcDir $SkillName))
+    $ManagedSkillPath = [System.IO.Path]::GetFullPath((Join-Path (Join-Path $KioRepoDir "skills") $SkillName))
     $NormalizedActual = [System.IO.Path]::GetFullPath($ActualTarget).TrimEnd('\', '/')
     $NormalizedExpected = $ExpectedSkillPath.TrimEnd('\', '/')
+    $NormalizedManaged = $ManagedSkillPath.TrimEnd('\', '/')
     
     # Strict boundary & exact skill directory match
-    if ($NormalizedActual -eq $NormalizedExpected) {
+    if (($NormalizedActual -eq $NormalizedExpected) -or ($NormalizedActual -eq $NormalizedManaged) -or (Test-RecordedKioTarget $LinkPath $ActualTarget $SkillName)) {
         return $true
     } else {
         # Target points elsewhere (user modified link)! Prune stale manifest entry.
@@ -328,6 +410,7 @@ Write-Host "=================================================================" -
 Write-Host "⬇️  Kio Skills Installer: Safe & Non-Destructive Mode" -ForegroundColor Cyan
 Write-Host "=================================================================" -ForegroundColor Cyan
 
+Ensure-KioRepoSource
 Init-Manifest
 
 foreach ($TargetDir in $TargetSkillsDirs) {

@@ -12,10 +12,28 @@
 
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILLS_SRC_DIR="$SCRIPT_DIR/skills"
 KIO_CONFIG_DIR="$HOME/.kio"
+KIO_REPO_DIR="$KIO_CONFIG_DIR/repo"
+KIO_REPO_URL="${KIO_REPO_URL:-https://github.com/toanpham2111/kio-agent-system.git}"
+KIO_TARBALL_URL="${KIO_TARBALL_URL:-https://github.com/toanpham2111/kio-agent-system/archive/refs/heads/main.tar.gz}"
 MANIFEST_FILE="$KIO_CONFIG_DIR/manifest.json"
+
+USING_MANAGED_REPO=false
+if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
+  CANDIDATE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  if [ -d "$CANDIDATE_DIR/skills/kio-frontend-craft" ]; then
+    SCRIPT_DIR="$CANDIDATE_DIR"
+    SKILLS_SRC_DIR="$SCRIPT_DIR/skills"
+  else
+    USING_MANAGED_REPO=true
+    SCRIPT_DIR="$KIO_REPO_DIR"
+    SKILLS_SRC_DIR="$KIO_REPO_DIR/skills"
+  fi
+else
+  USING_MANAGED_REPO=true
+  SCRIPT_DIR="$KIO_REPO_DIR"
+  SKILLS_SRC_DIR="$KIO_REPO_DIR/skills"
+fi
 
 # 7 Core Kio Skills
 ALL_KIO_SKILLS=(
@@ -116,10 +134,64 @@ except Exception:
 " "$MANIFEST_FILE" "$link_path" 2>/dev/null
 }
 
+is_recorded_kio_target() {
+  local link_path="$1"
+  local actual_dest="$2"
+  local skill_name="$3"
+  [ -f "$MANIFEST_FILE" ] || return 1
+  python3 -c "
+import json, os, sys
+m_path = sys.argv[1]
+l_path = os.path.abspath(sys.argv[2])
+a_dest = os.path.realpath(sys.argv[3])
+s_name = sys.argv[4]
+try:
+    with open(m_path, 'r') as f:
+        data = json.load(f)
+    for e in data.get('managed_links', []):
+        if e.get('link') == l_path:
+            rec_target = os.path.realpath(e.get('target', ''))
+            if rec_target == a_dest and os.path.basename(a_dest) == s_name:
+                sys.exit(0)
+    sys.exit(1)
+except Exception:
+    sys.exit(1)
+" "$MANIFEST_FILE" "$link_path" "$actual_dest" "$skill_name" 2>/dev/null
+}
+
+# Ensure Kio repository exists locally when executed via curl | bash
+ensure_kio_repo_source() {
+  if [ "$USING_MANAGED_REPO" = false ] && [ -d "$SKILLS_SRC_DIR/kio-frontend-craft" ]; then
+    return 0
+  fi
+
+  mkdir -p "$KIO_CONFIG_DIR"
+
+  if [ -d "$KIO_REPO_DIR/.git" ] && command -v git >/dev/null 2>&1; then
+    echo "🔄 Syncing managed Kio repository in $KIO_REPO_DIR..."
+    git -C "$KIO_REPO_DIR" pull --ff-only origin main >/dev/null 2>&1 || true
+  elif [ ! -d "$KIO_REPO_DIR/skills/kio-frontend-craft" ]; then
+    echo "🌐 Piped/standalone install detected — fetching Kio repository to $KIO_REPO_DIR..."
+    rm -rf "$KIO_REPO_DIR"
+    if command -v git >/dev/null 2>&1; then
+      git clone --depth 1 "$KIO_REPO_URL" "$KIO_REPO_DIR"
+    elif command -v curl >/dev/null 2>&1 && command -v tar >/dev/null 2>&1; then
+      mkdir -p "$KIO_REPO_DIR"
+      curl -fsSL "$KIO_TARBALL_URL" | tar -xz --strip-components=1 -C "$KIO_REPO_DIR"
+    else
+      echo "❌ Error: Neither 'git' nor 'curl + tar' is available to download Kio skills."
+      exit 1
+    fi
+  fi
+
+  SCRIPT_DIR="$KIO_REPO_DIR"
+  SKILLS_SRC_DIR="$KIO_REPO_DIR/skills"
+}
+
 # Strict Ownership Verification:
-# A symlink is ONLY considered Kio-owned if its actual destination points exactly
-# to the expected Kio skill folder. If user replaced it or target points elsewhere,
-# we prune any stale manifest entry and return 1 (PRESERVE).
+# A symlink is ONLY considered Kio-owned if its actual destination points to
+# the expected Kio skill folder (local clone, ~/.kio/repo, or recorded manifest target).
+# If user replaced it or target points elsewhere, we prune any stale manifest entry and return 1 (PRESERVE).
 verify_kio_ownership() {
   local link_path="$1"
   local skill_name="$2"
@@ -130,9 +202,11 @@ verify_kio_ownership() {
   actual_dest=$(resolve_path "$link_path")
   local expected_dest
   expected_dest=$(resolve_path "$SKILLS_SRC_DIR/$skill_name")
+  local managed_dest
+  managed_dest=$(resolve_path "$KIO_REPO_DIR/skills/$skill_name")
 
   # Exact target match with boundary check
-  if [ -n "$actual_dest" ] && [ "$actual_dest" = "$expected_dest" ]; then
+  if [ -n "$actual_dest" ] && { [ "$actual_dest" = "$expected_dest" ] || [ "$actual_dest" = "$managed_dest" ] || is_recorded_kio_target "$link_path" "$actual_dest" "$skill_name"; }; then
     return 0
   else
     # Mismatch: User pointed this link elsewhere! Prune stale manifest entry.
@@ -191,6 +265,7 @@ install_skills() {
   echo "⬇️  Kio Skills Installer: Safe & Non-Destructive Mode"
   echo "================================================================="
 
+  ensure_kio_repo_source
   init_manifest
 
   for target_dir in "${TARGET_SKILLS_DIRS[@]}"; do

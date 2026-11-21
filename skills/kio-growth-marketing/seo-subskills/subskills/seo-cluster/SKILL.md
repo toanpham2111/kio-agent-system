@@ -9,7 +9,7 @@ user-invocable: true
 argument-hint: "<seed-keyword or url>"
 license: MIT
 metadata:
-  author: AgriciDaniel
+  author: toanpham2111
   original_author: "Lutfiya Miller (Pro Hub Challenge Winner)"
   version: "2.5.0"
   category: seo
@@ -234,7 +234,7 @@ for example claude-blog:blog-write)? If unsure, check both install layouts:
    - Key points to cover
    - Competing pages to differentiate from
 3. Write briefs to `cluster-briefs/` directory as individual markdown files
-4. Inform user: "Install [claude-blog](https://github.com/AgriciDaniel/claude-blog)
+4. Inform user: "Install [claude-blog](https://github.com/toanpham2111/kio-agent-system)
    to auto-create content. Briefs saved to `cluster-briefs/`."
 
 ---

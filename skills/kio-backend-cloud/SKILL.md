@@ -1,26 +1,26 @@
 ---
 name: kio-backend-cloud
-description: "Kio Master Backend, Database, Cloud & AI/ML Powerhouse — Unifies Fullstack API Design (REST/GraphQL), Modern Auth (OAuth2/RBAC), Payment Gateways & Idempotent Webhooks (Stripe, PayPal, VietQR), Cloud Storage (S3/R2 Presigned URLs), Enterprise Database Engineering (PostgreSQL, Supabase RLS, EXPLAIN ANALYZE, Redis), Cloud DevOps & IaC (Docker multi-stage, Terraform, GitHub Actions CI/CD), Production AI/ML & Hybrid RAG (pgvector, QLoRA, Hugging Face), MCP Server Engineering, and Automated Project Scaffolding with Port Collision Detection."
+description: "Architect secure REST/GraphQL APIs, PostgreSQL schemas with Supabase RLS, idempotent payment webhooks, and multi-stage Docker deployments. Use when building backend services, databases, or cloud infrastructure."
 author: Toan Pham / Kio System
-version: 2.0.0
+version: 1.0.2
 ---
 
-# ⚙️ Kio Master Backend, Database, Cloud & AI/ML Powerhouse (`kio-backend-cloud`)
+# ⚙️ Kio Backend, Database & Cloud Engineering (`kio-backend-cloud`)
 
-The unified server-side engineering, database, and cloud AI powerhouse of the Kio System. Integrates 6 core infrastructure and backend engines:
+The server-side engineering, database, and cloud infrastructure skill of the Kio System. Integrates 6 core backend modules:
 
 ---
 
-## 🧭 Core 6 Backend Engines Matrix
+## 🧭 Core 6 Backend Modules Matrix
 
-| Engine | Functional Module | Core Mission & Deliverables |
+| Module | Reference Guide | Core Mission & Deliverables |
 | :--- | :--- | :--- |
-| **1. Fullstack API & Payments** | `kio-backend-api` | OWASP-compliant REST/GraphQL API design, OAuth2/JWT/RBAC authentication, payment gateways & Idempotent Webhooks (Stripe, PayPal, VietQR/PayOS, VNPay, MoMo), S3/R2 presigned URLs, and background worker queues. |
-| **2. Enterprise Database** | `kio-database` | PostgreSQL, Supabase Row-Level Security (RLS), query optimization with `EXPLAIN ANALYZE`, composite indexing, zero-downtime schema migrations, and high-performance Redis caching. |
-| **3. Cloud DevOps & IaC** | `kio-devops` | Terraform Infrastructure as Code (AWS/GCP/Azure), containerization with multi-stage Docker builds, GitHub Actions CI/CD automation, and zero-downtime deployments. |
-| **4. AI/ML & Hybrid RAG** | `kio-ai-ml` | Production-grade RAG pipelines (Hybrid Search: BM25 + pgvector HNSW, contextual chunking, Cohere/BGE re-ranking), PEFT/QLoRA fine-tuning via Hugging Face, and vector evaluation. |
-| **5. MCP Server Builder** | `kio-mcp-builder` | Authors production Model Context Protocol (MCP) servers using Python (FastMCP) or Node/TypeScript (MCP SDK) following protocol specifications. |
-| **6. Project Scaffolding** | `kio-create-project` | Automated scaffolding for modern fullstack architectures (Next.js, FastAPI, WP FSE Docker) with integrated port collision detection across `8080–8999`. |
+| **1. Fullstack API & Payments** | `references/api-payments.md` | OWASP-compliant REST/GraphQL API design, OAuth2/JWT/RBAC authentication, payment gateways & Idempotent Webhooks (Stripe, PayPal, VietQR/PayOS, VNPay, MoMo), S3/R2 presigned URLs, and background worker queues. |
+| **2. Enterprise Database** | `references/database-rls.md` | PostgreSQL, Supabase Row-Level Security (RLS), query optimization with `EXPLAIN ANALYZE`, composite indexing, zero-downtime schema migrations, and high-performance Redis caching. |
+| **3. Cloud DevOps & IaC** | `references/devops-docker.md` | Terraform Infrastructure as Code (AWS/GCP/Azure), containerization with multi-stage Docker builds, GitHub Actions CI/CD automation, and zero-downtime deployments. |
+| **4. AI/ML & Hybrid RAG** | `references/ai-rag.md` | Production-grade RAG pipelines (Hybrid Search: BM25 + pgvector HNSW, contextual chunking, Cohere/BGE re-ranking), PEFT/QLoRA fine-tuning via Hugging Face, and vector evaluation. |
+| **5. MCP Server Builder** | `references/mcp-server.md` | Authors production Model Context Protocol (MCP) servers using Python (FastMCP) or Node/TypeScript (MCP SDK) following protocol specifications. |
+| **6. Project Scaffolding** | Port Scanning & Setup | Automated scaffolding for modern fullstack architectures (Next.js, FastAPI, WP FSE Docker) with integrated port collision detection across `8080–8999`. |
 
 ---
 

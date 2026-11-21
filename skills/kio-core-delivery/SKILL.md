@@ -1,29 +1,29 @@
 ---
 name: kio-core-delivery
-description: "Kio Master Core Delivery & Architecture Powerhouse — Unifies Executive CTO governance, 5-Pillar Audit, Multi-Engine AI CLI Routing (claude, codex, agy), Socratic Brainstorming, Specification-Driven Development (SDD), Atomic Plan Writing (2-5m tasks), Disciplined Plan Execution, Persistent Memory Planning, and Parallel Agent Dispatching."
+description: "Author Specification-Driven Development (SDD) documents and decompose features into verifiable 2-5 minute atomic tasks. Use when scoping requirements, writing technical specs, or planning project execution."
 author: Toan Pham / Kio System
-version: 2.0.0
+version: 1.0.2
 ---
 
-# 👑 Kio Master Core Delivery & Architecture Powerhouse (`kio-core-delivery`)
+# 👑 Kio Core Delivery — Specification & Atomic Task Planning (`kio-core-delivery`)
 
-The unified executive leadership and lifecycle governance powerhouse of the Kio System. Integrates 9 core delivery and orchestration engines:
+The technical specification, atomic task breakdown, and delivery workflow skill of the Kio System. Integrates 9 core delivery modules:
 
 ---
 
-## 🧭 Core 9 Governance Engines Matrix
+## 🧭 Core 9 Delivery Modules Matrix
 
-| Engine | Functional Module | Core Mission & Deliverables |
+| Module | Resource / Tooling | Core Mission & Deliverables |
 | :--- | :--- | :--- |
-| **1. Executive CTO Governance** | `kio` | Enforces the 5-Pillar Audit (Security, Lean Code <700 lines, Anti-Slop UI/UX, SDD, Business Alignment). Final Executive Sign-Off. |
-| **2. Multi-Engine Router** | `kio-engine-router` | Dynamically classifies tasks and routes to the optimal AI CLI (`claude` for UI/UX, `codex` for Algorithms/DB/Tests, `agy` for 1M+ Context & Monorepos). Script: `scripts/kio_router.py`. |
-| **3. Socratic Brainstorming** | `kio-brainstorming` | Discovers root user intent via high-leverage Socratic inquiry, extracts PRDs, uncovers edge cases, and optimizes conversion (CRO). |
-| **4. Specification-Driven Dev (SDD)** | `kio-spec-kit` | Enterprise architecture via 4 core artifacts: `constitution.md` (boundaries), `spec.md` (Gherkin user stories), `plan.md` (architecture & data models), `tasks.md` (atomic checklist). |
-| **5. Atomic Plan Writing** | `kio-writing-plans` | Decomposes complex epics into independent 2–5 minute Atomic Tasks with verifiable checkpoint commands. |
-| **6. Disciplined Plan Execution** | `kio-executing-plans` | Enforces disciplined execution adhering to TDD (Red-Green-Refactor) and mandatory two-stage review (Spec compliance & Code quality). |
-| **7. Persistent File Planning** | `kio-planning-with-files` | Preserves cross-session state and architectural memory in `kio-memory/` (`task_plan.md`, `progress.md`, `findings.md`). |
-| **8. Parallel Agent Dispatcher** | `kio-dispatching-parallel-agents` | Coordinates concurrent sub-agents across isolated workstreams with zero context collision. |
-| **9. Isolated Workspace Management** | `kio-git-worktrees` | Manages isolated Git worktrees and feature branches to execute parallel initiatives cleanly without merge conflicts. |
+| **1. 5-Pillar Quality Audit** | Executive Quality Gate | Enforces the 5-Pillar Audit (Security, Lean Code <700 lines, Anti-Slop UI/UX, SDD, Business Alignment). Final Sign-Off. |
+| **2. Multi-Engine Router** | `scripts/kio_router.py` | Dynamically classifies tasks and recommends the optimal AI CLI (`claude` for UI/UX, `codex` for Algorithms/DB/Tests, `agy` for 1M+ Context & Monorepos). |
+| **3. Socratic Brainstorming** | PRD & Intent Discovery | Discovers root user intent via high-leverage Socratic inquiry, extracts PRDs, uncovers edge cases, and optimizes conversion (CRO). |
+| **4. Specification-Driven Dev (SDD)** | `templates/` | Enterprise architecture via 4 core artifacts: `constitution.md` (boundaries), `spec.md` (Gherkin user stories), `plan.md` (architecture & data models), `tasks.md` (atomic checklist). |
+| **5. Atomic Plan Writing** | 2–5m Task Breakdown | Decomposes complex epics into independent 2–5 minute Atomic Tasks with verifiable checkpoint commands. |
+| **6. Disciplined Plan Execution** | TDD & Two-Stage Review | Enforces disciplined execution adhering to TDD (Red-Green-Refactor) and mandatory two-stage review (Spec compliance & Code quality). |
+| **7. Persistent File Planning** | Cross-Session State | Preserves cross-session state and architectural memory in `memory/` (`task_plan.md`, `progress.md`, `findings.md`). |
+| **8. Parallel Agent Dispatcher** | Concurrent Sub-agents | Coordinates concurrent sub-agents across isolated workstreams with zero context collision. |
+| **9. Isolated Workspace Management** | Git Worktrees | Manages isolated Git worktrees and feature branches to execute parallel initiatives cleanly without merge conflicts. |
 
 ---
 

@@ -1,8 +1,8 @@
 ---
 name: kio-cognitive
-description: "Kio Master Cognitive & Thinking Powerhouse — Unifies 4 cognitive meta-skills: 'how' (code walkthroughs & runtime architecture), 'why' (decision rationale & git archaeology), 'reflect' (transcript mining & self-learning), and 'in-your-own-words' (intent restatement & deep listening)."
+description: "Analyze architectural trade-offs from first principles, explain runtime code flows (HOW), trace Git decision history (WHY), and extract post-mortem lessons (REFLECT). Use when evaluating system design or investigating unfamiliar code."
 author: Toan Pham / Kio System
-version: 2.0.0
+version: 1.0.2
 ---
 
 # 🧠 Kio Cognitive & Thinking Powerhouse (`kio-cognitive`)

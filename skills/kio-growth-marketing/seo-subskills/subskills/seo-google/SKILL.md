@@ -11,7 +11,7 @@ user-invocable: true
 argument-hint: "[command] [url|property]"
 license: MIT
 metadata:
-  author: AgriciDaniel
+  author: toanpham2111
   version: "2.5.0"
   category: seo
 ---

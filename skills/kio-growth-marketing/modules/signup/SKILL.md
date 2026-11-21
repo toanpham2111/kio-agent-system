@@ -353,7 +353,7 @@ Organized by:
 
 ## Enrichment and Sales-Assisted Routing
 
-If a signup needs enriched company data for a sales-assist handoff, use the [revops inbound-routing playbook](https://github.com/coreyhaines31/marketingskills/blob/main/skills/revops/references/inbound-routing.md). Keep account creation separate from enrichment availability; a timeout or ambiguous company match must not become an implicit signup rejection.
+If a signup needs enriched company data for a sales-assist handoff, use the [revops inbound-routing playbook](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/modules/revops/references/inbound-routing.md). Keep account creation separate from enrichment availability; a timeout or ambiguous company match must not become an implicit signup rejection.
 
 ## Related Skills
 

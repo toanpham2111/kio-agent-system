@@ -1,22 +1,22 @@
 ---
 name: kio-growth-marketing
-description: "Kio Master Growth Marketing, CRO & Agency-Grade SEO Powerhouse — Unifies 53 specialized growth frameworks (Conversion Rate Optimization, A/B testing, persuasive high-signal copywriting, behavioral marketing psychology, onboarding, pricing/paywalls, lifecycle marketing) and Agency-Grade Technical SEO & AEO (25 sub-skills covering crawlability, Schema.org JSON-LD, E-E-A-T, GEO AI Overviews, ChatGPT Search, Perplexity, and Local SEO)."
+description: "Optimize conversion funnels (CRO), craft persuasive copywriting, audit technical SEO, generate Schema.org JSON-LD, and optimize for AI search (GEO). Use when improving landing pages, pricing, or search visibility."
 author: Toan Pham / Kio System
-version: 2.0.0
+version: 1.0.2
 ---
 
-# 📈 Kio Master Growth Marketing, CRO & Agency-Grade SEO Powerhouse (`kio-growth-marketing`)
+# 📈 Kio Growth Marketing, CRO & Technical SEO (`kio-growth-marketing`)
 
-The unified revenue acceleration, conversion rate optimization, and agency-grade technical SEO/GEO powerhouse of the Kio System. Integrates 2 primary growth engines:
+The conversion rate optimization, copywriting, and technical SEO/GEO skill of the Kio System. Integrates 2 primary growth modules:
 
 ---
 
-## 🧭 Core 2 Growth Engines Matrix
+## 🧭 Core 2 Growth Modules Matrix
 
-| Engine | Functional Module | Core Mission & Deliverables |
+| Module | Directory Path | Core Mission & Deliverables |
 | :--- | :--- | :--- |
-| **1. Kio Marketing & CRO** | `kio-marketing` | 53 battle-tested growth frameworks: Conversion Rate Optimization (CRO), A/B testing methodology, high-signal persuasive copywriting (Anti-AI buzzwords), behavioral marketing psychology, viral onboarding flows, pricing strategy & paywalls, and churn reduction protocols. |
-| **2. Kio Master SEO & GEO** | `kio-seo` | 25 agency-grade SEO sub-skills: Technical SEO audits (Crawlability, Core Web Vitals, HTTP headers), automated Schema.org JSON-LD generation, E-E-A-T content blueprints, Generative Engine Optimization (GEO for Google AI Overviews, Perplexity, ChatGPT Search), and Local SEO (Google Business Profile). |
+| **1. Marketing & CRO** | `modules/` & `tools/` | 53 battle-tested growth frameworks: Conversion Rate Optimization (CRO), A/B testing methodology, high-signal persuasive copywriting (Anti-AI buzzwords), behavioral marketing psychology, viral onboarding flows, pricing strategy & paywalls, and churn reduction protocols. |
+| **2. Technical SEO & GEO** | `seo-subskills/` | 25 technical SEO sub-skills: Technical SEO audits (Crawlability, Core Web Vitals, HTTP headers), automated Schema.org JSON-LD generation, E-E-A-T content blueprints, Generative Engine Optimization (GEO for Google AI Overviews, Perplexity, ChatGPT Search), and Local SEO (Google Business Profile). |
 
 ---
 

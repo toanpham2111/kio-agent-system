@@ -4,6 +4,25 @@ All notable changes to the **Kio** project are documented here following the [Ke
 
 ---
 
+## [1.0.2] - 2026-11-21 — Piped Installer Auto-Clone, Version Unification, A/B Benchmarks & Open-Source Attribution
+
+### 🚀 One-Line Piped Installer Enhancement (`setup.sh` & `setup.ps1`)
+- **Automated Repository Fetching in Piped Mode (`curl | bash` & `irm | iex`)**:
+  - When executed via a one-line pipe where no local `skills/` checkout exists in the current directory, the installer automatically clones `toanpham2111/kio-agent-system` into `~/.kio/repo` (with a tarball/zip fallback if `git` is unavailable) before creating symlinks.
+  - Subsequent piped runs automatically sync the latest changes in `~/.kio/repo` via `git pull --ff-only`.
+  - Enhanced `verify_kio_ownership` to validate symlinks pointing to local checkouts, `~/.kio/repo`, or verified manifest targets.
+
+### 🧹 Internal Link Hygiene, Concise Skill Descriptions & Version Alignment
+- **Unified Version `v1.0.2`**: Synchronized version numbers across GitHub Releases, all 7 `SKILL.md` frontmatters, and all evaluation reports in `evaluations/`.
+- **Token-Optimized `description` Frontmatter**: Condensed every skill's YAML `description` to 1–2 high-signal sentences specifying exact activation triggers and removed phantom sub-engine identifiers.
+- **Internal Link Cleanup Across 150 Files**: Updated all internal module and tool registry links within `skills/` to resolve cleanly inside `toanpham2111/kio-agent-system`.
+- **Open-Source Attribution & License Compliance**: Added [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) and a **Credits & Third-Party Open Source Acknowledgments** section in `README.md` preserving upstream MIT license notices.
+
+### 🧪 A/B Comparative Benchmark Overhaul (`evaluations/`)
+- **Side-by-Side Baseline (No Skill) vs. With Kio Skill Evidence**: Updated all 10 benchmark logs in `evaluations/results/` with full raw Baseline and With-Skill code outputs, defect analysis, and objective rubric scoring (average score improved from `5.40/10` to `9.15/10`, `+3.75` delta).
+
+---
+
 ## [1.0.1] - 2026-11-21 — Installer Security & Ownership Verification Patch
 
 ### 🛡️ Security Fixes

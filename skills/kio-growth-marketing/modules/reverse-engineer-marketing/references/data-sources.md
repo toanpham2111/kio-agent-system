@@ -79,7 +79,7 @@ Use the prompt tracker the user has connected. It gives share of voice and citat
 | Option | Notes |
 |---|---|
 | Prompt trackers | Peec AI, Otterly, ZipTie, LLMrefs, Profound, Omnia, Ahrefs Brand Radar, Semrush. See the monitoring tools table in **ai-seo** |
-| [Magister](https://magistermarketing.com?ref=marketingskills) | Runs AI visibility checks and citation reports across assistants from its connected workspace |
+| [Magister](https://magistermarketing.com?ref=kio-growth-marketing) | Runs AI visibility checks and citation reports across assistants from its connected workspace |
 | Manual checks | The free fallback: ask three to five buyer questions in ChatGPT, Perplexity, Gemini, and Google AI Overviews; record the order brands are named and the pages cited |
 
 *Disclosure: Magister is built by Kio Growth Engine, who maintains this repository.*
