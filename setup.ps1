@@ -50,7 +50,7 @@ if ($Help) {
 
 function Show-List {
     Write-Host "=================================================================" -ForegroundColor Cyan
-    Write-Host "🧰 Kio: Available Engineering Skills (7 Master Skills)" -ForegroundColor Cyan
+    Write-Host "Kio: Available Engineering Skills (7 Master Skills)" -ForegroundColor Cyan
     Write-Host "=================================================================" -ForegroundColor Cyan
     Write-Host "1. kio-frontend-craft   (shortcut: frontend, fe)  - UI/UX, 79 styles, 192 palettes, Lenis"
     Write-Host "2. kio-backend-cloud    (shortcut: backend, be)   - REST/GraphQL APIs, RLS, Docker, Cloud"
@@ -107,10 +107,10 @@ function Ensure-KioRepoSource {
     $ManagedGitDir = Join-Path $KioRepoDir ".git"
     $ManagedCheck = Join-Path $KioRepoDir "skills\kio-frontend-craft"
     if ((Test-Path $ManagedGitDir) -and (Get-Command git -ErrorAction SilentlyContinue)) {
-        Write-Host "🔄 Syncing managed Kio repository in $KioRepoDir..." -ForegroundColor Cyan
+        Write-Host "[UPDATE] Syncing managed Kio repository in $KioRepoDir..." -ForegroundColor Cyan
         git -C $KioRepoDir pull --ff-only origin main 2>$null | Out-Null
     } elseif (-not (Test-Path $ManagedCheck)) {
-        Write-Host "🌐 Piped/standalone install detected — fetching Kio repository to $KioRepoDir..." -ForegroundColor Cyan
+        Write-Host "[FETCH] Piped/standalone install detected - fetching Kio repository to $KioRepoDir..." -ForegroundColor Cyan
         if (Test-Path $KioRepoDir) {
             Remove-Item $KioRepoDir -Recurse -Force
         }
@@ -344,7 +344,7 @@ function Resolve-SkillName ([string]$InputName) {
 # Uninstall Kio Skills
 if ($Uninstall) {
     Write-Host "=================================================================" -ForegroundColor Cyan
-    Write-Host "🗑️  Uninstalling Kio Skills..." -ForegroundColor Yellow
+    Write-Host "[REMOVE] Uninstalling Kio Skills..." -ForegroundColor Yellow
     Write-Host "   (Only components strictly verified to belong to Kio will be removed)" -ForegroundColor Yellow
     Write-Host "=================================================================" -ForegroundColor Cyan
 
@@ -352,7 +352,7 @@ if ($Uninstall) {
 
     foreach ($TargetDir in $TargetSkillsDirs) {
         if (-not (Test-Path $TargetDir)) { continue }
-        Write-Host "🔍 Checking: $TargetDir" -ForegroundColor Yellow
+        Write-Host "[CHECK] Checking: $TargetDir" -ForegroundColor Yellow
 
         foreach ($SkillName in $AllKioSkills) {
             $TargetSkill = Join-Path $TargetDir $SkillName
@@ -362,14 +362,14 @@ if ($Uninstall) {
                     if (Verify-KioOwnership $TargetSkill $SkillName) {
                         Remove-SafeLink $TargetSkill
                         Remove-From-Manifest $TargetSkill
-                        Write-Host "   └── 🗑️ Removed verified Kio link: $SkillName" -ForegroundColor Red
+                        Write-Host "     |-- [REMOVE] Removed verified Kio link: $SkillName" -ForegroundColor Red
                         $RemovedCount++
                     } else {
                         $ExtTarget = Get-JunctionTarget $TargetSkill
-                        Write-Host "   └── 🛡️ PRESERVED: $TargetSkill points to external location '$ExtTarget' (Not touched)" -ForegroundColor Green
+                        Write-Host "     |-- [KEEP] PRESERVED: $TargetSkill points to external location '$ExtTarget' (Not touched)" -ForegroundColor Green
                     }
                 } else {
-                    Write-Host "   └── 🛡️ PRESERVED: $TargetSkill is a regular folder (Not touched)" -ForegroundColor Green
+                    Write-Host "     |-- [KEEP] PRESERVED: $TargetSkill is a regular folder (Not touched)" -ForegroundColor Green
                 }
             }
         }
@@ -377,7 +377,7 @@ if ($Uninstall) {
 
     Write-Host ""
     Write-Host "=================================================================" -ForegroundColor Cyan
-    Write-Host "✅ SUCCESS: Kio skills uninstalled ($RemovedCount links removed)." -ForegroundColor Green
+    Write-Host "[OK] SUCCESS: Kio skills uninstalled ($RemovedCount links removed)." -ForegroundColor Green
     Write-Host "   All other user skills remain completely untouched." -ForegroundColor Green
     Write-Host "=================================================================" -ForegroundColor Cyan
     exit 0
@@ -395,7 +395,7 @@ if ([string]::IsNullOrWhiteSpace($Skill) -or $Skill -eq "all") {
         if ($Resolved) {
             $SkillsToInstall += $Resolved
         } else {
-            Write-Host "⚠️ Unknown skill shortcut: '$T'. Run '.\setup.ps1 -List' to see valid names." -ForegroundColor Red
+            Write-Host "[WARN] Unknown skill shortcut: '$T'. Run '.\setup.ps1 -List' to see valid names." -ForegroundColor Red
         }
     }
 }
@@ -407,7 +407,7 @@ if ($SkillsToInstall.Count -eq 0) {
 
 # Install selected skills safely
 Write-Host "=================================================================" -ForegroundColor Cyan
-Write-Host "⬇️  Kio Skills Installer: Safe & Non-Destructive Mode" -ForegroundColor Cyan
+Write-Host "Kio Skills Installer: Safe & Non-Destructive Mode" -ForegroundColor Cyan
 Write-Host "=================================================================" -ForegroundColor Cyan
 
 Ensure-KioRepoSource
@@ -417,12 +417,12 @@ foreach ($TargetDir in $TargetSkillsDirs) {
     if (-not (Test-Path $TargetDir)) {
         New-Item -ItemType Directory -Path $TargetDir -Force | Out-Null
     }
-    Write-Host "📦 Checking directory: $TargetDir" -ForegroundColor Yellow
+    Write-Host "[DIR] Checking directory: $TargetDir" -ForegroundColor Yellow
 
     foreach ($SkillName in $SkillsToInstall) {
         $SourceSkillPath = Join-Path $SkillsSrcDir $SkillName
         if (-not (Test-Path $SourceSkillPath)) {
-            Write-Host "   └── ⚠️ Skill source not found: $SkillName" -ForegroundColor Red
+            Write-Host "     |-- [WARN] Skill source not found: $SkillName" -ForegroundColor Red
             continue
         }
 
@@ -435,25 +435,25 @@ foreach ($TargetDir in $TargetSkillsDirs) {
                     Remove-SafeLink $TargetSkill
                     New-SafeLink $TargetSkill $SourceSkillPath
                     Record-Manifest $TargetSkill $SourceSkillPath
-                    Write-Host "   └── 🔄 Updated verified Kio link: $SkillName" -ForegroundColor Green
+                    Write-Host "     |-- [UPDATE] Updated verified Kio link: $SkillName" -ForegroundColor Green
                 } else {
                     $ExtTarget = Get-JunctionTarget $TargetSkill
-                    Write-Host "   └── 🛡️ PRESERVED: $TargetSkill points to external location '$ExtTarget' (Skipped, not modified)" -ForegroundColor DarkYellow
+                    Write-Host "     |-- [KEEP] PRESERVED: $TargetSkill points to external location '$ExtTarget' (Skipped, not modified)" -ForegroundColor DarkYellow
                 }
             } else {
-                Write-Host "   └── 🛡️ PRESERVED: $TargetSkill is a user folder (Skipped, not modified)" -ForegroundColor DarkYellow
+                Write-Host "     |-- [KEEP] PRESERVED: $TargetSkill is a user folder (Skipped, not modified)" -ForegroundColor DarkYellow
             }
         } else {
             New-SafeLink $TargetSkill $SourceSkillPath
             Record-Manifest $TargetSkill $SourceSkillPath
-            Write-Host "   └── 🔗 Linked skill: $SkillName" -ForegroundColor Green
+            Write-Host "     |-- [LINK] Linked skill: $SkillName" -ForegroundColor Green
         }
     }
 }
 
 Write-Host ""
 Write-Host "=================================================================" -ForegroundColor Cyan
-Write-Host "✅ SUCCESS: Selected Kio skills installed/updated!" -ForegroundColor Green
+Write-Host "[OK] SUCCESS: Selected Kio skills installed/updated!" -ForegroundColor Green
 Write-Host "   Ownership: Tracked in $ManifestFile" -ForegroundColor Green
 Write-Host "   Preserved: All existing user skills untouched." -ForegroundColor Green
 Write-Host "=================================================================" -ForegroundColor Cyan
