@@ -20,7 +20,7 @@ Through the practical production releases of `v1.0.0` and `v1.0.1`, we codified 
 ### 2. Author Attribution & Avatar Linking
 - **Issue**: Commits display a generic grey Octocat icon instead of the author's profile avatar.
 - **Root Cause**: GitHub attributes commits to user profiles only when `git config user.email` matches an email registered and verified on the GitHub account (`toan444666@gmail.com`).
-- **Solution**: Always ensure both local Git config and [scripts/sync_to_english_repo.sh](file:///home/toan/Toan/my-agent-skills/scripts/sync_to_english_repo.sh#L134-L135) use the verified email address:
+- **Solution**: Always ensure both local Git config and [scripts/sync_to_english_repo.sh](../scripts/sync_to_english_repo.sh#L134-L135) use the verified email address:
   ```bash
   git config user.name "Toan Pham"
   git config user.email "toan444666@gmail.com"
@@ -28,9 +28,9 @@ Through the practical production releases of `v1.0.0` and `v1.0.1`, we codified 
 
 ### 3. Strict 100% Pure English Distribution
 - The public distribution repository must be 100% pure English with zero Vietnamese characters.
-- [scripts/sync_to_english_repo.sh](file:///home/toan/Toan/my-agent-skills/scripts/sync_to_english_repo.sh) automatically:
+- [scripts/sync_to_english_repo.sh](../scripts/sync_to_english_repo.sh) automatically:
   - Swaps all `*.en.md` files to `*.md`.
-  - Promotes `README.en.md` to the primary `README.md`.
+  - Promotes `README.md` to the primary `README.md`.
   - Purges internal benchmarks, local sync tools, and binary PDFs.
   - Runs an automated regex byte scan across all files to guarantee 0 Vietnamese characters before pushing.
 
@@ -55,8 +55,8 @@ flowchart TD
 ```
 
 ### Step 1: Bump Version & Update Documentation
-1. Update version number and changes in [CHANGELOG.md](file:///home/toan/Toan/my-agent-skills/CHANGELOG.md).
-2. Update release badges in [README.md](file:///home/toan/Toan/my-agent-skills/README.md) and [README.en.md](file:///home/toan/Toan/my-agent-skills/README.en.md):
+1. Update version number and changes in [CHANGELOG.md](../CHANGELOG.md).
+2. Update release badges in [README.md](../README.md) and [README.md](../README.md):
    ```markdown
    [![Release](https://img.shields.io/badge/Release-v1.0.x-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
    ```
@@ -115,7 +115,7 @@ gh release create v1.0.x \
 ## ⚡ 1-Command Automated Script: `scripts/release.sh`
 
 For maximum developer velocity, use the automated release script:
-[scripts/release.sh](file:///home/toan/Toan/my-agent-skills/scripts/release.sh).
+[scripts/release.sh](../scripts/release.sh).
 
 ```bash
 # Usage:

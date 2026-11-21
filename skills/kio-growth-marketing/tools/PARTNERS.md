@@ -3,7 +3,7 @@
 The single source of truth for how tools and partners work in this repository. If anything elsewhere is ambiguous, this document governs.
 
 - **Public pitch & pricing:** [marketing-skills.com/sponsorship](https://marketing-skills.com/sponsorship)
-- **Content rules for mentioning any tool:** [CONTRIBUTING.md → Mentioning Tools](../CONTRIBUTING.md#mentioning-tools-the-integrity-rubric)
+- **Content rules for mentioning any tool:** CONTRIBUTING.md → Mentioning Tools
 - **The tool index itself:** [REGISTRY.md](REGISTRY.md)
 - **The legal terms:** the Partner Agreement, provided to each partner (accepted at checkout)
 
@@ -69,7 +69,7 @@ Plus a ◆ marker in [REGISTRY.md](REGISTRY.md) and an entry in [`../partners.js
 ## Editorial control & the integrity rubric
 
 - **The maintainer holds final editorial control** and may edit or cut anything for neutrality and accuracy, at any time.
-- **Any content that names a tool — partner or not — must pass the [integrity rubric](../CONTRIBUTING.md#mentioning-tools-the-integrity-rubric):** options not one answer, at the point of relevance, no forced endorsement, facts over framing, disclosed, and the *swap test* (swap the tool for a competitor and it should still read fair).
+- **Any content that names a tool — partner or not — must pass the integrity rubric:** options not one answer, at the point of relevance, no forced endorsement, facts over framing, disclosed, and the *swap test* (swap the tool for a competitor and it should still read fair).
 - **Partner integrations surface only at the point of relevance** — when a user is implementing or working with that tool. They never hijack generic queries and never insert themselves into a skill's recommendation as the answer.
 
 ## Category exclusivity (precise definition)
@@ -85,7 +85,7 @@ Plus a ◆ marker in [REGISTRY.md](REGISTRY.md) and an entry in [`../partners.js
 3. **Pay** — Stripe; acceptance (version + timestamp) recorded with the subscription. Nothing publishes until the first payment clears.
 4. **Onboard** — the partner submits logo, blurb, docs, and setup specifics via the onboarding form.
 5. **Author** — the integration guide is drafted collaboratively; **the maintainer holds the pen** and final editorial control.
-6. **Publish** — add the partner to [`../partners.json`](../partners.json), run [`../scripts/sync-partners.mjs`](../scripts/sync-partners.mjs) to regenerate the README + registry blocks, commit. The site reads `partners.json` directly.
+6. **Publish** — add the partner to [`../partners.json`](../partners.json), run `sync-partners.mjs` (upstream maintainer script, not shipped) to regenerate the README + registry blocks, commit. The site reads `partners.json` directly.
 7. **Renewal / lapse** — renewal is an explicit conversation, never an automatic charge. On lapse there's a **30-day notice period** where the integration is flagged as unmaintained before removal — installs are never silently broken. Deactivate with `"active": false` (keeps history, removes it from every surface).
 
 ## `tools/integrations/` spec (any tool, partner or not)
@@ -99,7 +99,7 @@ Plus a ◆ marker in [REGISTRY.md](REGISTRY.md) and an entry in [`../partners.js
 - Setup + common operations (with real command/code examples)
 - Links to official docs
 
-**CLIs** (`../clis/*.js`) are zero-dependency Node 18+ scripts: show usage with no args, support `--dry-run`, and never require credentials just to print help. See [AGENTS.md](../CLAUDE.md) build/verify rules.
+**CLIs** (`../clis/*.js`) are zero-dependency Node 18+ scripts: show usage with no args, support `--dry-run`, and never require credentials just to print help. 
 
 **A partner integration** is all of the above **plus** the disclosure header, the ◆ marker, and the `partners.json` entry.
 

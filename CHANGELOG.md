@@ -4,6 +4,30 @@ All notable changes to the **Kio** project are documented here following the [Ke
 
 ---
 
+## [1.1.0] - 2026-11-21 — Kio Skill Routers & Restored Content
+
+### 🎨 `kio-frontend-craft` 3.0.0
+- **Restored content lost in the skill consolidation** (from git history): 64 React/Next.js rules and the full guide, `ui-ux/pro-rules.md`, `ui-ux/quick-reference.md`, Web Performance, PDF → HTML, Mobile (React Native/Expo, SwiftUI, offline).
+- **New references:** 9-pass `/unslop` SOP, Lenis smooth scroll (checked against `lenis` 1.3.27).
+- **New router** (VI/EN), overlap rules, workflows; `THIRD_PARTY_NOTICES.md`.
+- 137 tests + data validation pass; PDF → HTML pipeline verified end to end.
+
+### ⚙️ `kio-backend-cloud` 3.0.0
+- **Restored lost content:** API & payments, database, DevOps, AI/ML, MCP builder, project scaffolding.
+- **Payments & idempotent webhooks:** `references/payments-webhooks.md` (Stripe, PayPal, VNPay, MoMo, PayOS, SePay) + tested reference `scripts/payment_signatures.py` (15 tests).
+- **MCP:** 4 new guides (best practices, Python, TypeScript, evaluation) for `mcp` Python 2.x (`MCPServer`) and the TypeScript SDK 1.32; examples executed.
+- **Expanded 9 thin references** and fixed `trivy-action@master`, `curl` healthchecks on slim images, RLS update policy without `WITH CHECK`, weak Redis lock tokens, Terraform state locking. SQL verified on PostgreSQL 16.
+- **New router** (VI/EN); `THIRD_PARTY_NOTICES.md` (Apache 2.0 for the MCP builder part).
+
+### 📈 `kio-growth-marketing` 3.0.0
+- **New router** (`SKILL.md`, `SKILL.md`): routing table for all 79 sub-skills (53 modules + 26 SEO Engine sub-skills), 17 merge rules for overlapping modules, 7 multi-module workflows and module name resolution.
+- **SEO Engine runs**: added the missing `seo-subskills/requirements.txt`, remapped `${CLAUDE_PLUGIN_ROOT}/skills/` to Kio's `subskills/` layout, added script-running instructions.
+- **Internal links**: rewrote 150 external GitHub links as relative links, fixed 25 broken links.
+- **Branding & licensing**: author metadata of all 79 sub-skills is now Kio System; open-source credits (MIT / CC BY 4.0) consolidated in `THIRD_PARTY_NOTICES.md`; fixed misattributed book/framework citations.
+- Fixed the English SEO Engine file (broken command, non-existent `seo-report` sub-skill).
+
+---
+
 ## [1.0.2] - 2026-11-21 — Piped Installer Auto-Clone, Version Unification, A/B Benchmarks & Open-Source Attribution
 
 ### 🚀 One-Line Piped Installer Enhancement (`setup.sh` & `setup.ps1`)
@@ -68,7 +92,7 @@ This marks the first official stable release of **Kio — Open Source AI Skills 
 - **Troubleshooting & FAQ**: Guidance on Windows Developer Mode, symlink permissions, IDE cache reloads, and token safety.
 
 ### 🤝 Community Governance & Open Source License
-- **Contribution Guidelines**: [`CONTRIBUTING.md`](CONTRIBUTING.md) & [`CONTRIBUTING.en.md`](CONTRIBUTING.en.md).
+- **Contribution Guidelines**: [`CONTRIBUTING.md`](CONTRIBUTING.md) & [`CONTRIBUTING.md`](CONTRIBUTING.md).
 - **Security Policy**: [`SECURITY.md`](SECURITY.md).
 - **Code of Conduct**: [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 - **License**: Official MIT License.

@@ -14,7 +14,7 @@ Three credential types serve different APIs:
 
 1. Go to [console.cloud.google.com](https://console.cloud.google.com)
 2. Click **Select a project** > **New Project**
-3. Name it (e.g., "Claude SEO") and note the project ID
+3. Name it (e.g., "Kio SEO") and note the project ID
 4. Select the project after creation
 
 ## Step 2: Enable APIs

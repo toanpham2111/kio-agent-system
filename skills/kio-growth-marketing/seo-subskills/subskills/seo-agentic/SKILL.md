@@ -12,7 +12,7 @@ user-invocable: true
 argument-hint: "[audit|fix|lighthouse|refresh] [url]"
 license: MIT
 metadata:
-  author: toanpham2111
+  author: Kio System
   version: "2.5.0"
   category: seo
 ---

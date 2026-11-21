@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Matomo credential management for Claude SEO.
+Matomo credential management for Kio SEO.
 
 Loads and validates credentials for the Matomo Reporting API.
 Supports config file and environment variable fallbacks.
@@ -568,7 +568,7 @@ VERIFY CONFIGURATION:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Matomo credential management for Claude SEO"
+        description="Matomo credential management for Kio SEO"
     )
     parser.add_argument(
         "--check",

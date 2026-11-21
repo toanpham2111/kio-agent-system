@@ -37,7 +37,7 @@ Kio analyzes user requests and repository signatures to route deterministically 
 
   - 🌐 **BRANCH 1: WORDPRESS (Dedicated WordPress FSE Pipeline)**
     - **Trigger**: Detected via prompt or repository signature (`wp-content/`, `theme.json`, `style.css` with Theme Name, `functions.php`, `block.json`, `docker-compose.yml` with WordPress).
-    - **Active Squad**: Kio activates the dedicated WordPress engineering team led by `wp-leader` operating the [`kio-wordpress-fse`](skills/kio-wordpress-fse/SKILL.md) pipeline.
+    - **Active Squad**: Kio activates the dedicated WordPress engineering team led by `wp-leader` operating the [`kio-wordpress-fse`](../skills/kio-wordpress-fse/SKILL.md) pipeline.
 
   - 🚀 **BRANCH 2: DEFAULT SQUAD (Rapid Implementation - Fullstack & Microservices)**
     - **Trigger**: Default for modern software engineering projects (Next.js, React, Node.js, Python, FastAPI, Mobile, Flutter, Go, DevOps, Scripts).
@@ -46,7 +46,7 @@ Kio analyzes user requests and repository signatures to route deterministically 
 
   - 📐 **BRANCH 3: SPEC-KIT / SDD (Specification-Driven Development - Enterprise Systems)**
     - **Trigger**: Monorepos, multi-service SaaS, fintech/healthcare systems, `.spec-kit/` directory present, or when requested by user ("spec-driven", "write spec first").
-    - **Characteristics**: 4-stage SDD framework via [`kio-core-delivery`](skills/kio-core-delivery/SKILL.md):
+    - **Characteristics**: 4-stage SDD framework via [`kio-core-delivery`](../skills/kio-core-delivery/SKILL.md):
       1. `constitution.md`: Architectural boundaries and technical non-negotiables.
       2. `spec.md`: Business specifications in Gherkin syntax (NO coding before spec approval).
       3. `plan.md`: Technical architecture, data models, API contracts, risk mitigations.

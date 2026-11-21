@@ -2,6 +2,7 @@
 name: cold-email
 description: Write and run B2B cold outbound that gets replies, from cold emails and follow-ups to sending setup, LinkedIn, multichannel cadences, and reply handling. Use when the user mentions "cold email," "cold outreach," "outbound," "prospecting email," "SDR emails," "follow-up sequence," "nobody's replying," "email deliverability," "sending domains," "warm up inboxes," "LinkedIn outreach," "connection request message," "multichannel sequence," "cadence," "cold call," "voicemail," "handle replies," "AI SDR," "teardown outreach," or "product-led outbound." Send from secondary domains, verify lists first, turn off open tracking, and stop every channel when a prospect replies. Copy avoids AI tells like 'it's not X, it's Y' reveals. For building the list and account research, see prospecting. For lifecycle email, see emails. For call scripts and sales collateral, see sales-enablement.
 metadata:
+  author: Kio System
   version: 2.2.1
 ---
 
@@ -188,15 +189,15 @@ Use this data to inform your writing — not as a checklist to satisfy.
 
 ## Tool Integrations
 
-For setup, see the [tools registry](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/REGISTRY.md), including its sales outbound quick start. Tools most used with this skill:
+For setup, see the [tools registry](../../tools/REGISTRY.md), including its sales outbound quick start. Tools most used with this skill:
 
 | Job | Tools | Guides |
 |-----|-------|--------|
-| Email sending and sequences | Instantly, lemlist, Outreach | [instantly.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/instantly.md), [lemlist.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/lemlist.md), [outreach.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/outreach.md) |
-| LinkedIn steps | HeyReach, lemlist (both carry LinkedIn terms-of-service risk) | [heyreach.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/heyreach.md) |
-| Verification before send | Truelist, Hunter | [truelist.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/truelist.md), [hunter.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/hunter.md) |
-| CRM and reply logging | HubSpot, Attio, Close | [attio.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/attio.md), [close.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/close.md) |
-| Booking | Calendly, SavvyCal | [calendly.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/calendly.md), [savvycal.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/savvycal.md) |
+| Email sending and sequences | Instantly, lemlist, Outreach | [instantly.md](../../tools/integrations/instantly.md), [lemlist.md](../../tools/integrations/lemlist.md), [outreach.md](../../tools/integrations/outreach.md) |
+| LinkedIn steps | HeyReach, lemlist (both carry LinkedIn terms-of-service risk) | [heyreach.md](../../tools/integrations/heyreach.md) |
+| Verification before send | Truelist, Hunter | [truelist.md](../../tools/integrations/truelist.md), [hunter.md](../../tools/integrations/hunter.md) |
+| CRM and reply logging | HubSpot, Attio, Close | [attio.md](../../tools/integrations/attio.md), [close.md](../../tools/integrations/close.md) |
+| Booking | Calendly, SavvyCal | [calendly.md](../../tools/integrations/calendly.md), [savvycal.md](../../tools/integrations/savvycal.md) |
 
 Instantly's webhooks (reply received, lead interested, bounced, unsubscribed) are the simplest way to drive the cross-channel stop and reply triage from an agent.
 

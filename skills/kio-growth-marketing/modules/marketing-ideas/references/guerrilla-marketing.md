@@ -53,4 +53,4 @@ Steal the *pattern*, not the prop. Each of these turned a small, unconventional 
 4. **Test small.** Ship to a handful, measure replies/meetings/coverage, and only scale what earns a response.
 5. **Turn the stunt into a system.** If it works, make it repeatable — a recurring mailer program, a series of films, an ongoing library — rather than a one-time spike.
 
-*Source: Kio Growth Engine, Founding Marketing, ch. 13.*
+*Source: Corey Haines, Founding Marketing, ch. 13.*

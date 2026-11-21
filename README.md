@@ -3,7 +3,7 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Release](https://img.shields.io/badge/Release-v1.0.2-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
+[![Release](https://img.shields.io/badge/Release-v1.1.0-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
 [![Supported Tools](https://img.shields.io/badge/Compatible_With-Claude_Code_|_Cursor_|_Codex_|_Antigravity_|_Windsurf-blue)](https://github.com/toanpham2111/kio-agent-system)
 [![Skills](https://img.shields.io/badge/Skills-7_Modular_Master_Skills-green)](skills/)
 [![Standard](https://img.shields.io/badge/Format-Agent_Skill_Standard-orange)](skills/)
@@ -135,7 +135,7 @@ All capabilities are organized into 7 self-contained master skills located in th
 | **[`skills/kio-backend-cloud`](skills/kio-backend-cloud)** | **Backend, DB & Cloud** | Practical REST/GraphQL patterns, PostgreSQL index tuning, Supabase Row-Level Security rules, Docker multi-stage setups, and idempotent webhook handling for Stripe/PayPal. |
 | **[`skills/kio-qa-security`](skills/kio-qa-security)** | **Automated QA & Security** | Automated 4-quadrant test case generation, multi-language unit test boilerplates (Vitest, Pytest, Go test), TDD Red-Green-Refactor workflows, and Playwright headless browser layout inspection. |
 | **[`skills/kio-core-delivery`](skills/kio-core-delivery)** | **Planning & Delivery** | Decomposes vague prompts into 2-5 minute atomic tasks, creates technical specifications (Specification-Driven Development), and manages multi-engine task routing. |
-| **[`skills/kio-growth-marketing`](skills/kio-growth-marketing)** | **Growth, CRO & SEO** | 53 growth frameworks (AARRR funnel, behavioral pricing, conversion copywriting) plus 25 technical SEO modules targeting modern search and AI Overviews (GEO). |
+| **[`skills/kio-growth-marketing`](skills/kio-growth-marketing)** | **Growth, CRO & SEO** | 53 growth frameworks (AARRR funnel, behavioral pricing, conversion copywriting) plus 26 technical SEO sub-skills targeting modern search and AI Overviews (GEO). |
 | **[`skills/kio-wordpress-fse`](skills/kio-wordpress-fse)** | **WordPress FSE** | Step-by-step S0-S8 industrial pipeline for turning designs or HTML mockups into clean, 100% native Gutenberg block themes without plugin bloat. |
 | **[`skills/kio-cognitive`](skills/kio-cognitive)** | **Deep Thinking & Rationale** | First-principles analysis methods, architectural decision walkthroughs ("Why & How"), and post-mortem failure analysis for continuous learning. |
 
@@ -308,9 +308,9 @@ kio-agent-system/
 │   └── kio-cognitive/                # Architecture rationale walkthroughs
 ├── evaluations/                      # Skill Evaluation Framework & Live Benchmarks
 │   ├── SKILL_EVALUATION_FRAMEWORK.md # 21 verified test scenarios
-│   ├── SKILL_EVALUATION_FRAMEWORK.en.md # English reference
+│   ├── SKILL_EVALUATION_FRAMEWORK.md # English reference
 │   ├── benchmark-summary.md          # Live benchmark summary report
-│   ├── benchmark-summary.en.md       # English benchmark report
+│   ├── benchmark-summary.md       # English benchmark report
 │   └── results/                      # Raw evidence logs per scenario (FE, BE, QA...)
 ├── agents/                           # Optional: 6 Role-specialized agent personas
 │   ├── kio.md                        # Coordinator persona for task triage & review

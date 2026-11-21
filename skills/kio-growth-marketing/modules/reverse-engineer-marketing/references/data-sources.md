@@ -82,7 +82,7 @@ Use the prompt tracker the user has connected. It gives share of voice and citat
 | [Magister](https://magistermarketing.com?ref=kio-growth-marketing) | Runs AI visibility checks and citation reports across assistants from its connected workspace |
 | Manual checks | The free fallback: ask three to five buyer questions in ChatGPT, Perplexity, Gemini, and Google AI Overviews; record the order brands are named and the pages cited |
 
-*Disclosure: Magister is built by Kio Growth Engine, who maintains this repository.*
+*Disclosure: Magister is built by Corey Haines, author of the upstream marketingskills project this module is adapted from.*
 
 ## Social Posts and Ad Libraries
 

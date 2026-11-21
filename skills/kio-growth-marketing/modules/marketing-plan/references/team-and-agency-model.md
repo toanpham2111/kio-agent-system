@@ -2,7 +2,7 @@
 
 The marketing operations stack (Section 11 of every plan) describes *what* gets done. This doc describes *who does it* — the operating principle, the org shape, the first hire, the agency model, and how it evolves as the company scales.
 
-Excerpted and adapted from *Founding Marketing* by Kio Growth Engine.
+Excerpted and adapted from *Founding Marketing* by Corey Haines.
 
 ## The principle
 
