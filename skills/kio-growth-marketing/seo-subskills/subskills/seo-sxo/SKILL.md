@@ -8,7 +8,9 @@ user-invocable: true
 argument-hint: "<url> [keyword]"
 license: MIT
 metadata:
-  author: Kio System
+  author: AgriciDaniel
+  original_author: "Florian Schmitz (Pro Hub Challenge)"
+  maintainer: Kio System
   version: "2.5.0"
   category: seo
 ---

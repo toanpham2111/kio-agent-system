@@ -15,7 +15,9 @@ set -e
 KIO_CONFIG_DIR="$HOME/.kio"
 KIO_REPO_DIR="$KIO_CONFIG_DIR/repo"
 KIO_REPO_URL="${KIO_REPO_URL:-https://github.com/toanpham2111/kio-agent-system.git}"
+[ -n "${KIO_TARBALL_URL:-}" ] && KIO_TARBALL_URL_SET=1
 KIO_TARBALL_URL="${KIO_TARBALL_URL:-https://github.com/toanpham2111/kio-agent-system/archive/refs/heads/main.tar.gz}"
+KIO_UPDATE_FAILED=false
 MANIFEST_FILE="$KIO_CONFIG_DIR/manifest.json"
 
 USING_MANAGED_REPO=false
@@ -159,6 +161,27 @@ except Exception:
 " "$MANIFEST_FILE" "$link_path" "$actual_dest" "$skill_name" 2>/dev/null
 }
 
+# Resolve which version of Kio to install into ~/.kio/repo.
+# KIO_REF (a tag such as v1.2.0, or a branch such as main) wins; otherwise the
+# newest released v* tag is used, so a piped install never picks up unreleased work.
+resolve_kio_ref() {
+  if [ -n "${KIO_REF:-}" ]; then
+    echo "$KIO_REF"
+    return 0
+  fi
+  local latest=""
+  if command -v git >/dev/null 2>&1; then
+    latest=$(git ls-remote --tags --refs --sort=-v:refname "$KIO_REPO_URL" 'v*' 2>/dev/null \
+      | head -n 1 | sed 's#.*refs/tags/##')
+  fi
+  if [ -n "$latest" ]; then
+    echo "$latest"
+  else
+    echo "⚠️  Could not list Kio release tags from $KIO_REPO_URL; falling back to 'main'." >&2
+    echo "main"
+  fi
+}
+
 # Ensure Kio repository exists locally when executed via curl | bash
 ensure_kio_repo_source() {
   if [ "$USING_MANAGED_REPO" = false ] && [ -d "$SKILLS_SRC_DIR/kio-frontend-craft" ]; then
@@ -166,18 +189,44 @@ ensure_kio_repo_source() {
   fi
 
   mkdir -p "$KIO_CONFIG_DIR"
+  local ref
+  ref=$(resolve_kio_ref)
 
   if [ -d "$KIO_REPO_DIR/.git" ] && command -v git >/dev/null 2>&1; then
-    echo "🔄 Syncing managed Kio repository in $KIO_REPO_DIR..."
-    git -C "$KIO_REPO_DIR" pull --ff-only origin main >/dev/null 2>&1 || true
+    echo "🔄 Updating managed Kio repository in $KIO_REPO_DIR to '$ref'..."
+    local fetch_log
+    if fetch_log=$(git -C "$KIO_REPO_DIR" fetch --depth 1 --force origin "$ref" 2>&1) \
+       && fetch_log=$(git -C "$KIO_REPO_DIR" checkout --quiet --force --detach FETCH_HEAD 2>&1); then
+      case "$ref" in v[0-9]*) git -C "$KIO_REPO_DIR" tag -f "$ref" HEAD >/dev/null 2>&1 || true ;; esac
+      echo "   └── ✅ Now at $ref ($(git -C "$KIO_REPO_DIR" rev-parse --short HEAD))"
+    else
+      echo "❌ ERROR: could not update $KIO_REPO_DIR to '$ref'." >&2
+      echo "$fetch_log" | sed 's/^/      /' >&2
+      echo "   Skills will keep using the copy already on disk ($(git -C "$KIO_REPO_DIR" rev-parse --short HEAD 2>/dev/null || echo unknown))." >&2
+      echo "   Fix the problem above, or delete $KIO_REPO_DIR and run the installer again." >&2
+      KIO_UPDATE_FAILED=true
+    fi
   elif [ ! -d "$KIO_REPO_DIR/skills/kio-frontend-craft" ]; then
-    echo "🌐 Piped/standalone install detected — fetching Kio repository to $KIO_REPO_DIR..."
+    echo "🌐 Piped/standalone install detected — fetching Kio '$ref' to $KIO_REPO_DIR..."
     rm -rf "$KIO_REPO_DIR"
     if command -v git >/dev/null 2>&1; then
-      git clone --depth 1 "$KIO_REPO_URL" "$KIO_REPO_DIR"
+      if ! git clone --quiet --depth 1 --branch "$ref" "$KIO_REPO_URL" "$KIO_REPO_DIR"; then
+        echo "❌ Error: git clone of '$ref' from $KIO_REPO_URL failed." >&2
+        exit 1
+      fi
     elif command -v curl >/dev/null 2>&1 && command -v tar >/dev/null 2>&1; then
+      local tarball_url="$KIO_TARBALL_URL"
+      if [ -z "${KIO_TARBALL_URL_SET:-}" ]; then
+        case "$ref" in
+          v[0-9]*) tarball_url="https://github.com/toanpham2111/kio-agent-system/archive/refs/tags/$ref.tar.gz" ;;
+          *)       tarball_url="https://github.com/toanpham2111/kio-agent-system/archive/refs/heads/$ref.tar.gz" ;;
+        esac
+      fi
       mkdir -p "$KIO_REPO_DIR"
-      curl -fsSL "$KIO_TARBALL_URL" | tar -xz --strip-components=1 -C "$KIO_REPO_DIR"
+      if ! curl -fsSL "$tarball_url" | tar -xz --strip-components=1 -C "$KIO_REPO_DIR"; then
+        echo "❌ Error: downloading $tarball_url failed." >&2
+        exit 1
+      fi
     else
       echo "❌ Error: Neither 'git' nor 'curl + tar' is available to download Kio skills."
       exit 1
@@ -307,6 +356,12 @@ install_skills() {
 
   echo ""
   echo "================================================================="
+  if [ "$KIO_UPDATE_FAILED" = true ]; then
+    echo "⚠️  Links are in place, but the Kio update FAILED (see the error above)."
+    echo "   Your skills still point at the previous version on disk."
+    echo "================================================================="
+    exit 2
+  fi
   echo "✅ SUCCESS: Selected Kio skills installed/updated!"
   echo "   Ownership: Tracked in $MANIFEST_FILE"
   echo "   Preserved: All existing user skills untouched."
@@ -436,6 +491,10 @@ show_help() {
   echo "  ./setup.sh --uninstall             Safely remove Kio skills (preserves user skills)"
   echo "  ./setup.sh --interactive           Open interactive menu"
   echo "  ./setup.sh --help                  Show this help"
+  echo ""
+  echo "Environment:"
+  echo "  KIO_REF=v1.2.0 | main              Version for piped installs (default: latest release tag)"
+  echo "  KIO_REPO_URL=<git url>             Alternative repository"
   echo ""
   echo "Examples:"
   echo "  ./setup.sh --skill frontend"

@@ -12,7 +12,8 @@ argument-hint: "[command] [query]"
 license: MIT
 compatibility: "Requires DataForSEO MCP server"
 metadata:
-  author: Kio System
+  author: AgriciDaniel
+  maintainer: Kio System
   version: "2.5.0"
   category: seo
 ---

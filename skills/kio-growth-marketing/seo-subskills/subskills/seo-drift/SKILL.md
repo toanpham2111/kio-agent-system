@@ -10,7 +10,9 @@ user-invocable: true
 argument-hint: "baseline|compare|history <url>"
 license: MIT
 metadata:
-  author: Kio System
+  author: AgriciDaniel
+  original_author: "Dan Colta (Pro Hub Challenge)"
+  maintainer: Kio System
   version: "2.5.0"
   category: seo
 ---

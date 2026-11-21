@@ -65,6 +65,7 @@ UI belongs to `kio-frontend-craft`; security review, test cases and Playwright t
 5. **Zero-downtime migrations.** `lock_timeout`, `CREATE INDEX CONCURRENTLY`, `NOT VALID` → `VALIDATE` constraints, expand/contract for renames and type changes.
 6. **Lean architecture (< 700 lines/file).** Layers `Routes/Controllers` → `Services` → `Repositories/Models`; no file over 700 lines.
 7. **Safe errors.** Consistent JSON errors without stack traces or SQL; logs carry a request ID and never card data or secrets.
+8. **Language:** answer in the language of the user's request (an English prompt gets an English answer), even when skill documents are written in another language.
 
 ## 📦 What's included
 

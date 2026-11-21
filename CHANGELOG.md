@@ -4,6 +4,30 @@ All notable changes to the **Kio** project are documented here following the [Ke
 
 ---
 
+## [1.2.0] - 2026-11-21 — QA & Security Upgrade, Release-Pinned Installer, Complete Attribution
+
+### 🧪 `kio-qa-security` 3.0.0
+- **Restored content lost in the skill consolidation:** TDD and systematic debugging (root-cause tracing, defense in depth, condition-based waiting, `find-polluter.sh`, TDD pressure scenarios), the 4 pstack deep-review modes (blast-radius, interrogate, arena, correct), the Playwright E2E guide, and the CodeQL/Semgrep workflows and scripts with their test suite.
+- **New:** `references/codeql/SKILL.md` (two-stage review, 5-layer checklist, "each Bash call is a fresh shell", CodeQL database discovery). 168/173 script tests pass; 2 more pass with Semgrep installed; 3 need an upstream `workflows/codeql-build.js` that was never shipped.
+- **New router** (VI/EN), full English editions, `THIRD_PARTY_NOTICES.md`.
+
+- **Answer language:** the benchmark showed the Vietnamese `SKILL.md` made the model answer an English prompt in Vietnamese (QA-01). The FE/BE/QA routers now tell the model to answer in the user's language (growth already did). Added after the benchmark run.
+
+### 🛡️ Installer
+- `curl | bash` / `irm | iex` install the **latest release tag** instead of `main`; choose another version with `KIO_REF`.
+- Failed updates are no longer swallowed: the git error is printed, the summary says the old copy is still in use, and the installer exits `2`; a failed fresh clone/download exits `1`.
+- `release.sh` refuses to tag unless local `main` equals `origin/main`.
+
+### 🙏 Attribution
+- 79 sub-skills record their original `author` (Corey Haines, AgriciDaniel, puneetindersingh) with `maintainer: Kio System`; the 5 SEO `original_author` credits are restored.
+- 21 SEO `LICENSE.txt` files carry the upstream copyright plus a Kio "Modifications" line.
+- The root `THIRD_PARTY_NOTICES.md` is now a complete index: adds Vercel, Anthropic, Profound, Knowatoa, ConversionKit, rowbound, Ploy, Phosphor, Google Fonts, pstack, Trail of Bits; inspirations: Ivan Falco, Gooseworks, spec-kit, Alibaba open-code-review.
+
+### 🧪 Benchmarks
+- Re-ran all 10 A/B scenarios on Claude Code (Sonnet 5.5 generation, blind Opus 5.5 judge, n = 1): average 7.61 → 8.01 (+0.40); 5 scenarios improved (FE-01 +3.8), 1 unchanged, 4 lower. The v1.0.2 results are kept as a historical section. Harness: `evaluations/harness/run_bench.py`; evidence: `evaluations/results-v1.2.0/`.
+
+---
+
 ## [1.1.0] - 2026-11-21 — Kio Skill Routers & Restored Content
 
 ### 🎨 `kio-frontend-craft` 3.0.0
@@ -23,7 +47,7 @@ All notable changes to the **Kio** project are documented here following the [Ke
 - **New router** (`SKILL.md`, `SKILL.md`): routing table for all 79 sub-skills (53 modules + 26 SEO Engine sub-skills), 17 merge rules for overlapping modules, 7 multi-module workflows and module name resolution.
 - **SEO Engine runs**: added the missing `seo-subskills/requirements.txt`, remapped `${CLAUDE_PLUGIN_ROOT}/skills/` to Kio's `subskills/` layout, added script-running instructions.
 - **Internal links**: rewrote 150 external GitHub links as relative links, fixed 25 broken links.
-- **Branding & licensing**: author metadata of all 79 sub-skills is now Kio System; open-source credits (MIT / CC BY 4.0) consolidated in `THIRD_PARTY_NOTICES.md`; fixed misattributed book/framework citations.
+- **Branding & licensing**: all 79 sub-skills keep their original `author` with `maintainer: Kio System`, the 5 SEO `original_author` credits are restored, and the SEO `LICENSE.txt` files carry the upstream copyright plus a "Modifications" line; open-source credits (MIT / CC BY 4.0) consolidated in `THIRD_PARTY_NOTICES.md`; fixed misattributed book/framework citations.
 - Fixed the English SEO Engine file (broken command, non-existent `seo-report` sub-skill).
 
 ---

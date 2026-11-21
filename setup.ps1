@@ -71,7 +71,6 @@ $HomeDir = [System.Environment]::GetFolderPath('UserProfile')
 $KioConfigDir = Join-Path $HomeDir ".kio"
 $KioRepoDir = Join-Path $KioConfigDir "repo"
 $KioRepoUrl = if ($env:KIO_REPO_URL) { $env:KIO_REPO_URL } else { "https://github.com/toanpham2111/kio-agent-system.git" }
-$KioZipUrl = if ($env:KIO_ZIP_URL) { $env:KIO_ZIP_URL } else { "https://github.com/toanpham2111/kio-agent-system/archive/refs/heads/main.zip" }
 $ManifestFile = Join-Path $KioConfigDir "manifest.json"
 
 $ScriptPath = $PSCommandPath
@@ -97,6 +96,23 @@ if ($ScriptPath -and (Test-Path $ScriptPath)) {
     $SkillsSrcDir = [System.IO.Path]::GetFullPath((Join-Path $KioRepoDir "skills"))
 }
 
+$script:KioUpdateFailed = $false
+
+# Version for piped installs: $env:KIO_REF (tag like v1.2.0, or a branch like main) wins;
+# otherwise the newest released v* tag, so a piped install never picks up unreleased work.
+function Resolve-KioRef {
+    if ($env:KIO_REF) { return $env:KIO_REF }
+    if (Get-Command git -ErrorAction SilentlyContinue) {
+        $Lines = git ls-remote --tags --refs --sort=-v:refname $KioRepoUrl 'v*' 2>$null
+        if ($LASTEXITCODE -eq 0 -and $Lines) {
+            $First = @($Lines)[0]
+            return ($First -replace '^.*refs/tags/', '').Trim()
+        }
+    }
+    Write-Host "[WARN] Could not list Kio release tags from $KioRepoUrl; falling back to 'main'." -ForegroundColor Yellow
+    return "main"
+}
+
 function Ensure-KioRepoSource {
     if (-not $UsingManagedRepo -and (Test-Path (Join-Path $SkillsSrcDir "kio-frontend-craft"))) {
         return
@@ -104,23 +120,51 @@ function Ensure-KioRepoSource {
     if (-not (Test-Path $KioConfigDir)) {
         New-Item -ItemType Directory -Path $KioConfigDir -Force | Out-Null
     }
+    $Ref = Resolve-KioRef
     $ManagedGitDir = Join-Path $KioRepoDir ".git"
     $ManagedCheck = Join-Path $KioRepoDir "skills\kio-frontend-craft"
     if ((Test-Path $ManagedGitDir) -and (Get-Command git -ErrorAction SilentlyContinue)) {
-        Write-Host "[UPDATE] Syncing managed Kio repository in $KioRepoDir..." -ForegroundColor Cyan
-        git -C $KioRepoDir pull --ff-only origin main 2>$null | Out-Null
+        Write-Host "[UPDATE] Updating managed Kio repository in $KioRepoDir to '$Ref'..." -ForegroundColor Cyan
+        $Log = git -C $KioRepoDir fetch --depth 1 --force origin $Ref 2>&1 | Out-String
+        $Ok = ($LASTEXITCODE -eq 0)
+        if ($Ok) {
+            $Log += git -C $KioRepoDir checkout --quiet --force --detach FETCH_HEAD 2>&1 | Out-String
+            $Ok = ($LASTEXITCODE -eq 0)
+        }
+        if ($Ok) {
+            if ($Ref -match '^v[0-9]') { git -C $KioRepoDir tag -f $Ref HEAD 2>&1 | Out-Null }
+            $Short = (git -C $KioRepoDir rev-parse --short HEAD).Trim()
+            Write-Host "     |-- [OK] Now at $Ref ($Short)" -ForegroundColor Green
+        } else {
+            Write-Host "[ERROR] Could not update $KioRepoDir to '$Ref'." -ForegroundColor Red
+            Write-Host $Log -ForegroundColor Red
+            Write-Host "   Skills will keep using the copy already on disk. Fix the problem above, or delete $KioRepoDir and run the installer again." -ForegroundColor Red
+            $script:KioUpdateFailed = $true
+        }
     } elseif (-not (Test-Path $ManagedCheck)) {
-        Write-Host "[FETCH] Piped/standalone install detected - fetching Kio repository to $KioRepoDir..." -ForegroundColor Cyan
+        Write-Host "[FETCH] Piped/standalone install detected - fetching Kio '$Ref' to $KioRepoDir..." -ForegroundColor Cyan
         if (Test-Path $KioRepoDir) {
             Remove-Item $KioRepoDir -Recurse -Force
         }
         if (Get-Command git -ErrorAction SilentlyContinue) {
-            git clone --depth 1 $KioRepoUrl $KioRepoDir
+            git clone --quiet --depth 1 --branch $Ref $KioRepoUrl $KioRepoDir
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "[ERROR] git clone of '$Ref' from $KioRepoUrl failed." -ForegroundColor Red
+                exit 1
+            }
         } else {
-            $TempZip = Join-Path $KioConfigDir "kio-main.zip"
+            if ($env:KIO_ZIP_URL) { $ZipUrl = $env:KIO_ZIP_URL }
+            elseif ($Ref -match '^v[0-9]') { $ZipUrl = "https://github.com/toanpham2111/kio-agent-system/archive/refs/tags/$Ref.zip" }
+            else { $ZipUrl = "https://github.com/toanpham2111/kio-agent-system/archive/refs/heads/$Ref.zip" }
+            $TempZip = Join-Path $KioConfigDir "kio-download.zip"
             $TempExtract = Join-Path $KioConfigDir "kio-extract"
             if (Test-Path $TempExtract) { Remove-Item $TempExtract -Recurse -Force }
-            Invoke-WebRequest -Uri $KioZipUrl -OutFile $TempZip -UseBasicParsing
+            try {
+                Invoke-WebRequest -Uri $ZipUrl -OutFile $TempZip -UseBasicParsing -ErrorAction Stop
+            } catch {
+                Write-Host "[ERROR] Downloading $ZipUrl failed: $($_.Exception.Message)" -ForegroundColor Red
+                exit 1
+            }
             Expand-Archive -Path $TempZip -DestinationPath $TempExtract -Force
             $InnerFolder = Get-ChildItem -Path $TempExtract -Directory | Select-Object -First 1
             Move-Item -Path $InnerFolder.FullName -Destination $KioRepoDir -Force
@@ -453,6 +497,12 @@ foreach ($TargetDir in $TargetSkillsDirs) {
 
 Write-Host ""
 Write-Host "=================================================================" -ForegroundColor Cyan
+if ($script:KioUpdateFailed) {
+    Write-Host "[WARN] Links are in place, but the Kio update FAILED (see the error above)." -ForegroundColor Yellow
+    Write-Host "   Your skills still point at the previous version on disk." -ForegroundColor Yellow
+    Write-Host "=================================================================" -ForegroundColor Cyan
+    exit 2
+}
 Write-Host "[OK] SUCCESS: Selected Kio skills installed/updated!" -ForegroundColor Green
 Write-Host "   Ownership: Tracked in $ManifestFile" -ForegroundColor Green
 Write-Host "   Preserved: All existing user skills untouched." -ForegroundColor Green

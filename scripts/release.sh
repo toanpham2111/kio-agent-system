@@ -110,6 +110,26 @@ echo "================================================================="
 
 cd "$REPO_ROOT"
 
+# 1.5 Refuse to release a stale or diverged checkout (the tag must point at origin/main)
+echo "🔍 Checking that local main matches origin/main..."
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$CURRENT_BRANCH" != "main" ]; then
+  echo "❌ Error: releases are cut from 'main' (current branch: $CURRENT_BRANCH)."
+  exit 1
+fi
+git fetch --quiet origin main
+if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+  if git merge-base --is-ancestor HEAD origin/main; then
+    echo "❌ Error: local main is behind origin/main. Run 'git pull --ff-only' first."
+  else
+    echo "❌ Error: local main has diverged from origin/main. Reconcile before releasing."
+  fi
+  echo "   local:  $(git log --oneline -1 HEAD)"
+  echo "   origin: $(git log --oneline -1 origin/main)"
+  exit 1
+fi
+echo "✅ main is up to date with origin/main."
+
 # 2. Check GitHub CLI Authentication
 echo "🔍 Checking GitHub authentication..."
 if ! "$GH_CMD" auth status >/dev/null 2>&1; then

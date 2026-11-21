@@ -8,7 +8,8 @@ user-invocable: true
 argument-hint: "[url or generate]"
 license: MIT
 metadata:
-  author: Kio System
+  author: AgriciDaniel
+  maintainer: Kio System
   version: "2.5.0"
   category: seo
 ---

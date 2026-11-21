@@ -9,7 +9,9 @@ user-invocable: true
 argument-hint: "<seed-keyword or url>"
 license: MIT
 metadata:
-  author: Kio System
+  author: AgriciDaniel
+  original_author: "Lutfiya Miller (Pro Hub Challenge Winner)"
+  maintainer: Kio System
   version: "2.5.0"
   category: seo
 ---

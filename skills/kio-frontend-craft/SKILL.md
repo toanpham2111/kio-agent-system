@@ -73,6 +73,7 @@ APIs, databases and payments belong to `kio-backend-cloud`; Playwright UI testin
 4. **Performance is a delivery requirement.** LCP < 2.5 s, CLS < 0.1 (target 0), INP < 200 ms on mobile; images carry dimensions and `aspect-ratio`.
 5. **React 19 / Next.js:** Server Components by default, Client Components at the leaves; no sequential `await` waterfalls when work can run in parallel.
 6. **Motion respects `prefers-reduced-motion`** and animates only `transform`/`opacity`.
+7. **Language:** answer in the language of the user's request (an English prompt gets an English answer), even when skill documents are written in another language.
 
 ## 📦 What's included
 

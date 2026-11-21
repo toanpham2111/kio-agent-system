@@ -6,7 +6,8 @@ user-invocable: true
 license: MIT
 compatibility: "Requires nanobanana MCP server"
 metadata:
-  author: Kio System
+  author: AgriciDaniel
+  maintainer: Kio System
   version: "2.5.0"
   category: seo
 ---

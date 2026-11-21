@@ -6,7 +6,8 @@ argument-hint: "<url>"
 license: MIT
 compatibility: "Free: Common Crawl + verify always available. Optional: Moz API, Bing Webmaster, Keywords Everywhere (free signup). Premium: DataForSEO extension."
 metadata:
-  author: Kio System
+  author: AgriciDaniel
+  maintainer: Kio System
   version: "2.5.0"
   category: seo
 ---

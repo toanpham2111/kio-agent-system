@@ -10,7 +10,8 @@ user-invocable: true
 argument-hint: "[business-type]"
 license: MIT
 metadata:
-  author: Kio System
+  author: AgriciDaniel
+  maintainer: Kio System
   version: "2.5.0"
   category: seo
 ---
