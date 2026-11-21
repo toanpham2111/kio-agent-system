@@ -70,8 +70,10 @@ if ($List) {
 $HomeDir = [System.Environment]::GetFolderPath('UserProfile')
 $KioConfigDir = Join-Path $HomeDir ".kio"
 $KioRepoDir = Join-Path $KioConfigDir "repo"
+# Release tag installed in piped mode; bumped by scripts/release.sh. Set $env:KIO_REF = "main" for unreleased code.
+$KioRef = if ($env:KIO_REF) { $env:KIO_REF } else { "v1.0.2" }
 $KioRepoUrl = if ($env:KIO_REPO_URL) { $env:KIO_REPO_URL } else { "https://github.com/toanpham2111/kio-agent-system.git" }
-$KioZipUrl = if ($env:KIO_ZIP_URL) { $env:KIO_ZIP_URL } else { "https://github.com/toanpham2111/kio-agent-system/archive/refs/heads/main.zip" }
+$KioZipUrl = if ($env:KIO_ZIP_URL) { $env:KIO_ZIP_URL } else { "https://github.com/toanpham2111/kio-agent-system/archive/$KioRef.zip" }
 $ManifestFile = Join-Path $KioConfigDir "manifest.json"
 
 $ScriptPath = $PSCommandPath
@@ -107,15 +109,21 @@ function Ensure-KioRepoSource {
     $ManagedGitDir = Join-Path $KioRepoDir ".git"
     $ManagedCheck = Join-Path $KioRepoDir "skills\kio-frontend-craft"
     if ((Test-Path $ManagedGitDir) -and (Get-Command git -ErrorAction SilentlyContinue)) {
-        Write-Host "🔄 Syncing managed Kio repository in $KioRepoDir..." -ForegroundColor Cyan
-        git -C $KioRepoDir pull --ff-only origin main 2>$null | Out-Null
+        Write-Host "🔄 Syncing managed Kio repository in $KioRepoDir to $KioRef..." -ForegroundColor Cyan
+        git -C $KioRepoDir fetch --quiet --depth 1 origin $KioRef 2>$null | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            git -C $KioRepoDir -c advice.detachedHead=false checkout --quiet --detach FETCH_HEAD 2>$null | Out-Null
+        }
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "⚠️  Warning: could not update $KioRepoDir to $KioRef — keeping the currently installed version." -ForegroundColor Yellow
+        }
     } elseif (-not (Test-Path $ManagedCheck)) {
-        Write-Host "🌐 Piped/standalone install detected — fetching Kio repository to $KioRepoDir..." -ForegroundColor Cyan
+        Write-Host "🌐 Piped/standalone install detected — fetching Kio $KioRef to $KioRepoDir..." -ForegroundColor Cyan
         if (Test-Path $KioRepoDir) {
             Remove-Item $KioRepoDir -Recurse -Force
         }
         if (Get-Command git -ErrorAction SilentlyContinue) {
-            git clone --depth 1 $KioRepoUrl $KioRepoDir
+            git -c advice.detachedHead=false clone --quiet --depth 1 --branch $KioRef $KioRepoUrl $KioRepoDir
         } else {
             $TempZip = Join-Path $KioConfigDir "kio-main.zip"
             $TempExtract = Join-Path $KioConfigDir "kio-extract"

@@ -124,25 +124,65 @@ git config user.name "$VERIFIED_NAME"
 git config user.email "$VERIFIED_EMAIL"
 echo "✅ Git Author set to: $VERIFIED_NAME <$VERIFIED_EMAIL>"
 
-# 4. Check & Update Version Badges in Documentation
+# Published tags are immutable: an existing tag may only be reused to resume a release of the same commit.
+echo "🔍 Checking whether tag $VERSION already exists..."
+if ! git fetch origin --tags --quiet; then
+  echo "❌ Error: Could not fetch tags from origin (a local tag may conflict with the remote one)."
+  exit 1
+fi
+TAG_EXISTS=false
+if git rev-parse -q --verify "refs/tags/$VERSION" >/dev/null; then
+  TAG_EXISTS=true
+  if [ "$(git rev-parse "$VERSION^{commit}")" != "$(git rev-parse HEAD)" ]; then
+    echo "❌ Error: Tag $VERSION already exists on a different commit. Published tags are never moved."
+    echo "   Bump to a new version instead (e.g. the next patch version)."
+    exit 1
+  fi
+  echo "ℹ️  Tag $VERSION already points to HEAD — resuming release."
+fi
+
+# 4. Check & Update Version Badges and Installer Release Ref
 echo "📝 Updating release badges in README files..."
 sed -i -E "s/Release-v[0-9]+\.[0-9]+\.[0-9]+-blue\.svg/Release-$VERSION-blue.svg/g" README.md 2>/dev/null || true
 sed -i -E "s/Release-v[0-9]+\.[0-9]+\.[0-9]+-blue\.svg/Release-$VERSION-blue.svg/g" README.en.md 2>/dev/null || true
 
-# 5. Commit any pending release metadata
-if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$(git status --porcelain)" ]; then
-  echo "💾 Committing release metadata updates..."
-  git add -A
+echo "📝 Pinning installers to $VERSION..."
+sed -i -E 's/^KIO_REF="\$\{KIO_REF:-[^}]*\}"/KIO_REF="${KIO_REF:-'"$VERSION"'}"/' setup.sh
+sed -i -E 's/^(\$KioRef = if \(\$env:KIO_REF\) \{ \$env:KIO_REF \} else \{ )"[^"]*"/\1"'"$VERSION"'"/' setup.ps1
+if ! grep -qF "KIO_REF=\"\${KIO_REF:-$VERSION}\"" setup.sh || ! grep -qF "else { \"$VERSION\" }" setup.ps1; then
+  echo "❌ Error: Could not pin KIO_REF to $VERSION in setup.sh / setup.ps1."
+  exit 1
+fi
+
+# 5. Commit pending release metadata (tracked files only — untracked files are never released)
+git add -u
+UNTRACKED_FILES="$(git ls-files --others --exclude-standard)"
+if [ -n "$UNTRACKED_FILES" ]; then
+  echo "⚠️  Untracked files are NOT included in the release commit:"
+  echo "$UNTRACKED_FILES" | sed 's/^/     /'
+fi
+if ! git diff --cached --quiet; then
+  if [ "$TAG_EXISTS" = true ]; then
+    echo "❌ Error: Tag $VERSION already exists but there are new changes to release. Bump to a new version."
+    exit 1
+  fi
+  echo "💾 Committing release metadata updates:"
+  git diff --cached --name-only | sed 's/^/     /'
   git commit -m "chore(release): bump version to $VERSION"
   git push origin main
 else
-  echo "ℹ️  Working tree is already clean."
+  echo "ℹ️  No tracked changes to commit."
 fi
 
 # 6. Tag Primary Repository
-echo "🏷️  Tagging primary repo with $VERSION..."
-git tag -fa "$VERSION" -m "$TITLE"
-git push origin "$VERSION" --force
+if [ "$TAG_EXISTS" = true ]; then
+  echo "ℹ️  Tag $VERSION already exists on HEAD — skipping tag creation."
+  git push origin "refs/tags/$VERSION"
+else
+  echo "🏷️  Tagging primary repo with $VERSION..."
+  git tag -a "$VERSION" -m "$TITLE"
+  git push origin "refs/tags/$VERSION"
+fi
 
 # 7. Create GitHub Release on Primary Repository
 echo "📦 Publishing GitHub Release on $PRIMARY_REPO..."
@@ -161,9 +201,12 @@ echo "🌍 Synchronizing 100% Pure English Distribution to $PUBLIC_REPO..."
 
 # 9. Sync Tag on Public Repository
 echo "🏷️  Synchronizing tag $VERSION on $PUBLIC_REPO..."
-LATEST_PUBLIC_SHA=$("$GH_CMD" api "repos/$PUBLIC_REPO/commits?per_page=1" --jq '.[0].sha')
-"$GH_CMD" api -X PATCH "repos/$PUBLIC_REPO/git/refs/tags/$VERSION" -f sha="$LATEST_PUBLIC_SHA" -F force=true 2>/dev/null || \
-"$GH_CMD" api -X POST "repos/$PUBLIC_REPO/git/refs" -f ref="refs/tags/$VERSION" -f sha="$LATEST_PUBLIC_SHA" >/dev/null 2>&1 || true
+if "$GH_CMD" api "repos/$PUBLIC_REPO/git/ref/tags/$VERSION" >/dev/null 2>&1; then
+  echo "ℹ️  Tag $VERSION already exists on $PUBLIC_REPO — leaving it unchanged."
+else
+  LATEST_PUBLIC_SHA=$("$GH_CMD" api "repos/$PUBLIC_REPO/commits?per_page=1" --jq '.[0].sha')
+  "$GH_CMD" api -X POST "repos/$PUBLIC_REPO/git/refs" -f ref="refs/tags/$VERSION" -f sha="$LATEST_PUBLIC_SHA" >/dev/null
+fi
 
 # 10. Create GitHub Release on Public Repository
 echo "📦 Publishing GitHub Release on $PUBLIC_REPO..."

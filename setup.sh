@@ -14,8 +14,10 @@ set -e
 
 KIO_CONFIG_DIR="$HOME/.kio"
 KIO_REPO_DIR="$KIO_CONFIG_DIR/repo"
+# Release tag installed in piped mode; bumped by scripts/release.sh. Set KIO_REF=main for unreleased code.
+KIO_REF="${KIO_REF:-v1.0.2}"
 KIO_REPO_URL="${KIO_REPO_URL:-https://github.com/toanpham2111/kio-agent-system.git}"
-KIO_TARBALL_URL="${KIO_TARBALL_URL:-https://github.com/toanpham2111/kio-agent-system/archive/refs/heads/main.tar.gz}"
+KIO_TARBALL_URL="${KIO_TARBALL_URL:-https://github.com/toanpham2111/kio-agent-system/archive/$KIO_REF.tar.gz}"
 MANIFEST_FILE="$KIO_CONFIG_DIR/manifest.json"
 
 USING_MANAGED_REPO=false
@@ -168,13 +170,16 @@ ensure_kio_repo_source() {
   mkdir -p "$KIO_CONFIG_DIR"
 
   if [ -d "$KIO_REPO_DIR/.git" ] && command -v git >/dev/null 2>&1; then
-    echo "🔄 Syncing managed Kio repository in $KIO_REPO_DIR..."
-    git -C "$KIO_REPO_DIR" pull --ff-only origin main >/dev/null 2>&1 || true
+    echo "🔄 Syncing managed Kio repository in $KIO_REPO_DIR to $KIO_REF..."
+    if ! { git -C "$KIO_REPO_DIR" fetch --quiet --depth 1 origin "$KIO_REF" &&
+           git -C "$KIO_REPO_DIR" -c advice.detachedHead=false checkout --quiet --detach FETCH_HEAD; }; then
+      echo "⚠️  Warning: could not update $KIO_REPO_DIR to $KIO_REF — keeping the currently installed version."
+    fi
   elif [ ! -d "$KIO_REPO_DIR/skills/kio-frontend-craft" ]; then
-    echo "🌐 Piped/standalone install detected — fetching Kio repository to $KIO_REPO_DIR..."
+    echo "🌐 Piped/standalone install detected — fetching Kio $KIO_REF to $KIO_REPO_DIR..."
     rm -rf "$KIO_REPO_DIR"
     if command -v git >/dev/null 2>&1; then
-      git clone --depth 1 "$KIO_REPO_URL" "$KIO_REPO_DIR"
+      git -c advice.detachedHead=false clone --quiet --depth 1 --branch "$KIO_REF" "$KIO_REPO_URL" "$KIO_REPO_DIR"
     elif command -v curl >/dev/null 2>&1 && command -v tar >/dev/null 2>&1; then
       mkdir -p "$KIO_REPO_DIR"
       curl -fsSL "$KIO_TARBALL_URL" | tar -xz --strip-components=1 -C "$KIO_REPO_DIR"

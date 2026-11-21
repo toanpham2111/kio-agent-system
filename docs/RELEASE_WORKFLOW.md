@@ -60,11 +60,12 @@ flowchart TD
    ```markdown
    [![Release](https://img.shields.io/badge/Release-v1.0.x-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
    ```
-3. Ensure a clean working tree (`git status`).
+3. Pin the piped installers to the new tag: `KIO_REF` default in `setup.sh` and `$KioRef` default in `setup.ps1`.
+4. Ensure a clean working tree (`git status`).
 
 ### Step 2: Commit & Push to Primary Repo
 ```bash
-git add .
+git add -u
 git commit -m "chore(release): bump version to v1.0.x"
 git push origin main
 git tag v1.0.x
@@ -91,8 +92,7 @@ gh release create v1.0.x \
 # Retrieve latest commit SHA on kio-agent-system
 LATEST_SHA=$(gh api repos/toanpham2111/kio-agent-system/commits?per_page=1 --jq '.[0].sha')
 
-# Update or create tag v1.0.x on kio-agent-system
-gh api -X PATCH repos/toanpham2111/kio-agent-system/git/refs/tags/v1.0.x -f sha="$LATEST_SHA" -F force=true 2>/dev/null || \
+# Create tag v1.0.x on kio-agent-system (published tags are never moved — bump the version instead)
 gh api -X POST repos/toanpham2111/kio-agent-system/git/refs -f ref="refs/tags/v1.0.x" -f sha="$LATEST_SHA"
 
 # Create official GitHub Release on kio-agent-system

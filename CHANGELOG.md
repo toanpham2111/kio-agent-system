@@ -4,6 +4,15 @@ All notable changes to the **Kio** project are documented here following the [Ke
 
 ---
 
+## [Unreleased]
+
+### 🛡️ Release & Installer Hardening
+- **Piped installers install the latest release tag, not `main`**: `setup.sh` / `setup.ps1` clone, sync and download the tag pinned in `KIO_REF` (override with `KIO_REF=main` for unreleased code). A failed sync now prints a warning instead of silently keeping an old version.
+- **`scripts/release.sh` no longer commits untracked files**: stages tracked changes only (`git add -u`), lists what is committed, and warns about untracked files left out.
+- **Published tags are immutable**: `release.sh` refuses to move an existing tag on either repository; re-running for a tag already on `HEAD` resumes the release. It also pins `KIO_REF` in both installers to the new version.
+
+---
+
 ## [1.0.2] - 2026-11-21 — Piped Installer Auto-Clone, Version Unification, A/B Benchmarks & Open-Source Attribution
 
 ### 🚀 One-Line Piped Installer Enhancement (`setup.sh` & `setup.ps1`)
