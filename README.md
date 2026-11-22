@@ -57,7 +57,19 @@ Same request *"a fresh-seafood shop website in Da Nang with proper SEO"*, same m
 | Output / input tokens | **20,387 / 97,344** | 42,951 / 1,663,477 (96% cache reads) |
 | Cost | **US$0.33** | US$0.86 |
 
-¹ **Why is there also a 100 / 100 / 100 / 100?** The table shows the real result of this run. The Kio page lost points for 2 issues: a render-blocking Google Fonts stylesheet (Performance 98) and a missing favicon (Best Practices 96); the baseline scored 100 because it was only HTML + CSS with emoji and no photos. To confirm the cause, we **hand-fixed exactly those 2 lines** on the same Kio page (nothing else changed, see [`manual-fix.diff`](evaluations/showcase/seafood-v1.3/manual-fix.diff)) and re-ran Lighthouse: **100 / 100 / 100 / 100**. That number belongs to the hand-fixed page, **not** to a new skill run. Both fixes became mandatory skill rules in v1.3.0; the next test will show whether the skill reaches it on its own. Both versions of the page are in the [showcase](evaluations/showcase/seafood-v1.3/README.md) so you can run Lighthouse yourself.
+¹ **Why is there also a 100 / 100 / 100 / 100?** The table shows the real result of this run. The Kio page lost points for 2 issues: a render-blocking Google Fonts stylesheet (Performance 98) and a missing favicon (Best Practices 96); the baseline scored 100 because it was only HTML + CSS with emoji and no photos. To confirm the cause, we **hand-fixed exactly those 2 lines** on the same Kio page (nothing else changed, see [`manual-fix.diff`](evaluations/showcase/seafood-v1.3/manual-fix.diff)) and re-ran Lighthouse: **100 / 100 / 100 / 100**. That number belongs to the hand-fixed page, **not** to a new skill run. Both fixes became mandatory skill rules in v1.3.0; the re-run below shows what the skill does on its own. Both versions of the page are in the [showcase](evaluations/showcase/seafood-v1.3/README.md) so you can run Lighthouse yourself.
+
+**Re-run with the updated skill (same day, same prompt, same Sonnet 5.5, no hand edits):** the skill now loaded fonts without blocking and added a favicon on its own. This page used 5 real photos instead of 1, which exposed a new issue: on phones the hero downloaded the 1024 px file (184 KB), pushing mobile LCP to 3.2 s.
+
+| Re-run | Without skill | With Kio |
+|---|:---:|:---:|
+| **Blind judge score** (Opus 5.5, both pages re-scored) | 78 | **86** |
+| Lighthouse mobile | 100 / 96 / 100 / 100 | 92 / **100 / 100 / 100** |
+| Lighthouse desktop | 100 / 96 / 100 / 100 | **100 / 100 / 100 / 100** |
+| Misaligned rows desktop / mobile edge overflow | 2 / 1 | **0 / 0** |
+| Time / cost | — | 5 min 35 s / US$1.05 |
+
+The cause of Performance 92 was confirmed: adding a 768 px image step at ~60 KB lifts the same page to **99**. That fix is now in `stock_images.py` (480 / 768 px steps, harder compression for the hero) and is the "mobile LCP image ≤ ~80 KB" rule as of v1.3.2. Details: [showcase, re-run section](evaluations/showcase/seafood-v1.3/README.md#re-run-with-the-updated-skill).
 
 Kio produced a clearly better page on design, accessibility and form reliability, at roughly 2.6–4× the time and tokens. One run per condition. Details, full-page screenshots, source code and data: [`evaluations/showcase/seafood-v1.3`](evaluations/showcase/seafood-v1.3/README.md).
 

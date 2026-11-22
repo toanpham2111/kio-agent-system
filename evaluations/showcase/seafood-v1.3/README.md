@@ -48,6 +48,7 @@ Judge's notes:
 
 Lighthouse ran on localhost with the same locally built Tailwind CSS replacing the CDN for every page.
 
+
 ## Time, tokens and cost
 
 | | Without skill | With skill |
@@ -62,7 +63,38 @@ Lighthouse ran on localhost with the same locally built Tailwind CSS replacing t
 
 The skill run looked up a design system, fetched 7 stock photos and kept the 1 that fit, and checked its JSON-LD and FAQ before delivering — hence roughly 2.6–4× the time and tokens.
 
+## Re-run with the updated skill
+
+Same day, same prompt, same **Claude Sonnet 5.5**, using `kio-frontend-craft` after the font and favicon rules were added. No hand edits. The baseline page is unchanged but was re-scored in the same judging pass as the new page. Source: [`site-with-skill-rerun/`](site-with-skill-rerun/index.html).
+
+| Desktop 1440 px | Mobile 375 px |
+|:---:|:---:|
+| ![Desktop: left without skill, right with Kio (re-run)](images/rerun-desktop-compare.jpg) | ![Mobile: left without skill, right with Kio (re-run)](images/rerun-mobile-compare.jpg) |
+
+Full pages: [desktop](images/rerun-with-skill-desktop-full.jpg) · [mobile](images/rerun-with-skill-mobile-full.jpg).
+
+| | Without skill | With skill (re-run) |
+|---|:---:|:---:|
+| Blind judge (Opus 5.5) — total | 78 | **86** |
+| ↳ Design / Layout / SEO / Content / Ordering / A11y | 13 / 12 / 22 / 13 / 11 / 7 | **16** / 12 / 22 / 13 / **14** / **9** |
+| Lighthouse mobile — Perf / A11y / BP / SEO | 100 / 96 / 100 / 100 | 92 / **100** / **100** / 100 |
+| Lighthouse desktop | 100 / 96 / 100 / 100 | **100 / 100 / 100 / 100** |
+| Non-blocking Google Fonts / favicon | — | **yes / yes** (done by the skill) |
+| `layout-check.js` desktop misaligned / mobile overflow | 2 / 1 | **0 / 0** |
+| HTML entities in source | 1 | **0** |
+| JSON-LD | 1 block | 1 `@graph` block (Store, per-kg OfferCatalog, FAQPage) |
+| Images with `alt` | 0 images | 5/5 (credited stock photos) |
+| Time | 1 min 55 s | 5 min 35 s |
+| Output / input tokens | 20,387 / 97,344 | 49,022 / 2,306,718 (96% cache reads) |
+| Cost | US$0.33 | US$1.05 |
+
+Judge: the skill page wins on design, the order form (live running total, per-field errors, focus moved to the invalid field) and accessibility; SEO is even. The baseline scored 78 this time (75 the first time): the same page re-judged can move by a few points.
+
+**Why only 92 for mobile Performance?** This time the skill used 5 real photos. The hero only had 640 and 1024 px files; a 380 px slot on a 1.75× phone screen needs about 665 px, so the browser downloaded the 1024 px file (184 KB) and mobile LCP reached 3.2 s. Confirmed: adding a 768 px file at quality 60 (60 KB) gives the same page Performance **99** (LCP 2.3 s). As of v1.3.2, `stock_images.py` writes 480 / 768 / 1024 / 1600 px steps and compresses the hero harder, and the skill has a "mobile LCP image ≤ ~80 KB" rule.
+
+Remaining flaw to know about: on mobile the store name in the top bar is truncated with an ellipsis because the hotline button takes the space.
+
 ## Reading these results honestly
-- One run per condition; a re-run can differ.
+- One run without the skill, two with it (the first run and the re-run); every run can differ.
 - The judge score is one AI model's assessment against the rubric above, not an absolute measurement.
-- The skill is not perfect: the with-skill page still has 2 misaligned rows on desktop and a fixed mobile bar that covers some content — rule 10 and `layout-check.js` exist, but this run could not launch a browser to check itself.
+- The skill is not perfect: in the first run the with-skill page still has 2 misaligned rows on desktop and a fixed mobile bar that covers some content — rule 10 and `layout-check.js` exist, but this run could not launch a browser to check itself. The re-run has no misaligned rows, but mobile Performance is only 92 and the store name is cut off on mobile.

@@ -197,12 +197,13 @@ def slug(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")[:60] or "image"
 
 
-def unsplash_url(raw: str, width: int) -> str:
+def unsplash_url(raw: str, width: int, quality: int = 75) -> str:
     sep = "&" if "?" in raw else "?"
-    return f"{raw}{sep}w={width}&q=80&auto=format&fit=crop"
+    return f"{raw}{sep}w={width}&q={quality}&auto=format&fit=crop"
 
 
-def save_variants(data: bytes, out_dir: str, name: str, widths: list[int]) -> list[tuple[str, int, int]]:
+def save_variants(data: bytes, out_dir: str, name: str, widths: list[int],
+                  quality: int = 75) -> list[tuple[str, int, int]]:
     """Write WebP variants with Pillow when available; otherwise the original bytes once."""
     os.makedirs(out_dir, exist_ok=True)
     try:
@@ -213,7 +214,7 @@ def save_variants(data: bytes, out_dir: str, name: str, widths: list[int]) -> li
         for w in sorted({min(w, img.width) for w in widths}):
             h = round(img.height * w / img.width)
             path = os.path.join(out_dir, f"{name}-{w}.webp")
-            img.resize((w, h)).save(path, "WEBP", quality=80, method=6)
+            img.resize((w, h)).save(path, "WEBP", quality=quality, method=6)
             files.append((path, w, h))
         return files
     except ImportError:
@@ -251,19 +252,23 @@ def fetch(query: str, name: str, out_dir: str, provider: str = "auto", orientati
           width: int = 1600, alt: str | None = None, eager: bool = False) -> dict:
     r = best(search(query, 10, provider, orientation), orientation)
     alt = alt or r["alt"] or query
-    widths = [640, 1024, width]
+    # 480/768 matter on phones: a 380 px slot at DPR 1.75-2 needs ~700 px, and without a
+    # 768 step the browser downloads the 1024 file. The LCP (eager) image is compressed
+    # harder so it stays around 60 KB on mobile.
+    widths = [480, 768, 1024, width]
+    quality = 62 if eager else 75
     if r["hotlink_only"]:  # Unsplash: hotlink + count the download, never re-host
         if r.get("download_location"):
             try:
                 _get(r["download_location"], {"Authorization": f"Client-ID {os.environ['UNSPLASH_ACCESS_KEY']}"})
             except StockError as e:
                 print(f"warning: could not trigger Unsplash download event: {e}", file=sys.stderr)
-        srcset = [(unsplash_url(r["raw"], w), w) for w in widths]
+        srcset = [(unsplash_url(r["raw"], w, quality), w) for w in widths]
         h = round(r["height"] * width / r["width"])
         files = []
     else:
         data = _get(r["download"])
-        files = save_variants(data, out_dir, f"{name}-{slug(r['author'])}", widths)
+        files = save_variants(data, out_dir, f"{name}-{slug(r['author'])}", widths, quality)
         if files[0][1]:
             srcset = [(p.replace(os.sep, "/"), w) for p, w, _ in files]
             width, h = files[-1][1], files[-1][2]

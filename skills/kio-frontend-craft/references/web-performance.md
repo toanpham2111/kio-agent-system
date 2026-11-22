@@ -63,6 +63,7 @@ Always apply these rules **while writing code** (do not wait until the site is s
   - If using Google Fonts, always include `<link rel="preconnect" href="https://fonts.googleapis.com">` and `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>`, with `&display=swap` in the URL.
   - If self-hosting fonts, use `font-display: swap;` and preload the primary heading/body `.woff2` file.
   - **Never load the Google Fonts stylesheet as a render-blocking `<link rel="stylesheet">`.** Use `<link rel="preload" as="style" href="…" onload="this.onload=null;this.rel='stylesheet'">` plus a `<noscript>` fallback. In the Kio seafood test this alone moved mobile FCP/LCP from 1.8 s to 1.1 s and Performance from 98 to 100.
+- **Mobile LCP image:** keep it at or under ~80 KB and give `srcset` 480 / 768 px steps. In the Kio seafood re-test a 380 px hero slot at DPR 1.75 skipped the 640 file and downloaded the 1024 one (184 KB): mobile LCP 3.2 s, Performance 92. Adding a 768 px step at WebP quality ~60 (60 KB) brought LCP to 2.3 s and Performance to 99.
 - **Favicon:** always declare `<link rel="icon" …>` (an inline `data:image/svg+xml` icon is enough). A missing favicon is a 404 in the console and costs Best Practices points.
 
 ### 4. ⚡ Main-Thread & DOM Discipline (Mobile 4x CPU Slowdown Defense)

@@ -42,7 +42,7 @@ Never paste image URLs "found" on the web without the script: they break, show t
 - Never imply that people in stock photos are real staff or customers; never present stock images as real results (medical, before/after treatments).
 
 ## 5. Performance and display
-- Downloads are converted to **WebP** at 640 / 1024 / 1600 px when Pillow is installed (`pip install pillow`); otherwise the original file is kept.
+- Downloads are converted to **WebP** at 480 / 768 / 1024 / 1600 px (quality 75; the `--eager` hero uses 62 so the mobile LCP image stays around 60 KB) when Pillow is installed (`pip install pillow`); otherwise the original file is kept.
 - Always ship `width` and `height` (or `aspect-ratio`) so **CLS = 0**; only the hero uses `fetchpriority="high"`, everything else `loading="lazy"`.
 - Text over a photo needs a dark overlay/gradient so it reaches ≥ 4.5:1 contrast; re-check with the checklist in `ui-ux/pro-rules.md`.
 - Use `object-cover` with fixed-ratio frames in galleries so mixed photo sizes still line up.

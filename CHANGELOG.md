@@ -4,6 +4,20 @@ All notable changes to the **Kio** project are documented here following the [Ke
 
 ---
 
+## [1.3.2] - 2026-11-22 — Lighter Mobile Images & Seafood Test Re-run
+
+### 🎨 `kio-frontend-craft`
+- **`stock_images.py` adds 480 / 768 px image steps** (previously 640 / 1024 / 1600) and compresses the `--eager` hero at quality 62 (others 75). Reason: a 380 px slot on a 1.75–2× phone screen needs ~700 px, and without a 768 step the browser downloads the 1024 file.
+- **New rule: mobile LCP image ≤ ~80 KB**, `srcset` with 480 / 768 px steps, only the hero loads eagerly (SKILL.md rule 4, `references/web-performance.md`).
+- `test_stock_images.py` now checks the image steps and compression quality; all 150 frontend tests pass.
+
+### 🧪 Seafood site re-run (no hand edits)
+- The skill loaded fonts without blocking and added a favicon on its own. Lighthouse desktop 100/100/100/100, mobile 92/100/100/100; blind judge 86 vs 78 for the baseline; 0 misaligned rows, 0 edge overflow.
+- Mobile Performance 92 came from a 184 KB hero; adding a 768 px step (60 KB) gives 99. That fix ships in this release.
+- The README now states plainly that the earlier 100/100/100/100 came from a **2-line hand fix** (with `manual-fix.diff` and the fixed page to check), not from a skill run.
+
+---
+
 ## [1.3.1] - 2026-11-22 — Core Delivery Upgrade
 
 ### 👑 `kio-core-delivery` 3.0.0

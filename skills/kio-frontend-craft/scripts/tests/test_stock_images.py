@@ -125,7 +125,8 @@ class FetchTests(unittest.TestCase):
             rec = si.fetch("manicure", "hero", self.tmp, orientation="landscape", alt="Làm móng", eager=True)
         self.assertTrue(any("/photos/u1/download" in u for u, _ in self.calls))
         self.assertEqual(rec["files"], [])
-        self.assertIn("images.unsplash.com/photo-u1?ixid=abc&w=1600", rec["img"])
+        self.assertIn("images.unsplash.com/photo-u1?ixid=abc&w=1600&q=62", rec["img"])
+        self.assertIn(" 768w", rec["img"])
         self.assertNotRegex(rec["img"] + rec["credit_html"], r"&[a-zA-Z]+;|&#[0-9]+;")
         self.assertIn('fetchpriority="high"', rec["img"])
         self.assertIn('alt="Làm móng"', rec["img"])
@@ -135,13 +136,16 @@ class FetchTests(unittest.TestCase):
 
     def test_pexels_fetch_downloads_locally_lazy_and_credits(self):
         responses = {"api.pexels.com": PEXELS, "images.pexels.com/photos/42/o.jpeg": JPEG}
+        seen = {}
         with mock.patch.dict(os.environ, {"PEXELS_API_KEY": "PK"}), \
              mock.patch.object(si, "_get", fake_get(responses, self.calls)), \
-             mock.patch.object(si, "save_variants", lambda data, out, name, widths:
-                               [(os.path.join(out, f"{name}-{w}.webp"), w, round(w * 2 / 3)) for w in (640, 1024, 1600)]):
+             mock.patch.object(si, "save_variants", lambda data, out, name, widths, quality=75:
+                               seen.update(widths=widths, quality=quality) or
+                               [(os.path.join(out, f"{name}-{w}.webp"), w, round(w * 2 / 3)) for w in widths]):
             rec = si.fetch("spa stones", "gallery-1", self.tmp)
+        self.assertEqual(seen, {"widths": [480, 768, 1024, 1600], "quality": 75})
         self.assertIn('loading="lazy"', rec["img"])
-        self.assertIn("gallery-1-minh-tran-640.webp 640w", rec["img"])
+        self.assertIn("gallery-1-minh-tran-768.webp 768w", rec["img"])
         self.assertIn('width="1600" height="1067"', rec["img"])
         html_credit = open(os.path.join(self.tmp, "CREDITS.html")).read()
         self.assertIn("Minh Tran", html_credit)

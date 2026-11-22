@@ -79,6 +79,7 @@ APIs, databases and payments belong to `kio-backend-cloud`; Playwright UI testin
    - **Google Fonts must not block rendering:** load them with `<link rel="preload" as="style" href="…" onload="this.onload=null;this.rel='stylesheet'">` plus `<noscript><link rel="stylesheet" href="…"></noscript>`, `preconnect` to `fonts.googleapis.com` and `fonts.gstatic.com`, `display=swap`; at most 2 families × 3 weights (or system fonts when no web font is needed).
    - **Always ship a favicon** (`<link rel="icon" …>`, an inline `data:` SVG is fine); without it the browser logs a 404 and Best Practices drops.
    - Only the hero image gets `fetchpriority="high"`; correct `srcset`/`sizes` so phones do not download a larger image than needed.
+   - **Mobile LCP image ≤ ~80 KB** with 480 / 768 px steps in `srcset`: a 380 px slot on a 1.75–2× screen needs ~700 px, and without a 768 step the browser downloads the 1024 file. `stock_images.py` already writes these steps and compresses the `--eager` image harder. Image-heavy pages: only the hero loads eagerly, everything else `loading="lazy"`.
 5. **React 19 / Next.js:** Server Components by default, Client Components at the leaves; no sequential `await` waterfalls when work can run in parallel.
 6. **Motion respects `prefers-reduced-motion`** and animates only `transform`/`opacity`.
 7. **Language:** answer in the language of the user's request (an English prompt gets an English answer), even when skill documents are written in another language.

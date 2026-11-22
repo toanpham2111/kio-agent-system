@@ -1,0 +1,128 @@
+[
+  {
+    "file": "cua",
+    "query": "crab seafood",
+    "provider": "openverse",
+    "id": "dbfec89b-0e19-40e7-9440-3536fe8f2630",
+    "page": "https://www.flickr.com/photos/9341577@N08/4022617272",
+    "author": "flickr4jazz",
+    "author_url": "https://www.flickr.com/photos/9341577@N08",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0/",
+    "credit_html": "\"<a href=\"https://www.flickr.com/photos/9341577@N08/4022617272\">City Crab Seafood Company, Manhattan, New York City</a>\" by <a href=\"https://www.flickr.com/photos/9341577@N08\">flickr4jazz</a>, <a href=\"https://creativecommons.org/licenses/by/2.0/\">CC BY 2.0</a>",
+    "files": [
+      "assets/img/cua-flickr4jazz-640.webp",
+      "assets/img/cua-flickr4jazz-1024.webp"
+    ],
+    "hotlinked": false,
+    "img": "<img src=\"assets/img/cua-flickr4jazz-1024.webp\" srcset=\"assets/img/cua-flickr4jazz-640.webp 640w, assets/img/cua-flickr4jazz-1024.webp 1024w\" sizes=\"100vw\" width=\"1024\" height=\"682\" alt=\"Cua ghẹ tươi (ảnh minh họa)\" loading=\"lazy\" decoding=\"async\">"
+  },
+  {
+    "file": "muc",
+    "query": "squid cuttlefish seafood",
+    "provider": "openverse",
+    "id": "4080afc5-1902-46e4-80a4-44102f1bf544",
+    "page": "https://www.flickr.com/photos/30047235@N03/26424739501",
+    "author": "pburka",
+    "author_url": "https://www.flickr.com/photos/30047235@N03",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "credit_html": "\"<a href=\"https://www.flickr.com/photos/30047235@N03/26424739501\">Squid</a>\" by <a href=\"https://www.flickr.com/photos/30047235@N03\">pburka</a>, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC BY-SA 2.0</a>",
+    "files": [
+      "assets/img/muc-pburka-640.webp",
+      "assets/img/muc-pburka-1023.webp"
+    ],
+    "hotlinked": false,
+    "img": "<img src=\"assets/img/muc-pburka-1023.webp\" srcset=\"assets/img/muc-pburka-640.webp 640w, assets/img/muc-pburka-1023.webp 1023w\" sizes=\"100vw\" width=\"1023\" height=\"630\" alt=\"Mực tươi (ảnh minh họa)\" loading=\"lazy\" decoding=\"async\">"
+  },
+  {
+    "file": "oc",
+    "query": "steamed clams shellfish dish",
+    "provider": "openverse",
+    "id": "020daae3-6534-46b6-a040-5f70e1fd1e2e",
+    "page": "https://www.flickr.com/photos/63669472@N00/6375062755",
+    "author": "eekim",
+    "author_url": "https://www.flickr.com/photos/63669472@N00",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0/",
+    "credit_html": "\"<a href=\"https://www.flickr.com/photos/63669472@N00/6375062755\">Shellfish in Broth</a>\" by <a href=\"https://www.flickr.com/photos/63669472@N00\">eekim</a>, <a href=\"https://creativecommons.org/licenses/by/2.0/\">CC BY 2.0</a>",
+    "files": [
+      "assets/img/oc-eekim-640.webp",
+      "assets/img/oc-eekim-1024.webp"
+    ],
+    "hotlinked": false,
+    "img": "<img src=\"assets/img/oc-eekim-1024.webp\" srcset=\"assets/img/oc-eekim-640.webp 640w, assets/img/oc-eekim-1024.webp 1024w\" sizes=\"100vw\" width=\"1024\" height=\"768\" alt=\"Ốc sò tươi (ảnh minh họa)\" loading=\"lazy\" decoding=\"async\">"
+  },
+  {
+    "file": "hero",
+    "query": "Pike Place Market fish",
+    "provider": "openverse",
+    "id": "dd32ed70-f379-40c5-918f-3aaa517ab116",
+    "page": "https://www.flickr.com/photos/38315261@N00/374380229",
+    "author": "Sharon Mollerus",
+    "author_url": "https://www.flickr.com/photos/38315261@N00",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0/",
+    "credit_html": "\"<a href=\"https://www.flickr.com/photos/38315261@N00/374380229\">Salmon on Ice</a>\" by <a href=\"https://www.flickr.com/photos/38315261@N00\">Sharon Mollerus</a>, <a href=\"https://creativecommons.org/licenses/by/2.0/\">CC BY 2.0</a>",
+    "files": [
+      "assets/img/hero-sharon-mollerus-640.webp",
+      "assets/img/hero-sharon-mollerus-1024.webp"
+    ],
+    "hotlinked": false,
+    "img": "<img src=\"assets/img/hero-sharon-mollerus-1024.webp\" srcset=\"assets/img/hero-sharon-mollerus-640.webp 640w, assets/img/hero-sharon-mollerus-1024.webp 1024w\" sizes=\"100vw\" width=\"1024\" height=\"670\" alt=\"Quầy hải sản tươi trên đá lạnh (ảnh minh họa)\" fetchpriority=\"high\" decoding=\"async\">"
+  },
+  {
+    "file": "ca",
+    "query": "tuna Boqueria fish",
+    "provider": "openverse",
+    "id": "ba5c682a-19a5-4615-a86d-6a0d4a3ca0a1",
+    "page": "https://www.flickr.com/photos/93687832@N00/3176278987",
+    "author": "fishbone1",
+    "author_url": "https://www.flickr.com/photos/93687832@N00",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0/",
+    "credit_html": "\"<a href=\"https://www.flickr.com/photos/93687832@N00/3176278987\">tuna, Boqueria</a>\" by <a href=\"https://www.flickr.com/photos/93687832@N00\">fishbone1</a>, <a href=\"https://creativecommons.org/licenses/by/2.0/\">CC BY 2.0</a>",
+    "files": [
+      "assets/img/ca-fishbone1-640.webp",
+      "assets/img/ca-fishbone1-1024.webp"
+    ],
+    "hotlinked": false,
+    "img": "<img src=\"assets/img/ca-fishbone1-1024.webp\" srcset=\"assets/img/ca-fishbone1-640.webp 640w, assets/img/ca-fishbone1-1024.webp 1024w\" sizes=\"100vw\" width=\"1024\" height=\"799\" alt=\"Cá tươi (ảnh minh họa)\" loading=\"lazy\" decoding=\"async\">"
+  },
+  {
+    "file": "tom2",
+    "query": "shrimp on ice market",
+    "provider": "openverse",
+    "id": "9839dd9c-99c8-4180-b512-cae047511f3d",
+    "page": "https://www.flickr.com/photos/122654055@N06/23084439192",
+    "author": "unclibraries_commons",
+    "author_url": "https://www.flickr.com/photos/122654055@N06",
+    "license": "Public Domain Mark",
+    "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "credit_html": "\"<a href=\"https://www.flickr.com/photos/122654055@N06/23084439192\">[Sanitary Fish Market, Morehead City, N.C.]</a>\" by <a href=\"https://www.flickr.com/photos/122654055@N06\">unclibraries_commons</a>, <a href=\"https://creativecommons.org/publicdomain/mark/1.0/\">Public Domain Mark</a>",
+    "files": [
+      "assets/img/tom2-unclibraries-commons-640.webp",
+      "assets/img/tom2-unclibraries-commons-1024.webp"
+    ],
+    "hotlinked": false,
+    "img": "<img src=\"assets/img/tom2-unclibraries-commons-1024.webp\" srcset=\"assets/img/tom2-unclibraries-commons-640.webp 640w, assets/img/tom2-unclibraries-commons-1024.webp 1024w\" sizes=\"100vw\" width=\"1024\" height=\"651\" alt=\"Tôm tươi trên đá (ảnh minh họa)\" loading=\"lazy\" decoding=\"async\">"
+  },
+  {
+    "file": "tom",
+    "query": "Fresh Shrimp Seafood City",
+    "provider": "openverse",
+    "id": "1256fffb-a02f-4cea-91ad-8db2871a6495",
+    "page": "https://www.flickr.com/photos/91545223@N00/16314205622",
+    "author": "Benson Kua",
+    "author_url": "https://www.flickr.com/photos/91545223@N00",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "credit_html": "\"<a href=\"https://www.flickr.com/photos/91545223@N00/16314205622\">Fish Platter</a>\" by <a href=\"https://www.flickr.com/photos/91545223@N00\">Benson Kua</a>, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC BY-SA 2.0</a>",
+    "files": [
+      "assets/img/tom-benson-kua-640.webp",
+      "assets/img/tom-benson-kua-1024.webp"
+    ],
+    "hotlinked": false,
+    "img": "<img src=\"assets/img/tom-benson-kua-1024.webp\" srcset=\"assets/img/tom-benson-kua-640.webp 640w, assets/img/tom-benson-kua-1024.webp 1024w\" sizes=\"100vw\" width=\"1024\" height=\"683\" alt=\"Tôm tươi (ảnh minh họa)\" loading=\"lazy\" decoding=\"async\">"
+  }
+]
