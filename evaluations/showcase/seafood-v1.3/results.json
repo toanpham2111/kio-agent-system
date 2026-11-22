@@ -88,7 +88,8 @@
         "CLS": "0.011"
       }
     },
-    "why_with_skill_scored_lower": "Render-blocking Google Fonts stylesheet (~810 ms) plus 5 font files and a 115 KB hero photo delayed FCP/LCP to 1.8 s on mobile; a missing favicon logged a 404 (Best Practices 96). The baseline loaded only HTML + CSS (no photos, system fonts, emoji). Loading fonts non-blocking and adding a favicon gives 100/100/100/100; both fixes are now skill rules."
+    "why_with_skill_scored_lower": "Render-blocking Google Fonts stylesheet (~810 ms) plus 5 font files and a 115 KB hero photo delayed FCP/LCP to 1.8 s on mobile; a missing favicon logged a 404 (Best Practices 96). The baseline loaded only HTML + CSS (no photos, system fonts, emoji). Loading fonts non-blocking and adding a favicon gives 100/100/100/100; both fixes are now skill rules.",
+    "with_skill_after_fix_note": "Hand-fixed copy of the with-skill page (2 lines: non-blocking Google Fonts, favicon); see manual-fix.diff and site-with-skill-fixed/. Not a new skill run."
   },
   "layout_check": {
     "baseline": {

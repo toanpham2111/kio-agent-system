@@ -44,7 +44,7 @@ Judge's notes:
 
 **Why did the with-skill page score slightly lower on Lighthouse?** The baseline loaded only 2 files (HTML 39 KB + CSS 18 KB): no photos, system fonts, emoji — nothing to slow it down. The with-skill page added a real hero photo (115 KB) and a **render-blocking** Google Fonts stylesheet (~810 ms, 5 font files), pushing mobile FCP/LCP to 1.8 s (Performance 98), and it had **no favicon**, so the browser logged a 404 (Best Practices 96).
 
-**After fixing those two points** (non-blocking Google Fonts + a favicon, hero photo kept): **100 / 100 / 100 / 100** on mobile and desktop (mobile FCP/LCP 1.1 s). Both fixes are now mandatory skill rules.
+**Confirming the cause with a hand fix** (not a new skill run): exactly 2 lines changed on the same with-skill page — non-blocking Google Fonts and a favicon, hero photo and everything else unchanged ([`manual-fix.diff`](manual-fix.diff), fixed page: [`site-with-skill-fixed/`](site-with-skill-fixed/index.html)) — then Lighthouse again: **100 / 100 / 100 / 100** on mobile and desktop (mobile FCP/LCP 1.1 s). Both points became mandatory skill rules in v1.3.0; the skill's own score will be measured in the next test.
 
 Lighthouse ran on localhost with the same locally built Tailwind CSS replacing the CDN for every page.
 

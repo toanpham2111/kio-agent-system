@@ -49,7 +49,7 @@ Same request *"a fresh-seafood shop website in Da Nang with proper SEO"*, same m
 | | Without skill | With Kio |
 |---|:---:|:---:|
 | **Blind judge score** (Opus 5.5, out of 100) | 75 | **86** |
-| Lighthouse mobile — Perf / A11y / Best Practices / SEO | 100 / 96 / 100 / 100 | 98 / **100** / 96 / 100 → **100 / 100 / 100 / 100** after the skill fix ¹ |
+| Lighthouse mobile — Perf / A11y / Best Practices / SEO | 100 / 96 / 100 / 100 | 98 / **100** / 96 / 100 ¹ |
 | Contrast failures | main order button 2.8:1 | **0** |
 | Order form | shows success but sends nothing | validates and sends the order |
 | Mobile edge overflow / `&amp;` entities | 1 / 1 | **0 / 0** |
@@ -57,7 +57,7 @@ Same request *"a fresh-seafood shop website in Da Nang with proper SEO"*, same m
 | Output / input tokens | **20,387 / 97,344** | 42,951 / 1,663,477 (96% cache reads) |
 | Cost | **US$0.33** | US$0.86 |
 
-¹ The Kio page scored slightly lower because of a real hero photo, a render-blocking Google Fonts stylesheet and a missing favicon (the baseline was HTML + CSS with emoji only). Non-blocking fonts plus a favicon give 100/100/100/100; both are now mandatory skill rules.
+¹ **Why is there also a 100 / 100 / 100 / 100?** The table shows the real result of this run. The Kio page lost points for 2 issues: a render-blocking Google Fonts stylesheet (Performance 98) and a missing favicon (Best Practices 96); the baseline scored 100 because it was only HTML + CSS with emoji and no photos. To confirm the cause, we **hand-fixed exactly those 2 lines** on the same Kio page (nothing else changed, see [`manual-fix.diff`](evaluations/showcase/seafood-v1.3/manual-fix.diff)) and re-ran Lighthouse: **100 / 100 / 100 / 100**. That number belongs to the hand-fixed page, **not** to a new skill run. Both fixes became mandatory skill rules in v1.3.0; the next test will show whether the skill reaches it on its own. Both versions of the page are in the [showcase](evaluations/showcase/seafood-v1.3/README.md) so you can run Lighthouse yourself.
 
 Kio produced a clearly better page on design, accessibility and form reliability, at roughly 2.6–4× the time and tokens. One run per condition. Details, full-page screenshots, source code and data: [`evaluations/showcase/seafood-v1.3`](evaluations/showcase/seafood-v1.3/README.md).
 
