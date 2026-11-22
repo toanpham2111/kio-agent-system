@@ -4,6 +4,17 @@ All notable changes to the **Kio** project are documented here following the [Ke
 
 ---
 
+## [1.3.1] - 2026-11-22 — Core Delivery Upgrade
+
+### 👑 `kio-core-delivery` 3.0.0
+- **New router** (VI/EN): request triage (hotfix / bounded change / new feature), routing table, overlap rules, workflows and quality gates.
+- **Restored and added guides:** Socratic brainstorming, Visual Companion, Spec-Kit SDD (`spec-kit.md`, `spec-driven.md`), writing and executing plans, parallel subagent dispatch, Git worktrees, multi-CLI routing, 5-pillar executive audit, spec/plan reviewer prompts.
+- **Templates:** 5 Spec-Kit templates, 9 command workflows (`templates/commands/`), 7 on-disk planning templates (`task_plan.md`, `findings.md`, `progress.md`…).
+- **On-disk planning (planning-with-files):** 20 scripts (`scripts/planning/`: init-session, check-complete, plan-doctor, attest, ledger, inject…); paths adjusted for the Kio layout (`kio-core-delivery/scripts/planning/`); init-session, check-complete, plan-doctor and gate-stop smoke-tested.
+- **Credits:** `superpowers` (Jesse Vincent), GitHub Spec-Kit, `planning-with-files` (Ahmad Adi), all MIT, in the skill's and the root `THIRD_PARTY_NOTICES.md`.
+
+---
+
 ## [1.3.0] - 2026-11-22 — Automatic Stock Photos & Layout Checks for Frontend
 
 ### 🎨 `kio-frontend-craft`
