@@ -38,6 +38,29 @@ Instead, Kio provides ready-to-use skill packages following the standard `SKILL.
 
 ---
 
+## 🧪 Real-World Test: Without Skill vs With Kio
+
+Same request *"a fresh-seafood shop website in Da Nang with proper SEO"*, same model **Claude Sonnet 5.5**, one run without a skill and one with `kio-frontend-craft` (2026-11-22, Kio v1.3.0).
+
+| Desktop 1440 px | Mobile 375 px |
+|:---:|:---:|
+| ![Desktop: left without skill, right with Kio](evaluations/showcase/seafood-v1.3/images/desktop-compare.jpg) | ![Mobile: left without skill, right with Kio](evaluations/showcase/seafood-v1.3/images/mobile-compare.jpg) |
+
+| | Without skill | With Kio |
+|---|:---:|:---:|
+| **Blind judge score** (Opus 5.5, out of 100) | 75 | **86** |
+| Lighthouse mobile — Perf / A11y / Best Practices / SEO | 100 / 96 / 100 / 100 | 98 / **100** / 96 / 100 |
+| Contrast failures | main order button 2.8:1 | **0** |
+| Order form | shows success but sends nothing | validates and sends the order |
+| Mobile edge overflow / `&amp;` entities | 1 / 1 | **0 / 0** |
+| Time | **1 min 55 s** | 8 min 2 s |
+| Output / input tokens | **20,387 / 97,344** | 42,951 / 1,663,477 (96% cache reads) |
+| Cost | **US$0.33** | US$0.86 |
+
+Kio produced a clearly better page on design, accessibility and form reliability, at roughly 2.6–4× the time and tokens. One run per condition. Details, full-page screenshots, source code and data: [`evaluations/showcase/seafood-v1.3`](evaluations/showcase/seafood-v1.3/README.md).
+
+---
+
 ## ⚡ 2-Minute Quickstart
 
 You do not need to read through thousands of documentation files to start using Kio. Get up and running in 3 simple steps:

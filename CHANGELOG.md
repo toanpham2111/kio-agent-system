@@ -14,6 +14,10 @@ All notable changes to the **Kio** project are documented here following the [Ke
 - **`scripts/layout-check.js`:** console check at 375 px and 1440 px reporting `overflow`, `misaligned` and `wrappedButtons`; validated on five pages with no false positives.
 - 150 tests pass (13 new for stock photos).
 
+### 🧪 Real-world test on the home page
+- The README gains a section comparing a seafood shop site built by Sonnet 5.5 without a skill and with `kio-frontend-craft`: desktop/mobile screenshots, blind judge score (75 → 86/100), Lighthouse, SEO and layout checks, time, tokens and cost. Details and data in `evaluations/showcase/seafood-v1.3/`.
+- `layout-check.js` ignores full-bleed background media (`absolute` and as wide as its parent), previously reported as edge overflow.
+
 ### 🔧 Process
 - `docs/RELEASE_WORKFLOW.md` adds a README and repository About review for every change; `CLAUDE.md` records the convention for agents.
 

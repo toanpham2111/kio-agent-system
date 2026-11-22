@@ -4,6 +4,8 @@ This document summarizes the **A/B Comparative Benchmark Evidence (Baseline With
 
 ---
 
+> 🦐 **Latest real-world test (v1.3.0):** a seafood shop site, without skill vs with `kio-frontend-craft`, with desktop/mobile screenshots, Lighthouse, tokens and time — see [`showcase/seafood-v1.3`](showcase/seafood-v1.3/README.md).
+
 ## 🆕 v1.2.0 Re-run (current results)
 
 - **Kio version:** `v1.2.0` (frontend, backend, QA and growth skills at 3.0.0; core-delivery, wordpress-fse and cognitive unchanged since 1.0.2)
