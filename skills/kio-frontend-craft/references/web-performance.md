@@ -62,6 +62,8 @@ Always apply these rules **while writing code** (do not wait until the site is s
 - **Preconnect & Swap**:
   - If using Google Fonts, always include `<link rel="preconnect" href="https://fonts.googleapis.com">` and `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>`, with `&display=swap` in the URL.
   - If self-hosting fonts, use `font-display: swap;` and preload the primary heading/body `.woff2` file.
+  - **Never load the Google Fonts stylesheet as a render-blocking `<link rel="stylesheet">`.** Use `<link rel="preload" as="style" href="…" onload="this.onload=null;this.rel='stylesheet'">` plus a `<noscript>` fallback. In the Kio seafood test this alone moved mobile FCP/LCP from 1.8 s to 1.1 s and Performance from 98 to 100.
+- **Favicon:** always declare `<link rel="icon" …>` (an inline `data:image/svg+xml` icon is enough). A missing favicon is a 404 in the console and costs Best Practices points.
 
 ### 4. ⚡ Main-Thread & DOM Discipline (Mobile 4x CPU Slowdown Defense)
 - **DOM Size Limit**: Keep total DOM nodes `< 800` (warn at `> 1,000`, strictly `< 1,400`). Avoid unnecessary nested `<div>` wrappers.

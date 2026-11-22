@@ -42,7 +42,11 @@ Judge's notes:
 | HTML entities in source (`&amp;`…) | 1 | **0** |
 | Images with `alt` | 0 images (emoji only) | 1/1 (credited stock photo) |
 
-The with-skill Best Practices deduction is only the missing favicon. Lighthouse ran on localhost with the same locally built Tailwind CSS replacing the CDN for both pages.
+**Why did the with-skill page score slightly lower on Lighthouse?** The baseline loaded only 2 files (HTML 39 KB + CSS 18 KB): no photos, system fonts, emoji — nothing to slow it down. The with-skill page added a real hero photo (115 KB) and a **render-blocking** Google Fonts stylesheet (~810 ms, 5 font files), pushing mobile FCP/LCP to 1.8 s (Performance 98), and it had **no favicon**, so the browser logged a 404 (Best Practices 96).
+
+**After fixing those two points** (non-blocking Google Fonts + a favicon, hero photo kept): **100 / 100 / 100 / 100** on mobile and desktop (mobile FCP/LCP 1.1 s). Both fixes are now mandatory skill rules.
+
+Lighthouse ran on localhost with the same locally built Tailwind CSS replacing the CDN for every page.
 
 ## Time, tokens and cost
 

@@ -75,6 +75,10 @@ APIs, databases and payments belong to `kio-backend-cloud`; Playwright UI testin
 2. **No generic AI look.** No decorative neon purple gradients, identical 3-column bento grids, emoji as icons, or buzzword copy.
 3. **Accessibility is a delivery requirement.** Text contrast ≥ 4.5:1 (large text and controls ≥ 3:1) in light and dark; visible focus; fully keyboard operable; images have `alt`.
 4. **Performance is a delivery requirement.** LCP < 2.5 s, CLS < 0.1 (target 0), INP < 200 ms on mobile; images carry dimensions and `aspect-ratio`.
+   - **Target Lighthouse 100 / 100 / 100 / 100** (Performance, Accessibility, Best Practices, SEO) on mobile and desktop.
+   - **Google Fonts must not block rendering:** load them with `<link rel="preload" as="style" href="…" onload="this.onload=null;this.rel='stylesheet'">` plus `<noscript><link rel="stylesheet" href="…"></noscript>`, `preconnect` to `fonts.googleapis.com` and `fonts.gstatic.com`, `display=swap`; at most 2 families × 3 weights (or system fonts when no web font is needed).
+   - **Always ship a favicon** (`<link rel="icon" …>`, an inline `data:` SVG is fine); without it the browser logs a 404 and Best Practices drops.
+   - Only the hero image gets `fetchpriority="high"`; correct `srcset`/`sizes` so phones do not download a larger image than needed.
 5. **React 19 / Next.js:** Server Components by default, Client Components at the leaves; no sequential `await` waterfalls when work can run in parallel.
 6. **Motion respects `prefers-reduced-motion`** and animates only `transform`/`opacity`.
 7. **Language:** answer in the language of the user's request (an English prompt gets an English answer), even when skill documents are written in another language.

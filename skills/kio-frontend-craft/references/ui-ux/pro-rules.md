@@ -79,6 +79,7 @@ Before delivering app UI code, verify every item below. Start with the process s
 - [ ] Official brand assets are used with correct proportions and clear space
 - [ ] Pressed-state visuals do not shift layout bounds or cause jitter
 - [ ] Semantic theme tokens are used consistently (no ad-hoc per-screen hardcoded colors)
+- [ ] Lighthouse 100/100/100/100 on mobile and desktop: non-blocking Google Fonts (preload + onload swap), a favicon declared, hero image sized with `srcset`/`sizes`
 - [ ] No HTML entities in source (`&amp;`, `&nbsp;`, `&copy;`, `&#...;`): real characters only; `grep -nE '&[a-zA-Z]+;|&#[0-9]+;'` prints nothing
 
 ### Interaction
