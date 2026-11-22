@@ -60,7 +60,11 @@ flowchart TD
    ```markdown
    [![Release](https://img.shields.io/badge/Release-v1.0.x-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
    ```
-3. Ensure a clean working tree (`git status`).
+3. **Review the README and the About section on every change** (not only at release time):
+   - The "7 core skills" table and each skill's usage section in `README.md` **and** `README.md` match the new features (counts, script names, environment variables).
+   - The GitHub **About** of both repositories (description, website, topics) is still accurate; edit it on the repository page → ⚙️ next to "About", or `gh repo edit <repo> --description "..." --add-topic ...`.
+   - Record the change in `CHANGELOG.md` / `CHANGELOG.md` and `docs/releases/vX.Y.Z.md`.
+4. Ensure a clean working tree (`git status`).
 
 ### Step 2: Commit & Push to Primary Repo
 ```bash

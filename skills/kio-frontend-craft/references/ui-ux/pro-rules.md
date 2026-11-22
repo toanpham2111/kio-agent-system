@@ -79,6 +79,7 @@ Before delivering app UI code, verify every item below. Start with the process s
 - [ ] Official brand assets are used with correct proportions and clear space
 - [ ] Pressed-state visuals do not shift layout bounds or cause jitter
 - [ ] Semantic theme tokens are used consistently (no ad-hoc per-screen hardcoded colors)
+- [ ] No HTML entities in source (`&amp;`, `&nbsp;`, `&copy;`, `&#...;`): real characters only; `grep -nE '&[a-zA-Z]+;|&#[0-9]+;'` prints nothing
 
 ### Interaction
 - [ ] All tappable elements provide clear pressed feedback (ripple/opacity/elevation)
@@ -96,6 +97,8 @@ Before delivering app UI code, verify every item below. Start with the process s
 - [ ] Both themes are tested before delivery (not inferred from a single theme)
 
 ### Layout
+- [ ] Rows stay aligned at 375 px and 1440 px: stat numbers on one line (number above label), card prices/buttons pinned with `mt-auto`, no button label wrapping; `scripts/layout-check.js` returns empty `misaligned` and `wrappedButtons`
+- [ ] At 375 px no element extends past the 16 px gutters (console check in the router's rule 1 returns `[]`); multi-column grids use `grid-cols-1` on mobile and `min-w-0` children; no `overflow-hidden` hiding a spill
 - [ ] Safe areas are respected for headers, tab bars, and bottom CTA bars
 - [ ] Scroll content is not hidden behind fixed/sticky bars
 - [ ] Verified on small phone, large phone, and tablet (portrait + landscape)

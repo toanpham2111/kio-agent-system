@@ -13,6 +13,8 @@ Parts of the data, scripts and rules are adapted from the open-source projects b
 
 The web performance workflow in `references/web-performance.md` follows the public Cloudflare web performance audit approach; no Cloudflare source files are included.
 
+Stock photo services used at build time by `scripts/stock_images.py` (no images are redistributed with Kio): [Unsplash](https://unsplash.com/license) (Unsplash License, hotlinked, credit required by the API guidelines), [Pexels](https://www.pexels.com/license/) (Pexels License) and [Openverse](https://openverse.org) (each image keeps its own Creative Commons license). Credits for the images a page uses are written to `CREDITS.json` / `CREDITS.html` next to the images.
+
 ---
 
 ## MIT License (applies to every MIT project listed above)
