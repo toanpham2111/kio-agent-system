@@ -16,13 +16,36 @@ sys.path.insert(0, SCRIPTS_DIR)
 import kio_router
 
 class TestKioRouter(unittest.TestCase):
+    """Runs against stub claude/codex/agy executables on PATH, so the suite does not
+    depend on which AI CLIs the machine (or a CI runner) happens to have."""
+
+    @classmethod
+    def setUpClass(cls):
+        import tempfile
+        cls._bin = tempfile.TemporaryDirectory()
+        for name in ("claude", "codex", "agy"):
+            path = os.path.join(cls._bin.name, name)
+            with open(path, "w") as f:
+                f.write("#!/bin/sh\nexit 0\n")
+            os.chmod(path, 0o755)
+            if os.name == "nt":
+                with open(path + ".cmd", "w") as f:
+                    f.write("@exit /b 0\r\n")
+        cls._old_path = os.environ.get("PATH", "")
+        os.environ["PATH"] = cls._bin.name + os.pathsep + cls._old_path
+
+    @classmethod
+    def tearDownClass(cls):
+        os.environ["PATH"] = cls._old_path
+        cls._bin.cleanup()
+
 
     def test_detect_installed_engines(self):
         engines = kio_router.detect_installed_engines()
         self.assertIn("claude", engines)
         self.assertIn("codex", engines)
         self.assertIn("agy", engines)
-        # Verify at least one engine is installed on this test environment
+        # the stub binaries on PATH make every engine detectable
         installed_count = sum(1 for e in engines.values() if e["installed"])
         self.assertGreaterEqual(installed_count, 1)
 

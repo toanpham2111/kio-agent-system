@@ -110,6 +110,11 @@ $script:KioUpdateFailed = $false
 # Version for piped installs: $env:KIO_REF (tag like v1.2.0, or a branch like main) wins;
 # otherwise the newest released v* tag, so a piped install never picks up unreleased work.
 function Resolve-KioRef {
+    # git writes progress ("From ...", "Cloning into ...") to stderr. With
+    # $ErrorActionPreference = 'Stop' Windows PowerShell 5.1 turns that into a terminating
+    # error, so native calls in this function run with 'Continue' and are judged by
+    # $LASTEXITCODE. Function scope only: the caller's preference is untouched.
+    $ErrorActionPreference = 'Continue'
     if ($env:KIO_REF) { return $env:KIO_REF }
     if (Get-Command git -ErrorAction SilentlyContinue) {
         $Lines = git ls-remote --tags --refs --sort=-v:refname $KioRepoUrl 'v*' 2>$null
@@ -123,6 +128,11 @@ function Resolve-KioRef {
 }
 
 function Ensure-KioRepoSource {
+    # git writes progress ("From ...", "Cloning into ...") to stderr. With
+    # $ErrorActionPreference = 'Stop' Windows PowerShell 5.1 turns that into a terminating
+    # error, so native calls in this function run with 'Continue' and are judged by
+    # $LASTEXITCODE. Function scope only: the caller's preference is untouched.
+    $ErrorActionPreference = 'Continue'
     if (-not $UsingManagedRepo -and (Test-Path (Join-Path $SkillsSrcDir "kio-frontend-craft"))) {
         return
     }
