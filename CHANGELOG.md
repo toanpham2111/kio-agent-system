@@ -4,6 +4,20 @@ All notable changes to the **Kio** project are documented here following the [Ke
 
 ---
 
+## [1.4.5] - 2026-11-23 — README restructured
+
+The README follows a clearer layout, with details moved to `docs/`.
+
+### 📖 README
+- **New top:** logo, a one-line title, a short problem → solution paragraph, live badges (CI and latest release read from GitHub, license "MIT + exceptions", skills) and a short nav bar.
+- **Quickstart first** with a "Before you begin" line, then a table of contents.
+- **One "Results & Benchmarks" section** (real-world test + evaluation framework) with a new "What these results do not show" list: small samples, the time and cost, routers that were not opened.
+- New **Documentation**, **Community** and **Security** sections.
+- **Details moved out:** per-skill usage guide, repository structure and multi-agent workflows are now `docs/skills.md`, `docs/structure.md` and `docs/multi-agent.md` (each with a `.en.md` twin). The README went from ~520 to ~410 lines.
+- The release badge now reads the latest GitHub release itself, so `release.sh` and `docs/RELEASE_WORKFLOW` no longer need a manual badge edit.
+
+---
+
 ## [1.4.4] - 2026-11-23 — `/kio-update`
 
 ### ⌨️ New command

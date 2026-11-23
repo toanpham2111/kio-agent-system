@@ -56,10 +56,7 @@ flowchart TD
 
 ### Step 1: Bump Version & Update Documentation
 1. Update version number and changes in [CHANGELOG.md](../CHANGELOG.md).
-2. Update release badges in [README.md](../README.md) and [README.md](../README.md):
-   ```markdown
-   [![Release](https://img.shields.io/badge/Release-v1.0.x-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
-   ```
+2. The release badge in [README.md](../README.md) and [README.md](../README.md) reads the latest GitHub release by itself (`img.shields.io/github/v/release/...`); there is nothing to edit. It shows the new version once the GitHub Release exists.
 3. **Review the README and the About section on every change** (not only at release time):
    - The "7 core skills" table and each skill's usage section in `README.md` **and** `README.md` match the new features (counts, script names, environment variables).
    - The GitHub **About** of both repositories (description, website, topics) is still accurate; edit it on the repository page → ⚙️ next to "About", or `gh repo edit <repo> --description "..." --add-topic ...`.
