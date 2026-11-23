@@ -199,7 +199,7 @@ def _check_file(label, filepath, search_cols, output_cols, problems):
     elif label.startswith("stack:"):
         problems.append(
             f"[{label}] {filepath.name}: missing 'No' index column present in other stack files "
-            "(schema drift -- harmless for search, but inconsistent with the rest of data/stacks/)"
+            "(schema drift -- harmless for search, but inconsistent with the rest of assets/data/stacks/)"
         )
 
     return headers, rows

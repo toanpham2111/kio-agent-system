@@ -1,5 +1,7 @@
 # Specification-Driven Development (SDD)
 
+> **In Kio:** this essay comes from GitHub Spec-Kit. Each `/speckit.<step>` command below is available as `/kio-spec-<step>` after installing Kio (see `spec-kit.md`).
+
 ## The Power Inversion
 
 For decades, code has been king. Specifications served code—they were the scaffolding we built and then discarded once the "real work" of coding began. We wrote PRDs to guide development, created design docs to inform implementation, drew diagrams to visualize architecture. But these were always subordinate to the code itself. Code was truth. Everything else was, at best, good intentions. Code was the source of truth, and as it moved forward, specs rarely kept pace. As the asset (code) and the implementation are one, it's not easy to have a parallel implementation without trying to build from the code.

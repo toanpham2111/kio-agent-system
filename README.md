@@ -13,7 +13,7 @@
 **A modular, open-source collection of engineering skills designed for AI coding tools.**  
 *Plug-and-play skills for Frontend UI/UX, Backend APIs, Automated QA Testing, Marketing CRO, and WordPress FSE.*
 
-[🚀 Installation Guide](#-installation-guide) • [⚡ 2-Minute Quickstart](#-2-minute-quickstart) • [🧰 The 7 Core Skills](#-the-7-core-engineering-skills) • [📖 Per-Skill Usage Guide](#-per-skill-usage-guide-prompts--expected-outputs) • [🧪 Skill Evaluation Framework](#-skill-evaluation-framework) • [🧩 Compatibility Matrix](#-compatibility-matrix) • [❓ Troubleshooting & FAQ](#-troubleshooting--faq)
+[🚀 Installation Guide](#-installation-guide) • [⚡ 2-Minute Quickstart](#-2-minute-quickstart) • [⌨️ Quick Commands](#️-quick-commands-slash-commands) • [🧰 The 7 Core Skills](#-the-7-core-engineering-skills) • [📖 Per-Skill Usage Guide](#-per-skill-usage-guide-prompts--expected-outputs) • [🧪 Skill Evaluation Framework](#-skill-evaluation-framework) • [🧩 Compatibility Matrix](#-compatibility-matrix) • [❓ Troubleshooting & FAQ](#-troubleshooting--faq)
 
 </div>
 
@@ -106,6 +106,27 @@ Try pasting one of these tested prompts into your AI:
 
 ---
 
+## ⌨️ Quick Commands (Slash Commands)
+
+No prompts to memorise: the installer copies these commands into `~/.claude/commands`, `~/.codex/prompts`, `~/.cursor/commands` and `~/.gemini/commands` (Gemini uses `.toml`). Type the command and your request after it, for example `/kio-fe landing page for a nail salon`. Skills still trigger on their own when a request matches; commands just call the right one faster.
+
+| Command | Skill | Use it for |
+| :--- | :--- | :--- |
+| `/kio` | auto | Not sure which skill: Kio picks one and says which |
+| `/kio-fe` | `kio-frontend-craft` | Building or reviewing UI, landing pages, design systems |
+| `/kio-be` | `kio-backend-cloud` | APIs, databases, auth, payments, cloud |
+| `/kio-qa` | `kio-qa-security` | Tests, code review, debugging, security |
+| `/kio-plan` | `kio-core-delivery` | Planning and executing a multi-step change |
+| `/kio-seo` | `kio-growth-marketing` | SEO audits, technical SEO, schema, content |
+| `/kio-growth` | `kio-growth-marketing` | CRO, copywriting, launches, ads, email |
+| `/kio-wp` | `kio-wordpress-fse` | WordPress block themes, the S0–S8 pipeline |
+| `/kio-think` | `kio-cognitive` | First-principles analysis, comparing options |
+| `/kio-spec-constitution` → `/kio-spec-specify` → `/kio-spec-clarify` → `/kio-spec-plan` → `/kio-spec-tasks` → `/kio-spec-analyze` → `/kio-spec-implement` (plus `/kio-spec-checklist`, `/kio-spec-converge`) | `kio-core-delivery` | The Spec-Kit SDD flow, **no Spec-Kit CLI needed**; artifacts live in `specs/<NNN>-<name>/` |
+
+Kio's command files carry a `kio-command:` marker; updates only overwrite files with that marker, a file of yours with the same name is left alone, and uninstall removes only Kio's files.
+
+---
+
 ## 🚀 Installation Guide
 
 Kio installs as a set of safe, non-destructive symbolic links directly into your local AI tool configuration directories (`~/.claude/skills`, `~/.cursor/skills`, `~/.gemini/config/skills`).
@@ -171,7 +192,7 @@ All capabilities are organized into 7 self-contained master skills located in th
 | Skill Directory | Focus Area | What It Gives Your AI Assistant |
 | :--- | :--- | :--- |
 | **[`skills/kio-frontend-craft`](skills/kio-frontend-craft)** | **Frontend UI/UX & Motion** | 79 searchable styles, 192 contrast-checked palettes, 74 font pairings and 22 framework rule sets (search CLI), 64 React/Next.js performance rules, Core Web Vitals (PageSpeed 95–100) audits, the 9-pass /unslop redesign SOP, Lenis smooth scroll, PDF → responsive HTML, React Native / Expo / SwiftUI guides, **free stock photos with credits** (Unsplash, Pexels, Openverse) and a **layout check** (`layout-check.js`: no edge spill, aligned rows, no wrapped buttons, no HTML entities like `&amp;`). |
-| **[`skills/kio-backend-cloud`](skills/kio-backend-cloud)** | **Backend, DB & Cloud** | REST/GraphQL API and auth (anti-IDOR) design, payments with idempotent webhooks (Stripe, PayPal, VNPay, MoMo, PayOS, SePay — tested reference code), PostgreSQL / Supabase RLS, EXPLAIN-driven indexing, zero-downtime migrations, Docker, GitHub Actions, Terraform, RAG with pgvector, QLoRA fine-tuning, and MCP servers in Python or TypeScript. |
+| **[`skills/kio-backend-cloud`](skills/kio-backend-cloud)** | **Backend, DB & Cloud** | REST/GraphQL API and auth (anti-IDOR) design, payments with idempotent webhooks (Stripe, PayPal, VNPay, MoMo, PayOS, SePay — tested reference code that applies each event exactly once on PostgreSQL and SQLite), PostgreSQL / Supabase RLS, EXPLAIN-driven indexing, zero-downtime migrations, Docker, GitHub Actions, Terraform, RAG with pgvector, QLoRA fine-tuning, and MCP servers in Python or TypeScript. |
 | **[`skills/kio-qa-security`](skills/kio-qa-security)** | **Automated QA & Security** | 4-quadrant test matrices and unit-test templates (Vitest, Pytest, Go), TDD and systematic debugging (root-cause tracing, flaky-test and test-pollution tools), deep review of risky diffs (blast radius, interrogation, arena), security review with Semgrep and CodeQL SAST (scripts + tests), and Playwright E2E visual QA at 375/768/1440 px. |
 | **[`skills/kio-core-delivery`](skills/kio-core-delivery)** | **Planning & Delivery** | Socratic brainstorming with browser Visual Companion mockups, Spec-Kit SDD templates (`constitution.md`, `spec.md`, `plan.md`, `tasks.md`), 2–5 minute atomic task plans, persistent file-based working memory (`task_plan.md`, `findings.md`, `progress.md`), parallel subagent dispatch, Git worktrees, multi-engine AI CLI routing (`kio_router.py`), and 5-pillar executive audit sign-off. |
 | **[`skills/kio-growth-marketing`](skills/kio-growth-marketing)** | **Growth, CRO & SEO** | One router over 79 sub-skills: 53 growth modules (CRO, copywriting, pricing, email, ads, launches, analytics, RevOps…) and 26 SEO Engine sub-skills (technical SEO, schema, AI search / GEO, local SEO) with 19 agents and 60+ Python checks. |
@@ -351,6 +372,8 @@ kio-agent-system/
 │   ├── kio-growth-marketing/         # Conversion frameworks, technical SEO modules
 │   ├── kio-wordpress-fse/            # WordPress block theme creation pipeline
 │   └── kio-cognitive/                # Architecture rationale walkthroughs
+│        (every skill: SKILL.md, SKILL.md, THIRD_PARTY_NOTICES.md, references/, scripts/, assets/)
+├── commands/                         # 18 /kio-* slash commands (Claude Code, Codex, Cursor, Gemini CLI)
 ├── evaluations/                      # Skill Evaluation Framework & Live Benchmarks
 │   ├── SKILL_EVALUATION_FRAMEWORK.md # 21 verified test scenarios
 │   ├── benchmark-summary.md          # Live benchmark summary report
@@ -431,7 +454,7 @@ Kio is open source and licensed under the **[MIT License](LICENSE)**.
 Kio unifies, adapts, and extends open-source agent skill specifications, datasets, and tooling under the MIT License. We gratefully acknowledge the original authors and contributors of the following upstream open-source projects (full copyright notices are preserved in **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**):
 - **Marketing & CRO Frameworks**: Adapted and modularized from `marketingskills` by Corey Haines (`coreyhaines31/marketingskills`, MIT License).
 - **Technical SEO & GEO Sub-skills**: Adapted and integrated from `claude-seo` & `claude-ads` by Daniel Agrici (`AgriciDaniel/claude-seo`, MIT License), Ivan Kuznetsov (`ivankuznetsov/claude-seo`, MIT License), and `flow` framework prompts (CC BY 4.0).
-- **Frontend UI/UX Datasets**: Style, typography, and palette datasets in `skills/kio-frontend-craft/data/` adapted from `ui-ux-pro-max-skill` (`nextlevelbuilder/ui-ux-pro-max-skill`, MIT License), Google Fonts metadata, and Phosphor Icons.
+- **Frontend UI/UX Datasets**: Style, typography, and palette datasets in `skills/kio-frontend-craft/assets/data/` adapted from `ui-ux-pro-max-skill` (`nextlevelbuilder/ui-ux-pro-max-skill`, MIT License), Google Fonts metadata, and Phosphor Icons.
 - **SDD & Agent Workflows**: Adapted and extended from `superpowers` by Jesse Vincent (`obra/superpowers`, MIT License), GitHub Spec-Kit (`github/spec-kit`, MIT License), and `planning-with-files` by Ahmad Adi (`OthmanAdi/planning-with-files`, MIT License).
 - **React & Next.js Performance Rules**: The 64 rules in `skills/kio-frontend-craft/references/react/` are adapted from Vercel's React Best Practices (`vercel-labs/agent-skills`, MIT License).
 - **MCP Server Builder**: `skills/kio-backend-cloud/references/mcp-server-builder.md` is adapted from Anthropic's `mcp-builder` skill (`anthropics/skills`, Apache License 2.0).

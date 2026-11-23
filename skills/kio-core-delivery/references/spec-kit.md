@@ -21,14 +21,14 @@ Phase 1: Constitution ──► Phase 2: Specification ──► Phase 3: Archit
 ```
 
 ### Phase 1: Project Constitution (`.spec-kit/constitution.md`)
-Establishes non-negotiable project guardrails (template: [`../templates/constitution-template.md`](../templates/constitution-template.md)):
+Establishes non-negotiable project guardrails (template: [`../assets/templates/constitution-template.md`](../assets/templates/constitution-template.md)):
 - **Architecture Boundaries**: Fixed tech stack, allowed/forbidden libraries (YAGNI).
 - **Code Standards**: File size `< 700 lines`, 0 hardcoded credentials (100% `.env`).
 - **Security Baseline**: OWASP Top 10, sanitization, RBAC, data privacy.
 - **Verification Gates**: Minimum test coverage, Zero-False-Completion.
 
 ### Phase 2: Functional Specification (`.spec-kit/specs/{feature}/spec.md`)
-Defines **WHAT** must be built without guesswork (template: [`../templates/spec-template.md`](../templates/spec-template.md)):
+Defines **WHAT** must be built without guesswork (template: [`../assets/templates/spec-template.md`](../assets/templates/spec-template.md)):
 1. **User Stories & Actors**: Who does what and why.
 2. **Domain Model & Entities**: Core entities and their relationships.
 3. **Boundary Conditions & Edge Cases**: Exceptions, network failures, malformed input, race conditions.
@@ -44,14 +44,14 @@ Defines **WHAT** must be built without guesswork (template: [`../templates/spec-
    ```
 
 ### Phase 3: Architectural Plan (`.spec-kit/specs/{feature}/plan.md`)
-Defines **HOW** the system is built (template: [`../templates/plan-template.md`](../templates/plan-template.md)):
+Defines **HOW** the system is built (template: [`../assets/templates/plan-template.md`](../assets/templates/plan-template.md)):
 1. **System & Component Architecture**: Data-flow diagrams and module boundaries.
 2. **Database Schemas & Migrations**: Table schemas, indexes, foreign keys (`snake_case`).
 3. **API Contracts**: OpenAPI / JSON Schema / Typed Contracts (`/api/v1/...`).
 4. **Risk & Mitigation Analysis**: Technical risks and rollback/mitigation strategies.
 
 ### Phase 4: Atomic Tasks Breakdown (`.spec-kit/specs/{feature}/tasks.md`)
-Decomposes the plan into 2–5 minute atomic tasks (template: [`../templates/tasks-template.md`](../templates/tasks-template.md)):
+Decomposes the plan into 2–5 minute atomic tasks (template: [`../assets/templates/tasks-template.md`](../assets/templates/tasks-template.md)):
 - Each task specifies: **Task ID** (`TASK-01`...), **Target Files**, **Prerequisites**, and **Verification Command**.
 
 ---
@@ -61,20 +61,22 @@ Decomposes the plan into 2–5 minute atomic tasks (template: [`../templates/tas
 ### 1. Core Philosophy
 - Read [`spec-driven.md`](spec-driven.md) — *The Power Inversion: Code serves specifications, specifications don't serve code.*
 
-### 2. Official Document Templates (`templates/`)
-- 📜 **Constitution**: [`../templates/constitution-template.md`](../templates/constitution-template.md)
-- 📋 **Specification**: [`../templates/spec-template.md`](../templates/spec-template.md)
-- 🏗️ **Architectural Plan**: [`../templates/plan-template.md`](../templates/plan-template.md)
-- 📝 **Tasks Breakdown**: [`../templates/tasks-template.md`](../templates/tasks-template.md)
-- ✅ **Quality Checklist**: [`../templates/checklist-template.md`](../templates/checklist-template.md)
+### 2. Official Document Templates (`assets/templates/`)
+- 📜 **Constitution**: [`../assets/templates/constitution-template.md`](../assets/templates/constitution-template.md)
+- 📋 **Specification**: [`../assets/templates/spec-template.md`](../assets/templates/spec-template.md)
+- 🏗️ **Architectural Plan**: [`../assets/templates/plan-template.md`](../assets/templates/plan-template.md)
+- 📝 **Tasks Breakdown**: [`../assets/templates/tasks-template.md`](../assets/templates/tasks-template.md)
+- ✅ **Quality Checklist**: [`../assets/templates/checklist-template.md`](../assets/templates/checklist-template.md)
 
-### 3. Command Workflows (`templates/commands/`)
-- `/speckit.constitution`: [`../templates/commands/constitution.md`](../templates/commands/constitution.md)
-- `/speckit.specify`: [`../templates/commands/specify.md`](../templates/commands/specify.md)
-- `/speckit.clarify`: [`../templates/commands/clarify.md`](../templates/commands/clarify.md)
-- `/speckit.plan`: [`../templates/commands/plan.md`](../templates/commands/plan.md)
-- `/speckit.tasks`: [`../templates/commands/tasks.md`](../templates/commands/tasks.md)
-- `/speckit.implement`: [`../templates/commands/implement.md`](../templates/commands/implement.md)
-- `/speckit.analyze`: [`../templates/commands/analyze.md`](../templates/commands/analyze.md)
-- `/speckit.checklist`: [`../templates/commands/checklist.md`](../templates/commands/checklist.md)
-- `/speckit.converge`: [`../templates/commands/converge.md`](../templates/commands/converge.md)
+### 3. Command Workflows (`assets/templates/commands/`)
+- `/kio-spec-constitution`: [`../assets/templates/commands/constitution.md`](../assets/templates/commands/constitution.md)
+- `/kio-spec-specify`: [`../assets/templates/commands/specify.md`](../assets/templates/commands/specify.md)
+- `/kio-spec-clarify`: [`../assets/templates/commands/clarify.md`](../assets/templates/commands/clarify.md)
+- `/kio-spec-plan`: [`../assets/templates/commands/plan.md`](../assets/templates/commands/plan.md)
+- `/kio-spec-tasks`: [`../assets/templates/commands/tasks.md`](../assets/templates/commands/tasks.md)
+- `/kio-spec-implement`: [`../assets/templates/commands/implement.md`](../assets/templates/commands/implement.md)
+- `/kio-spec-analyze`: [`../assets/templates/commands/analyze.md`](../assets/templates/commands/analyze.md)
+- `/kio-spec-checklist`: [`../assets/templates/commands/checklist.md`](../assets/templates/commands/checklist.md)
+- `/kio-spec-converge`: [`../assets/templates/commands/converge.md`](../assets/templates/commands/converge.md)
+
+> Installing Kio with `setup.sh` / `setup.ps1` adds the `/kio-spec-*` commands (Claude Code, Codex, Cursor, Gemini CLI). They run in **Kio mode**: no Spec-Kit CLI needed, the template's `scripts:` / `{SCRIPT}` / `.specify/` parts are skipped, templates come from `assets/templates/`, artifacts go to `specs/<NNN>-<name>/`.

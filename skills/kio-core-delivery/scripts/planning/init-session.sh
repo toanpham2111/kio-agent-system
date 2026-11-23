@@ -86,10 +86,10 @@ DATE=$(date +%Y-%m-%d)
 # CDPATH must not redirect the cd that locates the sibling scripts.
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 SKILL_ROOT="$(dirname "$SCRIPT_DIR")"
-if [ ! -d "$SKILL_ROOT/templates" ] && [ -d "$(dirname "$SKILL_ROOT")/templates" ]; then
+if [ ! -d "$SKILL_ROOT/assets/templates" ] && [ -d "$(dirname "$SKILL_ROOT")/assets/templates" ]; then
     SKILL_ROOT="$(dirname "$SKILL_ROOT")"
 fi
-TEMPLATE_DIR="$SKILL_ROOT/templates"
+TEMPLATE_DIR="$SKILL_ROOT/assets/templates"
 
 if [ "$TEMPLATE" != "default" ] && [ "$TEMPLATE" != "analytics" ]; then
     echo "Unknown template: $TEMPLATE (available: default, analytics). Using default."

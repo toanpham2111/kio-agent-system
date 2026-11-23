@@ -2,7 +2,7 @@
 
 Work like Manus: Use persistent markdown files as your "working memory on disk."
 
-> **Paths within `kio-core-delivery`:** Helper scripts live in `scripts/planning/` (relative to the `kio-core-delivery` skill root) and templates live in `templates/` (`templates/task_plan.md`, `templates/findings.md`, `templates/progress.md`, `templates/loop.md`, `templates/task_plan_autonomous.md`).
+> **Paths within `kio-core-delivery`:** Helper scripts live in `scripts/planning/` (relative to the `kio-core-delivery` skill root) and templates live in `assets/templates/` (`assets/templates/task_plan.md`, `assets/templates/findings.md`, `assets/templates/progress.md`, `assets/templates/loop.md`, `assets/templates/task_plan_autonomous.md`).
 
 ## FIRST: Restore Project State
 
@@ -36,12 +36,12 @@ Metadata mode may report that same-project session activity exists, but it emits
 
 ## Important: Where Files Go
 
-- **Templates and scripts** are relative to the `kio-core-delivery` skill root (`templates/` and `scripts/planning/`).
+- **Templates and scripts** are relative to the `kio-core-delivery` skill root (`assets/templates/` and `scripts/planning/`).
 - **Your planning files** go in **the selected task directory in your project**
 
 | Location | What Goes There |
 |----------|-----------------|
-| Installed skill directory (`kio-core-delivery`) | `templates/`, `scripts/planning/`, `references/planning-with-files/` |
+| Installed skill directory (`kio-core-delivery`) | `assets/templates/`, `scripts/planning/`, `references/planning-with-files/` |
 | Selected task directory (project root in legacy mode) | `task_plan.md`, `findings.md`, `progress.md` |
 
 ## Quick Start
@@ -49,7 +49,7 @@ Metadata mode may report that same-project session activity exists, but it emits
 Before a complex task:
 
 1. **Resolve or initialize the task directory.** Reuse the selected plan when resuming. For a separate task, run `scripts/planning/init-session.sh "Task Name"` and use the printed `PLAN_ID` to pin its host.
-2. **Create missing planning files only.** Use [../../templates/task_plan.md](../../templates/task_plan.md), [../../templates/findings.md](../../templates/findings.md), and [../../templates/progress.md](../../templates/progress.md) in that directory. Preserve existing work.
+2. **Create missing planning files only.** Use [../../templates/task_plan.md](../../assets/templates/task_plan.md), [../../templates/findings.md](../../assets/templates/findings.md), and [../../templates/progress.md](../../assets/templates/progress.md) in that directory. Preserve existing work.
 3. **Re-read the selected plan before decisions.** Update progress after each phase.
 4. **Assign one plan owner.** The orchestrator owns `task_plan.md` and shared summaries. Workers report through their own ledgers or assigned files; they do not independently rewrite the shared planning files.
 
@@ -180,9 +180,9 @@ If you can answer these, your context management is solid:
 
 Copy these templates to start:
 
-- [../../templates/task_plan.md](../../templates/task_plan.md) — Phase tracking
-- [../../templates/findings.md](../../templates/findings.md) — Research storage
-- [../../templates/progress.md](../../templates/progress.md) — Session logging
+- [../../templates/task_plan.md](../../assets/templates/task_plan.md) — Phase tracking
+- [../../templates/findings.md](../../assets/templates/findings.md) — Research storage
+- [../../templates/progress.md](../../assets/templates/progress.md) — Session logging
 
 ## Scripts
 
@@ -314,7 +314,7 @@ Both procedures match what the `commands/plan-goal.md` and `commands/plan-loop.m
 
 ### `loop.md` template
 
-Claude Code's bare `/loop` reads `.claude/loop.md` (project) or `~/.claude/loop.md` (user). v2.38 ships a planning-aware template at `templates/loop.md`. Install once:
+Claude Code's bare `/loop` reads `.claude/loop.md` (project) or `~/.claude/loop.md` (user). v2.38 ships a planning-aware template at `assets/templates/loop.md`. Install once:
 
 ```bash
 # Resolve the host-provided installation folder, or set it explicitly.

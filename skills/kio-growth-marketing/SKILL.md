@@ -9,20 +9,20 @@ metadata:
 
 # 📈 Kio Growth, CRO & SEO (`kio-growth-marketing`)
 
-The router for Kio's **79 sub-skills**: 53 growth/marketing modules (`modules/`) and 26 Kio SEO Engine sub-skills (`seo-subskills/subskills/`). This file holds **no** domain knowledge; it only points the way. The knowledge lives in each module.
+The router for Kio's **79 sub-skills**: 53 growth/marketing modules (`references/modules/`) and 26 Kio SEO Engine sub-skills (`references/seo/subskills/`). This file holds **no** domain knowledge; it only points the way. The knowledge lives in each module.
 
 ## ⚙️ How to work (mandatory, in order)
 
 1. **Read product context first.** If the project has `.agents/product-marketing.md` (or `.claude/product-marketing.md`, legacy `product-marketing-context.md`), read it before asking the user anything. If it is missing and the task needs deep context (plans, copy, positioning), run the `product-marketing` module to create it.
 2. **Pick one primary module** from the [Routing table](#-routing-table-79-sub-skills). For overlapping pairs use the [Merge rules](#-merge-rules-for-overlapping-modules). Open that module's `SKILL.md` and **follow its process exactly**.
 3. **Open `references/` only when the module says so** (its "Reference Routing" table). Never preload the folder.
-4. **When a module names another module** ("see **signup**", "use the `ab-testing` skill"), read it as `modules/<name>/SKILL.md`; a `seo-` name that is not in `modules/` means `seo-subskills/subskills/<name>/SKILL.md`. `seo-audit` exists in both: see merge rule #1.
+4. **When a module names another module** ("see **signup**", "use the `ab-testing` skill"), read it as `references/modules/<name>/SKILL.md`; a `seo-` name that is not in `references/modules/` means `references/seo/subskills/<name>/SKILL.md`. `seo-audit` exists in both: see merge rule #1.
 5. **Multi-step jobs** (launches, a landing page from scratch, a full SEO audit…) follow the [Multi-module workflows](#-multi-module-workflows).
-6. **Tools and APIs**: `tools/REGISTRY.md` (index), `tools/integrations/<tool>.md` (106 guides), `tools/clis/` (67 CLIs). Never invent endpoints.
+6. **Tools and APIs**: `references/tools/REGISTRY.md` (index), `references/tools/integrations/<tool>.md` (106 guides), `scripts/clis/` (67 CLIs). Never invent endpoints.
 
 ## 🧭 Routing table (79 sub-skills)
 
-`M/` = `modules/`, `S/` = `seo-subskills/subskills/`.
+`M/` = `references/modules/`, `S/` = `references/seo/subskills/`.
 
 ### 1. Conversion (CRO) & product
 | Sub-skill | Path | Use when |
@@ -106,7 +106,7 @@ The router for Kio's **79 sub-skills**: 53 growth/marketing modules (`modules/`)
 | `link-building` | `M/link-building` | Earning backlinks and mentions |
 
 ### 8. Kio SEO Engine (scripts, agents, reports)
-The shared entry point is `S/seo` (the `/seo …` orchestrator). Read [`seo-subskills/SKILL.md`](seo-subskills/SKILL.md) for how to run the scripts.
+The shared entry point is `S/seo` (the `/seo …` orchestrator). Read [`references/seo/SKILL.md`](references/seo/SKILL.md) for how to run the scripts.
 
 | Sub-skill | Path | Use when |
 |---|---|---|
@@ -185,8 +185,8 @@ These pairs overlap. Kio merges each into **one entry point** ("Start at"); the 
 
 ## 📦 What's included
 
-- `modules/` — 53 modules, each with `SKILL.md`, `references/`, `evals/evals.json`.
-- `seo-subskills/` — Kio SEO Engine: 26 sub-skills, 19 agents (`agents/`), 60+ scripts (`scripts/`), `requirements.txt`.
+- `references/modules/` — 53 modules, each with `SKILL.md`, `references/`, `evals/evals.json`.
+- `references/seo/` — Kio SEO Engine: 26 sub-skills, 19 agents (`agents/`), 60+ scripts (`scripts/`), `requirements.txt`.
 - `tools/` — `REGISTRY.md`, `integrations/` (106 services), `clis/` (67 CLIs), `composio/`.
-- `partners.json` — tool partner list.
+- `assets/partners.json` — tool partner list.
 - `THIRD_PARTY_NOTICES.md` — the required copyright and license notices for the open-source sources Kio uses. Keep this file when redistributing.

@@ -1,0 +1,17 @@
+# Keep line endings stable on Windows checkouts (core.autocrlf=true would turn
+# shell scripts into CRLF and bash then fails with $'\r': command not found).
+* text=auto
+*.sh   text eol=lf
+*.py   text eol=lf
+*.bash text eol=lf
+*.ps1  text eol=crlf
+*.cmd  text eol=crlf
+*.bat  text eol=crlf
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.gif  binary
+*.ico  binary
+*.woff2 binary
+*.zip  binary

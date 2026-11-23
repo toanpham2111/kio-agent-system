@@ -7,17 +7,15 @@ This guide tells the agent how to create, configure and start a new project to K
 
 ## 🎯 Dynamic Workspace Resolution
 
-**NEVER** hardcode a fixed path. Resolve the workspace from configuration and the current OS user:
+**NEVER** hardcode one machine's path. Use the `KIO_WORKSPACE_ROOT` environment variable, defaulting to `~/Projects`:
 
 ```bash
-# 1. Current OS username
-CURRENT_USER=$(whoami)
-
-# 2. Use KIO_WORKSPACE_ROOT when set; otherwise fall back to a folder named after the current user
-WORKSPACE_ROOT="${KIO_WORKSPACE_ROOT:-$HOME/$CURRENT_USER}"
+# 1. Use KIO_WORKSPACE_ROOT when the user set it; otherwise ~/Projects.
+#    Never append the user name to $HOME ($HOME already is /home/<user> or /Users/<user>).
+WORKSPACE_ROOT="${KIO_WORKSPACE_ROOT:-$HOME/Projects}"
 mkdir -p "$WORKSPACE_ROOT"
 
-# Target project path
+# 2. Target project path
 TARGET_DIR="$WORKSPACE_ROOT/<project-name>"
 ```
 
@@ -57,7 +55,7 @@ TARGET_DIR="$WORKSPACE_ROOT/<project-name>"
 
 ### 2. Create the Project Folder
 ```bash
-WORKSPACE_ROOT="${KIO_WORKSPACE_ROOT:-$HOME/$(whoami)}"
+WORKSPACE_ROOT="${KIO_WORKSPACE_ROOT:-$HOME/Projects}"
 mkdir -p "$WORKSPACE_ROOT/<project-name>"
 cd "$WORKSPACE_ROOT/<project-name>"
 ```
@@ -137,8 +135,8 @@ cd "$WORKSPACE_ROOT/<project-name>"
 
 #### 🅱️ React / Vite Project (TypeScript)
 ```bash
-WORKSPACE_ROOT="${KIO_WORKSPACE_ROOT:-$HOME/$(whoami)}"
-cd "$WORKSPACE_ROOT"
+WORKSPACE_ROOT="${KIO_WORKSPACE_ROOT:-$HOME/Projects}"
+mkdir -p "$WORKSPACE_ROOT" && cd "$WORKSPACE_ROOT"
 npx -y create-vite@latest <project-name> --template react-ts
 cd <project-name>
 npm install
@@ -146,15 +144,15 @@ npm install
 
 #### 🅲 Next.js App Router Project
 ```bash
-WORKSPACE_ROOT="${KIO_WORKSPACE_ROOT:-$HOME/$(whoami)}"
-cd "$WORKSPACE_ROOT"
+WORKSPACE_ROOT="${KIO_WORKSPACE_ROOT:-$HOME/Projects}"
+mkdir -p "$WORKSPACE_ROOT" && cd "$WORKSPACE_ROOT"
 npx -y create-next-app@latest <project-name> --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm --no-git
 cd <project-name>
 ```
 
 #### 🅳 Python / FastAPI Project
 ```bash
-WORKSPACE_ROOT="${KIO_WORKSPACE_ROOT:-$HOME/$(whoami)}"
+WORKSPACE_ROOT="${KIO_WORKSPACE_ROOT:-$HOME/Projects}"
 mkdir -p "$WORKSPACE_ROOT/<project-name>" && cd "$WORKSPACE_ROOT/<project-name>"
 python3 -m venv venv
 source venv/bin/activate

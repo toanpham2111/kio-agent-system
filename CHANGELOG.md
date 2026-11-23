@@ -4,6 +4,39 @@ All notable changes to the **Kio** project are documented here following the [Ke
 
 ---
 
+## [1.4.0] - 2026-11-23 — Slash Commands, One Skill Layout, Payments & Windows
+
+Fixes from a backend user's feedback.
+
+### 💳 `kio-backend-cloud` — apply payment webhooks exactly once
+- **Bug fix:** the old example recorded the event in `payment_events` before checking the amount. On a mismatch the event was still recorded, so the re-delivery after fixing the order was treated as a duplicate and the order stayed `pending`. Amount and currency are now checked **first**; a mismatched event is stored for audit but does not consume the idempotency key.
+- The order row is locked (`FOR UPDATE` / `BEGIN IMMEDIATE`) and the `UPDATE` row count is checked; a second event for a paid order returns `already_settled` (possible double payment) instead of success.
+- New `scripts/payment_apply.py`: the same SQL runs on **PostgreSQL** (psycopg) and **SQLite**; 8 tests run on both (including concurrent deliveries); set `KIO_TEST_PG_DSN` to run them against a real PostgreSQL.
+- `project-scaffolding.md`: uses `KIO_WORKSPACE_ROOT`, default `~/Projects` (previously `$HOME/$USER` repeated the user name and hardcoded a personal folder).
+
+### ⌨️ Slash commands
+- 18 commands in `commands/`: `/kio`, `/kio-fe`, `/kio-be`, `/kio-qa`, `/kio-plan`, `/kio-seo`, `/kio-growth`, `/kio-wp`, `/kio-think` and 9 `/kio-spec-*` commands for the Spec-Kit flow.
+- `setup.sh` / `setup.ps1` copy them to Claude Code (`~/.claude/commands`), Codex (`~/.codex/prompts`), Cursor (`~/.cursor/commands`) and Gemini CLI (`~/.gemini/commands`, converted to `.toml`). Only files with the `kio-command:` marker are overwritten or removed.
+- `/kio-spec-*` runs **without the Spec-Kit CLI** (the docs used to mention `/speckit.*`, but the templates need Spec-Kit scripts that Kio does not ship).
+
+### 🗂️ One layout for all 7 skills
+- Every skill holds only `SKILL.md`, `SKILL.md`, `THIRD_PARTY_NOTICES.md`, `references/`, `scripts/` (tests in `scripts/tests/`) and `assets/`. Moved: core-delivery `templates`, `tests`; frontend `data`, `templates`; growth `modules`, `seo-subskills`, `tools` (CLIs to `scripts/clis/`), `partners.json`; qa `evals`. Relative links were remapped automatically.
+- `kio-cognitive` and `kio-wordpress-fse` keep `author`/`version` under `metadata` like the other skills (version 1.1.0).
+- `scripts/lint_skills.py` checks the layout, the frontmatter, every relative link and the command files.
+
+### 🪟 Windows
+- `irm … | iex` no longer closes the user's PowerShell window (the script's `exit` used to end the session).
+- Link removal never runs `Remove-Item -Recurse` on a junction (which can delete the Kio repo's files on PowerShell 5.1).
+- ZIP installs can now update; a failed download keeps the installed copy.
+- `.gitattributes`: `.sh` files stay LF on Windows (CRLF broke the planning scripts).
+- New CI (`.github/workflows/installers.yml`): install, update and uninstall on Windows PowerShell 5.1, PowerShell 7, Ubuntu and macOS; lint and every skill test suite with PostgreSQL.
+
+### 🧹 Cleanup
+- Removed `scripts/kio_branding_sanitize.py` (a no-op that also contradicted the credit policy).
+- Removed personal machine paths from `memory/projects_registry*.md` and `rules/GLOBAL_RULE*.md`.
+
+---
+
 ## [1.3.2] - 2026-11-22 — Lighter Mobile Images & Seafood Test Re-run
 
 ### 🎨 `kio-frontend-craft`

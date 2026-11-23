@@ -12,7 +12,7 @@ from math import log
 from collections import defaultdict
 
 # ============ CONFIGURATION ============
-DATA_DIR = Path(__file__).parent.parent / "data"
+DATA_DIR = Path(__file__).parent.parent / "assets" / "data"
 MAX_RESULTS = 3
 
 CSV_CONFIG = {
@@ -534,7 +534,7 @@ def _row_identities(row, fields):
 # Load the product-domain keyword list from products.csv at import time so
 # it stays in sync with the data instead of needing manual updates to a
 # hardcoded list. Falls back to a small built-in seed if the file is
-# missing (e.g. package built without data/).
+# missing (e.g. package built without assets/data/).
 def _load_product_keywords():
     """Return high-signal product labels/aliases, never every corpus keyword."""
     seed = ["saas", "ecommerce", "fintech", "healthcare", "gaming", "portfolio",

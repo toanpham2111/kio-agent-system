@@ -1,8 +1,10 @@
 ---
 name: kio-wordpress-fse
 description: "Build WordPress Full Site Editing (FSE) block themes, native Gutenberg block patterns, and SSR custom blocks via the S0-S8 workflow. Use for Gutenberg block themes (not legacy classic themes like Flatsome)."
-version: 1.0.2
-author: Toan Pham / Kio System
+license: MIT
+metadata:
+  author: Kio System / Toan Pham
+  version: 1.1.0
 ---
 
 # 🌐 Kio WordPress FSE & Block Theme Pipeline (`kio-wordpress-fse`)

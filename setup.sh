@@ -307,6 +307,72 @@ list_skills() {
   echo "================================================================="
 }
 
+# Slash commands (/kio-fe, /kio-spec-specify, ...). Command files are COPIED (file
+# symlinks need admin rights on Windows, so both installers copy) and carry the marker
+# below; only files with the marker are ever replaced or removed.
+KIO_CMD_MARK="kio-command:"
+TARGET_COMMAND_DIRS=(
+  "$HOME/.claude/commands"
+  "$HOME/.codex/prompts"
+  "$HOME/.cursor/commands"
+)
+GEMINI_COMMAND_DIR="$HOME/.gemini/commands"
+
+kio_command_to_toml() {
+  # Gemini CLI commands are TOML: description + prompt, with {{args}} for the arguments.
+  local src="$1"
+  local desc
+  desc=$(sed -n 's/^description: //p' "$src" | head -1)
+  echo "# $KIO_CMD_MARK managed by the Kio installer; local edits are replaced on update"
+  echo "description = $desc"
+  echo "prompt = '''"
+  awk 'f==2 {print; next} /^---[[:space:]]*$/ {f++}' "$src" | sed 's/\$ARGUMENTS/{{args}}/g' | grep -v "$KIO_CMD_MARK"
+  echo "'''"
+}
+
+install_commands() {
+  local src_dir="$SCRIPT_DIR/commands"
+  if [ ! -d "$src_dir" ]; then
+    echo "   └── ⚠️ No commands/ folder in $SCRIPT_DIR (skipping slash commands)"
+    return 0
+  fi
+  local installed=0 kept=0 dir ext old name src dest
+  for dir in "${TARGET_COMMAND_DIRS[@]}" "$GEMINI_COMMAND_DIR"; do
+    mkdir -p "$dir"
+    ext="md"; [ "$dir" = "$GEMINI_COMMAND_DIR" ] && ext="toml"
+    # drop Kio commands that no longer exist upstream
+    for old in "$dir"/kio*."$ext"; do
+      [ -e "$old" ] || continue
+      name=$(basename "$old" ".$ext")
+      if [ ! -f "$src_dir/$name.md" ] && grep -q "$KIO_CMD_MARK" "$old"; then rm -f "$old"; fi
+    done
+    for src in "$src_dir"/*.md; do
+      [ -e "$src" ] || continue
+      name=$(basename "$src" .md)
+      dest="$dir/$name.$ext"
+      if [ -e "$dest" ] && ! grep -q "$KIO_CMD_MARK" "$dest"; then
+        kept=$((kept + 1)); continue   # the user's own file with this name: never overwritten
+      fi
+      if [ "$ext" = "toml" ]; then kio_command_to_toml "$src" > "$dest"; else cp "$src" "$dest"; fi
+      installed=$((installed + 1))
+    done
+  done
+  echo "⌨️  Slash commands: $installed file(s) written to ~/.claude/commands, ~/.codex/prompts, ~/.cursor/commands, ~/.gemini/commands"
+  if [ "$kept" -gt 0 ]; then echo "   └── 🛡️ $kept existing file(s) with the same name are yours and were left untouched"; fi
+  return 0
+}
+
+uninstall_commands() {
+  local removed=0 dir f
+  for dir in "${TARGET_COMMAND_DIRS[@]}" "$GEMINI_COMMAND_DIR"; do
+    for f in "$dir"/kio*.md "$dir"/kio*.toml; do
+      [ -e "$f" ] || continue
+      if grep -q "$KIO_CMD_MARK" "$f"; then rm -f "$f"; removed=$((removed + 1)); fi
+    done
+  done
+  echo "⌨️  Removed $removed Kio slash command file(s)"
+}
+
 # Action: Install / Update selected skills
 install_skills() {
   local selected_skills=("$@")
@@ -354,6 +420,7 @@ install_skills() {
     done
   done
 
+  install_commands
   echo ""
   echo "================================================================="
   if [ "$KIO_UPDATE_FAILED" = true ]; then
@@ -402,6 +469,7 @@ uninstall_kio() {
     done
   done
 
+  uninstall_commands
   echo ""
   echo "================================================================="
   echo "✅ SUCCESS: Kio skills uninstalled ($removed_count symlinks removed)."

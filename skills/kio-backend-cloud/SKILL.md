@@ -23,7 +23,7 @@ The router for Kio's server-side work. Knowledge lives in `references/`; this fi
 | Area | Start | Deep dives |
 |---|---|---|
 | API, auth, uploads, email, queues | `references/api-and-payments.md` | — |
-| Payments & webhooks | `references/payments-webhooks.md` | Tested reference code: `scripts/payment_signatures.py` |
+| Payments & webhooks | `references/payments-webhooks.md` | Tested reference code: `scripts/payment_signatures.py`, `scripts/payment_apply.py` |
 | PostgreSQL | `references/database.md` | `postgres-supabase-rls.md` (RLS, multi-tenant), `indexing-and-optimization.md` (EXPLAIN, indexes), `migrations-and-caching.md` (safe DDL, Redis) |
 | DevOps & infrastructure | `references/devops.md` | `docker-containers.md`, `github-actions-cicd.md`, `terraform-iac.md` |
 | AI/ML & RAG | `references/ai-ml.md` | `production-rag-pipelines.md`, `vector-db-and-eval.md`, `huggingface-fine-tuning.md` |
@@ -70,5 +70,6 @@ UI belongs to `kio-frontend-craft`; security review, test cases and Playwright t
 ## 📦 What's included
 
 - `references/` — the documents in the table above (`mcp/` for MCP servers).
-- `scripts/payment_signatures.py` — reference signature checks for Stripe, VNPay, MoMo, PayOS plus idempotent payment application; tests: `python3 -m pytest scripts/tests`.
+- `scripts/payment_signatures.py` — reference signature checks for Stripe, VNPay, MoMo, PayOS.
+- `scripts/payment_apply.py` — applies a webhook exactly once: checks the amount before using the idempotency key, locks the order row, checks the update row count; the same SQL runs on PostgreSQL and SQLite. Tests: `python3 -m pytest scripts/tests` (set `KIO_TEST_PG_DSN` to also run against a real PostgreSQL).
 - `THIRD_PARTY_NOTICES.md` — credits and licenses for the open-source sources Kio uses; keep it when redistributing.

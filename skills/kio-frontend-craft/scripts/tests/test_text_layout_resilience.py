@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 SCRIPTS_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = SCRIPTS_DIR.parent / "data"
+DATA_DIR = SCRIPTS_DIR.parent / "assets" / "data"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from core import search, search_stack  # noqa: E402

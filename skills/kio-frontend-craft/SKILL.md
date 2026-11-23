@@ -9,7 +9,7 @@ metadata:
 
 # 🎨 Kio Frontend, UI/UX & Motion (`kio-frontend-craft`)
 
-The router for Kio's interface work. Knowledge lives in `references/`, design data lives in `data/` and is queried with `scripts/search.py`. This file only points the way and holds the mandatory rules.
+The router for Kio's interface work. Knowledge lives in `references/`, design data lives in `assets/data/` and is queried with `scripts/search.py`. This file only points the way and holds the mandatory rules.
 
 `KIO_FE_ROOT` = this skill's install directory (e.g. `~/.claude/skills/kio-frontend-craft`). All commands below use `${KIO_FE_ROOT:-skills/kio-frontend-craft}`.
 
@@ -28,11 +28,11 @@ The router for Kio's interface work. Knowledge lives in `references/`, design da
 
 | Task | Open | Notes |
 |---|---|---|
-| Choose style, colours, fonts, icons, landing pattern | `scripts/search.py` (`--design-system`, `--domain`) | Data: `data/*.csv`, 192 reasoning profiles in `data/ui-reasoning.csv` |
+| Choose style, colours, fonts, icons, landing pattern | `scripts/search.py` (`--design-system`, `--domain`) | Data: `assets/data/*.csv`, 192 reasoning profiles in `assets/data/ui-reasoning.csv` |
 | Full UI/UX rules in 10 groups (accessibility, touch, layout, forms, navigation, charts…) | `references/ui-ux/quick-reference.md` | CRITICAL → LOW priority |
 | Professional rules + pre-delivery checklist | `references/ui-ux/pro-rules.md` | The single, mandatory checklist |
 | UI "looks AI-generated" and needs a redo | `references/unslop-9-pass.md` | 9 passes, in order |
-| 3-layer design tokens | `templates/design-tokens-starter.json` | Primitive → semantic → component |
+| 3-layer design tokens | `assets/templates/design-tokens-starter.json` | Primitive → semantic → component |
 | Lenis smooth scroll, GSAP ScrollTrigger | `references/motion-lenis.md` | `data-lenis-prevent`, reduced motion |
 | Core Web Vitals, PageSpeed 95–100, page performance audit | `references/web-performance.md` | LCP, CLS, INP, 5-phase audit |
 | React / Next.js performance (waterfalls, bundle, RSC, re-renders) | `references/react/README.md` → `references/react/rules/<rule>.md` | 64 rules, 8 groups; full compiled guide: `references/react/AGENTS.md` |
@@ -97,7 +97,7 @@ APIs, databases and payments belong to `kio-backend-cloud`; Playwright UI testin
 
 ## 📦 What's included
 
-- `data/` — styles, colours, typography, icons, landing, products, UX, charts, motion, React performance, 22 stacks; `catalog-summary.json` (counts), `data-provenance.json` (sources and review dates).
+- `assets/data/` — styles, colours, typography, icons, landing, products, UX, charts, motion, React performance, 22 stacks; `catalog-summary.json` (counts), `data-provenance.json` (sources and review dates).
 - `scripts/` — `layout-check.js` (console check for edge spill / misaligned rows / wrapped buttons), `stock_images.py` (stock photos), `search.py` (BM25 search + design systems), `validate_data.py`, `convert.sh`, `extract_sections.py`; tests: `python3 -m pytest scripts/tests`.
-- `references/` — the documents in the table above. `templates/` — design tokens.
+- `references/` — the documents in the table above. `assets/templates/` — design tokens.
 - `THIRD_PARTY_NOTICES.md` — credits and licenses for the open-source sources Kio uses; keep it when redistributing.

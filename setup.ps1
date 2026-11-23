@@ -17,6 +17,15 @@ param (
     [switch]$Help = $false
 )
 
+# `irm .../setup.ps1 | iex` runs this text inside the user's own PowerShell session:
+# a bare `exit` there would close their window. Exit-Kio unwinds to the bottom of the
+# script instead, which exits with the code when run as a file and only sets
+# $LASTEXITCODE when piped.
+function Exit-Kio ([int]$Code) { throw "KIO_EXIT:$Code" }
+$script:KioExitCode = 0
+
+try {
+
 $AllKioSkills = @(
     "kio-core-delivery",
     "kio-frontend-craft",
@@ -45,7 +54,7 @@ function Show-Help {
 
 if ($Help) {
     Show-Help
-    exit 0
+    Exit-Kio 0
 }
 
 function Show-List {
@@ -64,7 +73,7 @@ function Show-List {
 
 if ($List) {
     Show-List
-    exit 0
+    Exit-Kio 0
 }
 
 $HomeDir = [System.Environment]::GetFolderPath('UserProfile')
@@ -141,35 +150,54 @@ function Ensure-KioRepoSource {
             Write-Host "   Skills will keep using the copy already on disk. Fix the problem above, or delete $KioRepoDir and run the installer again." -ForegroundColor Red
             $script:KioUpdateFailed = $true
         }
-    } elseif (-not (Test-Path $ManagedCheck)) {
-        Write-Host "[FETCH] Piped/standalone install detected - fetching Kio '$Ref' to $KioRepoDir..." -ForegroundColor Cyan
-        if (Test-Path $KioRepoDir) {
-            Remove-Item $KioRepoDir -Recurse -Force
-        }
+    } else {
+        # No git checkout to update (first install, ZIP install, or git missing): fetch a
+        # fresh copy next to the old one and swap, so a failed download never deletes the
+        # skills that are already installed.
+        $HadCopy = Test-Path $ManagedCheck
+        $NewDir = Join-Path $KioConfigDir "repo.new"
+        $OldDir = Join-Path $KioConfigDir "repo.old"
+        foreach ($D in @($NewDir, $OldDir)) { if (Test-Path $D) { Remove-Item -LiteralPath $D -Recurse -Force } }
+        Write-Host "[FETCH] Fetching Kio '$Ref' to $KioRepoDir..." -ForegroundColor Cyan
+        $Fetched = $false
         if (Get-Command git -ErrorAction SilentlyContinue) {
-            git clone --quiet --depth 1 --branch $Ref $KioRepoUrl $KioRepoDir
-            if ($LASTEXITCODE -ne 0) {
-                Write-Host "[ERROR] git clone of '$Ref' from $KioRepoUrl failed." -ForegroundColor Red
-                exit 1
-            }
+            git clone --quiet --depth 1 --branch $Ref $KioRepoUrl $NewDir 2>&1 | Out-Host
+            $Fetched = ($LASTEXITCODE -eq 0)
+            if (-not $Fetched) { Write-Host "[ERROR] git clone of '$Ref' from $KioRepoUrl failed." -ForegroundColor Red }
         } else {
             if ($env:KIO_ZIP_URL) { $ZipUrl = $env:KIO_ZIP_URL }
             elseif ($Ref -match '^v[0-9]') { $ZipUrl = "https://github.com/toanpham2111/kio-agent-system/archive/refs/tags/$Ref.zip" }
             else { $ZipUrl = "https://github.com/toanpham2111/kio-agent-system/archive/refs/heads/$Ref.zip" }
             $TempZip = Join-Path $KioConfigDir "kio-download.zip"
             $TempExtract = Join-Path $KioConfigDir "kio-extract"
-            if (Test-Path $TempExtract) { Remove-Item $TempExtract -Recurse -Force }
+            if (Test-Path $TempExtract) { Remove-Item -LiteralPath $TempExtract -Recurse -Force }
             try {
+                [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
                 Invoke-WebRequest -Uri $ZipUrl -OutFile $TempZip -UseBasicParsing -ErrorAction Stop
+                Expand-Archive -Path $TempZip -DestinationPath $TempExtract -Force -ErrorAction Stop
+                $InnerFolder = Get-ChildItem -Path $TempExtract -Directory | Select-Object -First 1
+                Move-Item -LiteralPath $InnerFolder.FullName -Destination $NewDir -Force -ErrorAction Stop
+                $Fetched = $true
             } catch {
                 Write-Host "[ERROR] Downloading $ZipUrl failed: $($_.Exception.Message)" -ForegroundColor Red
-                exit 1
+            } finally {
+                Remove-Item -LiteralPath $TempZip -Force -ErrorAction SilentlyContinue
+                Remove-Item -LiteralPath $TempExtract -Recurse -Force -ErrorAction SilentlyContinue
             }
-            Expand-Archive -Path $TempZip -DestinationPath $TempExtract -Force
-            $InnerFolder = Get-ChildItem -Path $TempExtract -Directory | Select-Object -First 1
-            Move-Item -Path $InnerFolder.FullName -Destination $KioRepoDir -Force
-            Remove-Item $TempZip -Force -ErrorAction SilentlyContinue
-            Remove-Item $TempExtract -Recurse -Force -ErrorAction SilentlyContinue
+        }
+        if ($Fetched -and (Test-Path (Join-Path $NewDir "skills\kio-frontend-craft"))) {
+            if (Test-Path $KioRepoDir) { Rename-Item -LiteralPath $KioRepoDir -NewName "repo.old" }
+            Rename-Item -LiteralPath $NewDir -NewName "repo"
+            if (Test-Path $OldDir) { Remove-Item -LiteralPath $OldDir -Recurse -Force -ErrorAction SilentlyContinue }
+            Write-Host "     |-- [OK] Now at $Ref" -ForegroundColor Green
+        } else {
+            if (Test-Path $NewDir) { Remove-Item -LiteralPath $NewDir -Recurse -Force -ErrorAction SilentlyContinue }
+            if ($HadCopy) {
+                Write-Host "   Skills will keep using the copy already on disk." -ForegroundColor Red
+                $script:KioUpdateFailed = $true
+            } else {
+                Exit-Kio 1
+            }
         }
     }
 }
@@ -197,20 +225,23 @@ function New-SafeLink ([string]$Path, [string]$Value) {
 }
 
 function Remove-SafeLink ([string]$Path) {
-    if (-not (Test-Path $Path)) { return }
-    $Item = Get-Item $Path -Force
-    if ($Item.Attributes -match "ReparsePoint" -or [System.IO.File]::GetAttributes($Path).HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
+    # Only ever removes the link itself. Remove-Item -Recurse on a junction can delete the
+    # files of its TARGET on Windows PowerShell 5.1, i.e. the Kio repo, so it is never used.
+    $Item = Get-Item -LiteralPath $Path -Force -ErrorAction SilentlyContinue
+    if (-not $Item) { return }
+    if (-not ($Item.Attributes -band [System.IO.FileAttributes]::ReparsePoint)) {
+        throw "Refusing to remove '$Path': it is not a link."
+    }
+    try {
+        [System.IO.Directory]::Delete($Path, $false)
+    } catch {
         if ($IsWindows -or ($null -eq $IsWindows)) {
-            try {
-                [System.IO.Directory]::Delete($Path)
-                return
-            } catch {
-                Remove-Item $Path -Force -Recurse
-            }
+            cmd /c rmdir "$Path" | Out-Null
         } else {
-            Remove-Item $Path -Force -Recurse
+            [System.IO.File]::Delete($Path)
         }
     }
+    if (Test-Path -LiteralPath $Path) { throw "Could not remove link '$Path'." }
 }
 
 # Manifest Management
@@ -385,6 +416,80 @@ function Resolve-SkillName ([string]$InputName) {
     }
 }
 
+# Slash commands (/kio-fe, /kio-spec-specify, ...). Files are COPIED, not linked: file
+# symlinks need admin rights or Developer Mode on Windows. Every Kio command file carries
+# the marker below; only files with the marker are ever replaced or removed.
+$KioCmdMark = "kio-command:"
+$TargetCommandDirs = @(
+    (Join-Path $HomeDir ".claude\commands"),
+    (Join-Path $HomeDir ".codex\prompts"),
+    (Join-Path $HomeDir ".cursor\commands")
+)
+$GeminiCommandDir = Join-Path $HomeDir ".gemini\commands"
+
+function Convert-KioCommandToToml ([string]$Src) {
+    $Lines = Get-Content -LiteralPath $Src -Encoding UTF8
+    $Desc = ($Lines | Where-Object { $_ -like 'description: *' } | Select-Object -First 1) -replace '^description: ', ''
+    $Seen = 0
+    $Body = New-Object System.Collections.Generic.List[string]
+    foreach ($L in $Lines) {
+        if ($Seen -ge 2) {
+            if ($L -notlike "*$KioCmdMark*") { $Body.Add(($L -replace '\$ARGUMENTS', '{{args}}')) }
+        } elseif ($L -match '^---\s*$') { $Seen++ }
+    }
+    $Out = @("# $KioCmdMark managed by the Kio installer; local edits are replaced on update",
+             "description = $Desc", "prompt = '''") + $Body + @("'''")
+    return ($Out -join "`n") + "`n"
+}
+
+function Test-KioCommandFile ([string]$Path) {
+    return [bool](Select-String -LiteralPath $Path -SimpleMatch $KioCmdMark -Quiet)
+}
+
+function Install-KioCommands {
+    $SrcDir = Join-Path $ScriptDir "commands"
+    if (-not (Test-Path $SrcDir)) {
+        Write-Host "     |-- [WARN] No commands folder in $ScriptDir (skipping slash commands)" -ForegroundColor DarkYellow
+        return
+    }
+    $Sources = @(Get-ChildItem -LiteralPath $SrcDir -Filter "*.md" -File)
+    $Installed = 0; $Kept = 0
+    $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    foreach ($Dir in ($TargetCommandDirs + $GeminiCommandDir)) {
+        if (-not (Test-Path $Dir)) { New-Item -ItemType Directory -Path $Dir -Force | Out-Null }
+        $Ext = if ($Dir -eq $GeminiCommandDir) { "toml" } else { "md" }
+        foreach ($Old in @(Get-ChildItem -LiteralPath $Dir -Filter "kio*.$Ext" -File -ErrorAction SilentlyContinue)) {
+            $Name = [System.IO.Path]::GetFileNameWithoutExtension($Old.Name)
+            if (-not (Test-Path (Join-Path $SrcDir "$Name.md")) -and (Test-KioCommandFile $Old.FullName)) {
+                Remove-Item -LiteralPath $Old.FullName -Force
+            }
+        }
+        foreach ($Src in $Sources) {
+            $Dest = Join-Path $Dir ($Src.BaseName + "." + $Ext)
+            if ((Test-Path $Dest) -and -not (Test-KioCommandFile $Dest)) { $Kept++; continue }
+            if ($Ext -eq "toml") {
+                [System.IO.File]::WriteAllText($Dest, (Convert-KioCommandToToml $Src.FullName), $Utf8NoBom)
+            } else {
+                Copy-Item -LiteralPath $Src.FullName -Destination $Dest -Force
+            }
+            $Installed++
+        }
+    }
+    Write-Host "[CMD] Slash commands: $Installed file(s) written to .claude\commands, .codex\prompts, .cursor\commands, .gemini\commands" -ForegroundColor Green
+    if ($Kept -gt 0) { Write-Host "     |-- [KEEP] $Kept existing file(s) with the same name are yours and were left untouched" -ForegroundColor DarkYellow }
+}
+
+function Uninstall-KioCommands {
+    $Removed = 0
+    foreach ($Dir in ($TargetCommandDirs + $GeminiCommandDir)) {
+        if (-not (Test-Path $Dir)) { continue }
+        foreach ($F in @(Get-ChildItem -LiteralPath $Dir -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -like "kio*.md" -or $_.Name -like "kio*.toml" })) {
+            if (Test-KioCommandFile $F.FullName) { Remove-Item -LiteralPath $F.FullName -Force; $Removed++ }
+        }
+    }
+    Write-Host "[CMD] Removed $Removed Kio slash command file(s)" -ForegroundColor Yellow
+}
+
 # Uninstall Kio Skills
 if ($Uninstall) {
     Write-Host "=================================================================" -ForegroundColor Cyan
@@ -419,12 +524,13 @@ if ($Uninstall) {
         }
     }
 
+    Uninstall-KioCommands
     Write-Host ""
     Write-Host "=================================================================" -ForegroundColor Cyan
     Write-Host "[OK] SUCCESS: Kio skills uninstalled ($RemovedCount links removed)." -ForegroundColor Green
     Write-Host "   All other user skills remain completely untouched." -ForegroundColor Green
     Write-Host "=================================================================" -ForegroundColor Cyan
-    exit 0
+    Exit-Kio 0
 }
 
 # Determine which skills to install
@@ -446,7 +552,7 @@ if ([string]::IsNullOrWhiteSpace($Skill) -or $Skill -eq "all") {
 
 if ($SkillsToInstall.Count -eq 0) {
     Write-Host "No valid skills selected for installation." -ForegroundColor Red
-    exit 1
+    Exit-Kio 1
 }
 
 # Install selected skills safely
@@ -495,15 +601,28 @@ foreach ($TargetDir in $TargetSkillsDirs) {
     }
 }
 
+Install-KioCommands
 Write-Host ""
 Write-Host "=================================================================" -ForegroundColor Cyan
 if ($script:KioUpdateFailed) {
     Write-Host "[WARN] Links are in place, but the Kio update FAILED (see the error above)." -ForegroundColor Yellow
     Write-Host "   Your skills still point at the previous version on disk." -ForegroundColor Yellow
     Write-Host "=================================================================" -ForegroundColor Cyan
-    exit 2
+    Exit-Kio 2
 }
 Write-Host "[OK] SUCCESS: Selected Kio skills installed/updated!" -ForegroundColor Green
 Write-Host "   Ownership: Tracked in $ManifestFile" -ForegroundColor Green
 Write-Host "   Preserved: All existing user skills untouched." -ForegroundColor Green
 Write-Host "=================================================================" -ForegroundColor Cyan
+
+} catch {
+    if ("$($_.Exception.Message)" -match '^KIO_EXIT:(\d+)$') {
+        $script:KioExitCode = [int]$Matches[1]
+    } else {
+        Write-Host "[ERROR] $($_.Exception.Message)" -ForegroundColor Red
+        $script:KioExitCode = 1
+    }
+}
+
+if ($PSCommandPath) { exit $script:KioExitCode }
+$global:LASTEXITCODE = $script:KioExitCode

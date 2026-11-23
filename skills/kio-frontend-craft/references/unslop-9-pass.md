@@ -17,7 +17,7 @@ python3 "${KIO_FE_ROOT:-skills/kio-frontend-craft}/scripts/search.py" "<product 
 ## Pass 2 — Colour (80 / 15 / 5)
 - 80% neutral surfaces, 15% secondary/brand tint, 5% accent reserved for the primary action and key data.
 - Remove decorative purple→pink→blue gradients and glows. If a gradient stays, it is subtle, two adjacent hues, and has a purpose.
-- Define colours as tokens (`--color-bg`, `--color-fg`, `--color-accent`…) from `templates/design-tokens-starter.json`; no raw hex in components.
+- Define colours as tokens (`--color-bg`, `--color-fg`, `--color-accent`…) from `assets/templates/design-tokens-starter.json`; no raw hex in components.
 - Body text ≥ 4.5:1 contrast, large text and UI controls ≥ 3:1, in light **and** dark mode.
 
 ## Pass 3 — Icons

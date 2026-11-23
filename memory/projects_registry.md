@@ -9,6 +9,7 @@
 
 | Project Name | Workspace Path | Tech Stack | Active Port | Database Name | Notes |
 |---|---|---|---|---|---|
+| **example-shop** | `~/Projects/example-shop` | Next.js / PostgreSQL | `8080` (Web), `5433` (DB) | `example_shop` | Example row: replace with your projects. |
 | **kio-agent-system** | `/path/to/kio-agent-system` | Python / Shell / Markdown / HTML / JS | — | — | Central Kio rule and skill system repository. |
 
 ---

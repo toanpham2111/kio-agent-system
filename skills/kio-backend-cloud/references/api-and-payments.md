@@ -36,9 +36,11 @@ Financial transactions require zero-defect engineering. Never trust client-side 
   - **MoMo**: Verify `HMAC-SHA256` signature over canonical parameter string before updating order state.
 - **Idempotency & Atomic Database Transactions (Zero Double-Spend)**:
   - Payment gateways retry webhooks on network timeouts. Every webhook handler MUST be **idempotent**:
-    1. Record `provider_event_id` / `transaction_id` in a `payment_events` table with a `UNIQUE` index.
-    2. Wrap order fulfillment inside a database transaction with row-level locking (`SELECT id, status FROM orders WHERE id = $1 FOR UPDATE`).
-    3. If `order.status === 'paid'`, return `200 OK` immediately without re-crediting wallet or re-deducting inventory.
+    1. In one transaction, lock the order row (`SELECT total, currency, status FROM orders WHERE id = $1 FOR UPDATE`).
+    2. Check amount and currency **before** marking the event as processed. A mismatch is stored for audit but must not consume the `(provider, event_id)` key, or the corrected re-delivery is dropped as a duplicate.
+    3. Only a successful apply records the event as `applied` (unique key on `provider, event_id`); a repeat of an applied event returns `200 OK` with no side effects.
+    4. Update the order with `WHERE status = 'pending'` and check the row count; 0 rows means it was already settled (alert, possible double payment).
+    Full flow and tested code: `payments-webhooks.md`, `../scripts/payment_apply.py`.
 
 ---
 

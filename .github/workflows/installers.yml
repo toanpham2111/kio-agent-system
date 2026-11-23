@@ -1,0 +1,129 @@
+name: installers
+
+on:
+  push:
+    paths: ["setup.sh", "setup.ps1", "commands/**", ".gitattributes", ".github/workflows/installers.yml", "skills/**/*.sh"]
+  pull_request:
+    paths: ["setup.sh", "setup.ps1", "commands/**", ".gitattributes", ".github/workflows/installers.yml", "skills/**/*.sh"]
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]   # Windows PowerShell 5.1 and PowerShell 7
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Shell scripts keep LF on a Windows checkout
+        shell: bash
+        run: |
+          bad=$(git ls-files --eol '*.sh' | grep -v 'w/lf' || true)
+          if [ -n "$bad" ]; then echo "$bad"; exit 1; fi
+          for f in $(git ls-files '*.sh'); do bash -n "$f"; done
+
+      - name: Prepare a user skill and a foreign link that must survive
+        run: |
+          $d = Join-Path $HOME ".claude\skills"
+          New-Item -ItemType Directory -Force (Join-Path $d "my-own-skill") | Out-Null
+          Set-Content (Join-Path $d "my-own-skill\SKILL.md") "mine"
+          $foreign = Join-Path $HOME "foreign-target"
+          New-Item -ItemType Directory -Force $foreign | Out-Null
+          New-Item -ItemType Junction -Path (Join-Path $d "kio-cognitive") -Value $foreign | Out-Null
+
+      - name: Install from the checkout
+        run: |
+          .\setup.ps1
+          if ($LASTEXITCODE -ne 0) { throw "install exit $LASTEXITCODE" }
+          $link = Get-Item (Join-Path $HOME ".claude\skills\kio-frontend-craft") -Force
+          if (-not ($link.Attributes -band [IO.FileAttributes]::ReparsePoint)) { throw "not a link" }
+          if (-not (Test-Path (Join-Path $link.FullName "SKILL.md"))) { throw "link does not resolve" }
+          $cmd = Join-Path $HOME ".claude\commands\kio-fe.md"
+          if (-not (Test-Path $cmd)) { throw "slash command not installed: $cmd" }
+
+      - name: Re-run (update) keeps everything
+        run: |
+          .\setup.ps1
+          if ($LASTEXITCODE -ne 0) { throw "update exit $LASTEXITCODE" }
+
+      - name: Uninstall removes only Kio links
+        run: |
+          $before = (Get-ChildItem -Recurse -File skills | Measure-Object).Count
+          .\setup.ps1 -Uninstall
+          if ($LASTEXITCODE -ne 0) { throw "uninstall exit $LASTEXITCODE" }
+          $after = (Get-ChildItem -Recurse -File skills | Measure-Object).Count
+          if ($before -ne $after) { throw "repo files changed: $before -> $after" }
+          $d = Join-Path $HOME ".claude\skills"
+          if (Test-Path (Join-Path $d "kio-frontend-craft")) { throw "Kio link left behind" }
+          if (-not (Test-Path (Join-Path $d "my-own-skill\SKILL.md"))) { throw "user skill removed" }
+          if (-not (Test-Path (Join-Path $d "kio-cognitive"))) { throw "foreign link removed" }
+          if (Test-Path (Join-Path $HOME ".claude\commands\kio-fe.md")) { throw "Kio command left behind" }
+
+      - name: Piped install (irm | iex) does not close the session
+        run: |
+          $env:KIO_REPO_URL = "file:///" + ($PWD.Path -replace '\\', '/')
+          $env:KIO_REF = "${{ github.ref_name }}"
+          git branch -f "${{ github.ref_name }}" HEAD 2>$null
+          $text = Get-Content .\setup.ps1 -Raw
+          Push-Location $env:TEMP
+          Invoke-Expression $text
+          $code = $LASTEXITCODE
+          Pop-Location
+          Write-Host "still alive, exit code $code"
+          if ($code -ne 0) { throw "piped install exit $code" }
+          if (-not (Test-Path (Join-Path $HOME ".kio\repo\skills\kio-frontend-craft\SKILL.md"))) { throw "managed repo missing" }
+          Invoke-Expression $text   # second run = update path
+          if ($LASTEXITCODE -ne 0) { throw "piped update exit $LASTEXITCODE" }
+
+  linux-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install, update, uninstall
+        run: |
+          mkdir -p ~/.claude/skills/my-own-skill && echo mine > ~/.claude/skills/my-own-skill/SKILL.md
+          ./setup.sh
+          test -f ~/.claude/skills/kio-frontend-craft/SKILL.md
+          test -f ~/.claude/commands/kio-fe.md
+          ./setup.sh   # second run = update
+          ./setup.sh --uninstall
+          test ! -e ~/.claude/skills/kio-frontend-craft
+          test ! -e ~/.claude/commands/kio-fe.md
+          test -f ~/.claude/skills/my-own-skill/SKILL.md
+
+  skills:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: kio
+          POSTGRES_DB: kio_test
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pytest pillow "psycopg[binary]"
+      - name: Lint skills
+        run: python3 scripts/lint_skills.py
+      - name: Skill test suites
+        env:
+          KIO_TEST_PG_DSN: host=127.0.0.1 port=5432 user=postgres password=kio dbname=kio_test
+        run: |
+          for d in skills/*/scripts/tests skills/*/tests; do
+            [ -d "$d" ] && python3 -m pytest -q "$d"
+          done

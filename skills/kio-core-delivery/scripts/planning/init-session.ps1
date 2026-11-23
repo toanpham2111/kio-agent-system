@@ -52,10 +52,10 @@ if ($Gated) {
 # Resolve template directory (skill root is one or two levels up from scripts/)
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $SkillRoot = Split-Path -Parent $ScriptDir
-if (-not (Test-Path -LiteralPath (Join-Path $SkillRoot "templates")) -and (Test-Path -LiteralPath (Join-Path (Split-Path -Parent $SkillRoot) "templates"))) {
+if (-not (Test-Path -LiteralPath (Join-Path $SkillRoot "assets\templates")) -and (Test-Path -LiteralPath (Join-Path (Split-Path -Parent $SkillRoot) "assets\templates"))) {
     $SkillRoot = Split-Path -Parent $SkillRoot
 }
-$TemplateDir = Join-Path $SkillRoot "templates"
+$TemplateDir = Join-Path $SkillRoot "assets\templates"
 
 function Get-Nonce {
     # 16 hex chars for the plan-data delimiter framing (security strand rec 8).

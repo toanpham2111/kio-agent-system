@@ -1,6 +1,6 @@
 # Payments & Idempotent Webhooks (Stripe, PayPal, VNPay, MoMo, PayOS/VietQR, SePay)
 
-Kio reference for taking money safely. Read together with `api-and-payments.md` (rules) — this file is the implementation. A runnable, tested reference lives in [`../scripts/payment_signatures.py`](../scripts/payment_signatures.py) (`python3 -m pytest scripts/tests`); port it, then run your port against the same vectors.
+Kio reference for taking money safely. Read together with `api-and-payments.md` (rules) — this file is the implementation. Runnable, tested references: [`../scripts/payment_signatures.py`](../scripts/payment_signatures.py) (signatures) and [`../scripts/payment_apply.py`](../scripts/payment_apply.py) (apply exactly once, same SQL on PostgreSQL and SQLite). Run `python3 -m pytest scripts/tests`; set `KIO_TEST_PG_DSN` to also run the suite against a real PostgreSQL. Port them, then run your port against the same cases.
 
 ## 1. The payment state machine
 
@@ -18,16 +18,23 @@ pending ──(verified webhook, amount matches)──▶ paid ──(refund web
 1. Read the **raw body** (bytes) before any JSON parser touches it.
 2. Verify the signature with a **constant-time compare** (`crypto.timingSafeEqual`, `hmac.compare_digest`, `hash_equals`). Reject with 400/401 and log the provider + event id only.
 3. Look up the order by **your** reference (`vnp_TxnRef`, `orderId`, `orderCode`, Stripe `metadata.order_id` / `client_reference_id`).
-4. Check **amount and currency** equal the order total. Mismatch → do not mark paid, alert.
-5. In **one DB transaction**: insert `(provider, event_id)` into `payment_events` (unique key), then update the order with the status guard. Unique-violation = duplicate → return success without side effects.
-6. Respond in the format the gateway expects **fast** (< 5 s); push emails, fulfilment and invoices to a queue after commit.
+4. In **one DB transaction**, in this order:
+   1. If `(provider, event_id)` already has outcome `applied` → duplicate: return the gateway's success response, change nothing.
+   2. **Lock the order row** (`SELECT ... FOR UPDATE` on PostgreSQL, `BEGIN IMMEDIATE` on SQLite).
+   3. Compare **amount and currency** with the order **before** using the event's idempotency key. Mismatch → upsert the event with outcome `amount_mismatch` (audit + alert) and leave the order `pending`. This row must **not** count as processed: if the order is corrected and the gateway re-delivers the same event, it is evaluated again. (Writing the key first and checking the amount afterwards makes that re-delivery look like a duplicate, and the order stays `pending` forever.)
+   4. Match → upsert the event with outcome `applied` (`ON CONFLICT (provider, event_id) DO UPDATE ... WHERE payment_events.outcome <> 'applied'`). Row count 0 = a concurrent delivery won → duplicate.
+   5. `UPDATE orders SET status = 'paid' WHERE id = $1 AND status = 'pending'` and **check the row count**. 0 rows = the order was already paid, refunded or failed: mark the event `order_not_pending` and alert (usually a double payment to refund). Never report it as a normal success.
+5. Respond in the format the gateway expects **fast** (< 5 s); push emails, fulfilment and invoices to a queue after commit.
 
 ```sql
+-- PostgreSQL (the portable version used by payment_apply.py also runs on SQLite)
 CREATE TABLE payment_events (
   provider    text        NOT NULL,
   event_id    text        NOT NULL,          -- Stripe evt_..., MoMo transId, VNPay vnp_TransactionNo, PayOS reference
   order_id    uuid        NOT NULL REFERENCES orders(id),
   amount      bigint      NOT NULL,
+  currency    text        NOT NULL,
+  outcome     text        NOT NULL CHECK (outcome IN ('applied','amount_mismatch','order_not_pending')),
   payload     jsonb       NOT NULL,          -- raw event for audits / replays
   received_at timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY (provider, event_id)
@@ -35,16 +42,41 @@ CREATE TABLE payment_events (
 ```
 
 ```ts
-// Postgres + node-postgres: idempotent apply
-await db.query('BEGIN');
-const ins = await db.query(
-  `INSERT INTO payment_events (provider, event_id, order_id, amount, payload)
-   VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING`, [provider, eventId, orderId, amount, payload]);
-if (ins.rowCount === 0) { await db.query('ROLLBACK'); return ok(); }        // duplicate retry
-await db.query(`UPDATE orders SET status='paid', paid_at=now()
-                WHERE id=$1 AND status='pending' AND total=$2`, [orderId, amount]);
-await db.query('COMMIT');
+// PostgreSQL + node-postgres: apply a verified event exactly once
+const UPSERT = `INSERT INTO payment_events (provider, event_id, order_id, amount, currency, outcome, payload)
+  VALUES ($1,$2,$3,$4,$5,$6,$7)
+  ON CONFLICT (provider, event_id) DO UPDATE SET amount = excluded.amount, currency = excluded.currency,
+    outcome = excluded.outcome, payload = excluded.payload, received_at = now()
+  WHERE payment_events.outcome <> 'applied'`;
+
+const client = await pool.connect();
+try {
+  await client.query('BEGIN');
+  const seen = await client.query(
+    `SELECT 1 FROM payment_events WHERE provider=$1 AND event_id=$2 AND outcome='applied'`, [provider, eventId]);
+  if (seen.rowCount) { await client.query('COMMIT'); return 'duplicate'; }
+
+  const { rows } = await client.query(
+    'SELECT total, currency FROM orders WHERE id=$1 FOR UPDATE', [orderId]);
+  if (!rows.length) { await client.query('COMMIT'); return 'unknown_order'; }       // alert
+  if (BigInt(rows[0].total) !== BigInt(amount) || rows[0].currency !== currency) {
+    await client.query(UPSERT, [provider, eventId, orderId, amount, currency, 'amount_mismatch', payload]);
+    await client.query('COMMIT'); return 'amount_mismatch';                         // alert, order stays pending
+  }
+  const ins = await client.query(UPSERT, [provider, eventId, orderId, amount, currency, 'applied', payload]);
+  if (ins.rowCount === 0) { await client.query('COMMIT'); return 'duplicate'; }     // concurrent delivery won
+  const upd = await client.query(
+    `UPDATE orders SET status='paid', paid_at=now() WHERE id=$1 AND status='pending'`, [orderId]);
+  if (upd.rowCount === 0) {
+    await client.query(`UPDATE payment_events SET outcome='order_not_pending' WHERE provider=$1 AND event_id=$2`,
+                       [provider, eventId]);
+    await client.query('COMMIT'); return 'already_settled';                         // alert: refund?
+  }
+  await client.query('COMMIT'); return 'applied';
+} catch (e) { await client.query('ROLLBACK'); throw e; } finally { client.release(); }
 ```
+
+Moving between databases: the SQL above is standard enough to run on PostgreSQL, SQLite (≥ 3.24) and, with `ON DUPLICATE KEY UPDATE` instead of `ON CONFLICT`, MySQL. Keep the driver behind one `applyPayment()` function so switching SQLite (dev/tests) to PostgreSQL (production) changes only the connection and placeholders.
 
 ## 3. Gateway specifics
 
@@ -81,6 +113,9 @@ await db.query('COMMIT');
 - [ ] Valid signature → order `paid`, one `payment_events` row.
 - [ ] Same event twice → second call is a no-op and still returns the gateway's success response.
 - [ ] Tampered amount or body → rejected, order stays `pending`.
+- [ ] Amount mismatch, then the order is corrected and the same event re-delivered → applied (the mismatch did not consume the key).
+- [ ] Two different events for the same order → the second returns `already_settled` and raises an alert.
+- [ ] Same event delivered concurrently → applied once.
 - [ ] Re-serialised JSON body → rejected (proves you verify the raw body).
 - [ ] Stale Stripe timestamp → rejected.
 - [ ] Success after refund → order stays `refunded`.

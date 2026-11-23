@@ -1,14 +1,14 @@
 # Third-Party Notices — `kio-core-delivery`
 
-`kio-core-delivery` is maintained by Kio. The router (`SKILL.md`, `SKILL.md`), `references/executive-audit*.md`, `references/engine-router*.md`, `references/spec-kit*.md`, `scripts/kio_router.py`, `tests/test_router.py` and all Kio modifications are © 2026 Toan Pham / Kio System, MIT License (repository `LICENSE`).
+`kio-core-delivery` is maintained by Kio. The router (`SKILL.md`, `SKILL.md`), `references/executive-audit*.md`, `references/engine-router*.md`, `references/spec-kit*.md`, `scripts/kio_router.py`, `scripts/tests/test_router.py` and all Kio modifications are © 2026 Toan Pham / Kio System, MIT License (repository `LICENSE`).
 
 Parts of this skill are adapted from the open-source projects below. Keep this file when redistributing.
 
 | Upstream project | Copyright | License | Used in |
 | :--- | :--- | :--- | :--- |
 | [obra/superpowers](https://github.com/obra/superpowers) — brainstorming, writing-plans, executing-plans, dispatching-parallel-agents, using-git-worktrees | © Jesse Vincent | MIT | `references/brainstorming.md`, `references/visual-companion.md`, `references/spec-document-reviewer-prompt.md`, `references/writing-plans.md`, `references/plan-document-reviewer-prompt.md`, `references/executing-plans.md`, `references/dispatching-parallel-agents.md`, `references/git-worktrees.md`, `scripts/server.cjs`, `scripts/helper.js`, `scripts/frame-template.html`, `scripts/start-server.sh`, `scripts/stop-server.sh` |
-| [github/spec-kit](https://github.com/github/spec-kit) — Specification-Driven Development templates & command workflows | © GitHub, Inc. | MIT | `references/spec-driven.md`, `templates/constitution-template.md`, `templates/spec-template.md`, `templates/plan-template.md`, `templates/tasks-template.md`, `templates/checklist-template.md`, `templates/vscode-settings.json`, `templates/commands/*.md` |
-| [OthmanAdi/planning-with-files](https://github.com/OthmanAdi/planning-with-files) — persistent file-based planning | © 2026 Ahmad Adi | MIT | `references/planning-with-files/` (`README.md`, `reference.md`, `examples.md`), `templates/task_plan.md`, `templates/task_plan_autonomous.md`, `templates/findings.md`, `templates/progress.md`, `templates/loop.md`, `templates/analytics_task_plan.md`, `templates/analytics_findings.md`, `scripts/planning/` |
+| [github/spec-kit](https://github.com/github/spec-kit) — Specification-Driven Development templates & command workflows | © GitHub, Inc. | MIT | `references/spec-driven.md`, `assets/templates/constitution-template.md`, `assets/templates/spec-template.md`, `assets/templates/plan-template.md`, `assets/templates/tasks-template.md`, `assets/templates/checklist-template.md`, `assets/templates/vscode-settings.json`, `assets/templates/commands/*.md` |
+| [OthmanAdi/planning-with-files](https://github.com/OthmanAdi/planning-with-files) — persistent file-based planning | © 2026 Ahmad Adi | MIT | `references/planning-with-files/` (`README.md`, `reference.md`, `examples.md`), `assets/templates/task_plan.md`, `assets/templates/task_plan_autonomous.md`, `assets/templates/findings.md`, `assets/templates/progress.md`, `assets/templates/loop.md`, `assets/templates/analytics_task_plan.md`, `assets/templates/analytics_findings.md`, `scripts/planning/` |
 
 ---
 

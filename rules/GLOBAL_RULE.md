@@ -7,7 +7,7 @@
 
 Universally applied to all AI Coding Agents: Antigravity (Gemini CLI), Claude Code, OpenAI Codex, Qoder, Cursor IDE, Windsurf, Aider, and OpenAgents on every workstation.
 
-Primary Source Location: `~/Toan/my-agent-skills/rules/GLOBAL_RULE.md`
+Primary Source Location: `<kio-repo>/rules/GLOBAL_RULE.md` (setup.sh: `~/.kio/repo`)
 
 ---
 

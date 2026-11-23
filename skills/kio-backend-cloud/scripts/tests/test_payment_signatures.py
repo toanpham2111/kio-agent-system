@@ -1,6 +1,5 @@
 import hashlib
 import hmac
-import sqlite3
 import sys
 import unittest
 from pathlib import Path
@@ -80,34 +79,6 @@ class PayOSTests(unittest.TestCase):
         self.assertTrue(ps.payos_verify({"data": data, "signature": sig}, "CK"))
         self.assertFalse(ps.payos_verify({"data": {**data, "amount": 1}, "signature": sig}, "CK"))
         self.assertFalse(ps.payos_verify({"signature": sig}, "CK"))
-
-
-class IdempotencyTests(unittest.TestCase):
-    def setUp(self):
-        self.db = sqlite3.connect(":memory:")
-        self.db.executescript(ps.SCHEMA)
-        self.db.execute("INSERT INTO orders VALUES ('o1', 50000, 'pending')")
-
-    def status(self):
-        return self.db.execute("SELECT status FROM orders WHERE id='o1'").fetchone()[0]
-
-    def test_retry_is_duplicate(self):
-        self.assertEqual(ps.apply_payment(self.db, "momo", "t1", "o1", 50000), "applied")
-        self.assertEqual(ps.apply_payment(self.db, "momo", "t1", "o1", 50000), "duplicate")
-        self.assertEqual(self.status(), "paid")
-        self.assertEqual(self.db.execute("SELECT COUNT(*) FROM payment_events").fetchone()[0], 1)
-
-    def test_amount_mismatch_leaves_order_pending(self):
-        self.assertEqual(ps.apply_payment(self.db, "payos", "t2", "o1", 49999), "amount_mismatch")
-        self.assertEqual(self.status(), "pending")
-
-    def test_unknown_order(self):
-        self.assertEqual(ps.apply_payment(self.db, "vnpay", "t3", "nope", 1), "unknown_order")
-
-    def test_paid_order_not_downgraded(self):
-        self.db.execute("UPDATE orders SET status='refunded' WHERE id='o1'")
-        self.assertEqual(ps.apply_payment(self.db, "stripe", "t4", "o1", 50000), "applied")
-        self.assertEqual(self.status(), "refunded")
 
 
 if __name__ == "__main__":

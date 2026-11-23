@@ -9,7 +9,7 @@ metadata:
 
 # 👑 Kio Core Delivery, SDD & Orchestration (`kio-core-delivery`)
 
-The router for Kio's specification-driven development (SDD), atomic task planning, and multi-agent orchestration. Knowledge lives in `references/`, document templates in `templates/`, and automation utilities in `scripts/`. This file only points the way and holds the mandatory quality gates.
+The router for Kio's specification-driven development (SDD), atomic task planning, and multi-agent orchestration. Knowledge lives in `references/`, document templates in `assets/templates/`, and automation utilities in `scripts/`. This file only points the way and holds the mandatory quality gates.
 
 `KIO_DELIVERY_ROOT` = this skill's install directory (e.g. `~/.claude/skills/kio-core-delivery`). Commands below use `${KIO_DELIVERY_ROOT:-skills/kio-core-delivery}`.
 
@@ -28,10 +28,10 @@ The router for Kio's specification-driven development (SDD), atomic task plannin
 |---|---|---|
 | Explore ideas, clarify requirements before coding | `references/brainstorming.md` | 3 paths: Spike, Bounded, Architectural; subagent spec review in `references/spec-document-reviewer-prompt.md` |
 | Render live browser mockups / diagrams during brainstorming | `references/visual-companion.md` | Server: `scripts/start-server.sh`, `scripts/stop-server.sh` |
-| Design a system with the 4-phase Spec-Kit SDD workflow | `references/spec-kit.md` | Deep methodology: `references/spec-driven.md`; templates in `templates/*-template.md` and `templates/commands/*.md` |
+| Design a system with the 4-phase Spec-Kit SDD workflow | `references/spec-kit.md` | Deep methodology: `references/spec-driven.md`; templates in `assets/templates/*-template.md` and `assets/templates/commands/*.md` |
 | Break a spec into 2–5 minute atomic tasks | `references/writing-plans.md` | Self-contained TDD tasks; plan review prompt in `references/plan-document-reviewer-prompt.md` |
 | Execute a written implementation plan step by step | `references/executing-plans.md` | Disciplined checkpoints and verification gates |
-| Keep persistent working memory on disk for long tasks (5+ steps) | `references/planning-with-files/README.md` | Templates: `templates/task_plan.md`, `findings.md`, `progress.md`; scripts: `scripts/planning/init-session.sh`; details: `reference.md`, `examples.md` |
+| Keep persistent working memory on disk for long tasks (5+ steps) | `references/planning-with-files/README.md` | Templates: `assets/templates/task_plan.md`, `findings.md`, `progress.md`; scripts: `scripts/planning/init-session.sh`; details: `reference.md`, `examples.md` |
 | Dispatch multiple independent subagents in parallel | `references/dispatching-parallel-agents.md` | One subagent per independent problem domain with zero shared state |
 | Isolate feature work in a Git worktree | `references/git-worktrees.md` | Detect existing isolation → native tool → `git worktree add` |
 | Route tasks across local AI CLIs (`claude`, `codex`, `agy`) | `references/engine-router.md` | CLI: `python3 "${KIO_DELIVERY_ROOT:-skills/kio-core-delivery}/scripts/kio_router.py"` |
@@ -42,7 +42,7 @@ The router for Kio's specification-driven development (SDD), atomic task plannin
 | Need | Start at | Switch when |
 |---|---|---|
 | "I have a new feature idea, requirements are still fuzzy" | `references/brainstorming.md` | Design is approved and needs full SDD artifacts → `references/spec-kit.md`; or ready for immediate task breakdown → `references/writing-plans.md` |
-| "Write a formal PRD / technical spec for a complex system" | `references/spec-kit.md` (`templates/spec-template.md`) | `spec.md` & `plan.md` are ready and need 2–5 min coding steps → `references/writing-plans.md` |
+| "Write a formal PRD / technical spec for a complex system" | `references/spec-kit.md` (`assets/templates/spec-template.md`) | `spec.md` & `plan.md` are ready and need 2–5 min coding steps → `references/writing-plans.md` |
 | "Track progress and research findings across a multi-step session" | `references/planning-with-files/README.md` | Need a step-by-step implementation blueprint with exact file paths and test code → `references/writing-plans.md` |
 | "Execute an existing implementation plan" | `references/executing-plans.md` | 2+ independent tasks or test failures across unrelated subsystems → `references/dispatching-parallel-agents.md` |
 | "Dispatch work across different local AI CLI engines" | `references/engine-router.md` (`scripts/kio_router.py`) | Coordinating subagents inside the current host session → `references/dispatching-parallel-agents.md` |
@@ -54,7 +54,7 @@ flowchart TD
     User["User Request"] --> Triage{"Triage Task Scope"}
     Triage -->|"Hotfix < 30s"| FastTrack["🚀 Direct Fix & Run Tests"]
     Triage -->|"New Feature / Complex"| Brainstorm["💡 references/brainstorming.md"]
-    Brainstorm --> SDD["📐 references/spec-kit.md (templates/)"]
+    Brainstorm --> SDD["📐 references/spec-kit.md (assets/templates/)"]
     SDD --> Plan["⚡ references/writing-plans.md (Atomic 2-5m Tasks)"]
     Plan --> Worktree["🌿 references/git-worktrees.md"]
     Worktree --> Exec["🔨 references/executing-plans.md / dispatching-parallel-agents.md"]
@@ -81,6 +81,6 @@ UI implementation belongs to `kio-frontend-craft`; backend/DB to `kio-backend-cl
 ## 📦 What's included
 
 - `references/` — 12 delivery guides listed in the routing table (`brainstorming.md`, `visual-companion.md`, `spec-kit.md`, `spec-driven.md`, `writing-plans.md`, `executing-plans.md`, `dispatching-parallel-agents.md`, `git-worktrees.md`, `engine-router.md`, `executive-audit.md`, and `planning-with-files/`).
-- `templates/` — 5 Spec-Kit templates (`constitution-template.md`, `spec-template.md`, `plan-template.md`, `tasks-template.md`, `checklist-template.md`), 9 command workflows in `templates/commands/`, and 7 persistent planning templates (`task_plan.md`, `task_plan_autonomous.md`, `findings.md`, `progress.md`, `loop.md`, `analytics_task_plan.md`, `analytics_findings.md`).
+- `assets/templates/` — 5 Spec-Kit templates (`constitution-template.md`, `spec-template.md`, `plan-template.md`, `tasks-template.md`, `checklist-template.md`), 9 command workflows in `assets/templates/commands/`, and 7 persistent planning templates (`task_plan.md`, `task_plan_autonomous.md`, `findings.md`, `progress.md`, `loop.md`, `analytics_task_plan.md`, `analytics_findings.md`).
 - `scripts/` — `kio_router.py` (tested via `python3 -m unittest discover -s skills/kio-core-delivery/tests`), the Visual Brainstorming server (`start-server.sh`, `stop-server.sh`, `server.cjs`, `helper.js`, `frame-template.html`), and the persistent file-planning scripts in `scripts/planning/`.
 - `THIRD_PARTY_NOTICES.md` — open-source credits and licenses (`obra/superpowers`, `github/spec-kit`, `OthmanAdi/planning-with-files`); keep it when redistributing.

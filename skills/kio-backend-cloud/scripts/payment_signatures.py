@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Kio reference implementation: payment webhook signature checks + idempotency.
+"""Kio reference implementation: payment webhook signature checks.
 
 Stdlib only. Mirrors the rules in references/payments-webhooks.md so an agent can
 port them to any stack and test the port against the same vectors.
@@ -19,7 +19,6 @@ from __future__ import annotations
 
 import hashlib
 import hmac
-import sqlite3
 import time
 from typing import Any, Mapping
 from urllib.parse import quote_plus
@@ -105,45 +104,7 @@ def payos_verify(webhook: Mapping[str, Any], checksum_key: str) -> bool:
     return _safe_equal(_hmac_hex(checksum_key, payos_data_string(data)), received)
 
 
-# --- Idempotency ------------------------------------------------------------
-SCHEMA = """
-CREATE TABLE IF NOT EXISTS payment_events (
-  provider    TEXT NOT NULL,
-  event_id    TEXT NOT NULL,
-  order_id    TEXT NOT NULL,
-  amount      INTEGER NOT NULL,
-  received_at INTEGER NOT NULL,
-  PRIMARY KEY (provider, event_id)
-);
-CREATE TABLE IF NOT EXISTS orders (
-  id     TEXT PRIMARY KEY,
-  total  INTEGER NOT NULL,
-  status TEXT NOT NULL CHECK (status IN ('pending','paid','failed','refunded'))
-);
-"""
-
-
-def apply_payment(db: sqlite3.Connection, provider: str, event_id: str,
-                  order_id: str, amount: int) -> str:
-    """Record the event and mark the order paid in ONE transaction.
-
-    Returns "applied", "duplicate", "amount_mismatch" or "unknown_order".
-    The unique key makes retries safe; the status guard makes it monotonic.
-    """
-    with db:  # BEGIN ... COMMIT / ROLLBACK
-        row = db.execute("SELECT total, status FROM orders WHERE id = ?", (order_id,)).fetchone()
-        if row is None:
-            return "unknown_order"
-        total, _status = row
-        if amount != total:
-            return "amount_mismatch"
-        cur = db.execute(
-            "INSERT OR IGNORE INTO payment_events(provider, event_id, order_id, amount, received_at) "
-            "VALUES (?, ?, ?, ?, ?)", (provider, event_id, order_id, amount, int(time.time())))
-        if cur.rowcount == 0:
-            return "duplicate"
-        db.execute("UPDATE orders SET status = 'paid' WHERE id = ? AND status = 'pending'", (order_id,))
-        return "applied"
+# Applying a verified event exactly once lives in payment_apply.py.
 
 
 if __name__ == "__main__":
