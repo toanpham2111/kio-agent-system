@@ -118,6 +118,7 @@ def test_pointers_were_found() -> None:
     assert PROSE, f"no prose section pointers found under {PLUGIN_ROOT} — the scanner broke"
 
 
+@pytest.mark.skipif(not WORKFLOW_JS.exists(), reason="workflows/codeql-build.js belongs to the upstream plugin and is not shipped in Kio")
 def test_the_workflows_pointers_are_still_checked() -> None:
     """The global guard above is satisfied by markdown alone.
 
@@ -132,6 +133,7 @@ def test_the_workflows_pointers_are_still_checked() -> None:
     )
 
 
+@pytest.mark.skipif(not WORKFLOW_JS.exists(), reason="workflows/codeql-build.js belongs to the upstream plugin and is not shipped in Kio")
 def test_the_workflow_does_not_hardcode_a_path_into_this_repo() -> None:
     """A repo-relative skill path resolves only in a checkout of the marketplace.
 

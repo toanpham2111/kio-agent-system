@@ -23,6 +23,7 @@ The router for Kio's interface work. Knowledge lives in `references/`, design da
 2. **Pick exactly one primary reference** from the [routing table](#-routing-table). For overlaps use the [selection rules](#-selection-rules-for-overlaps).
 3. **Look details up by domain/stack** instead of guessing: `--domain style|color|typography|icons|landing|product|ux|chart|gsap|react|web|google-fonts`, `--stack <framework>`.
 4. **Before delivery** always run the checklist in `references/ui-ux/pro-rules.md` (*Pre-Delivery Checklist*), check at 375 px, 768 px and 1440 px, and run `scripts/layout-check.js` (no edge spill, no misaligned rows, no wrapped buttons).
+5. **MANDATORY reads (open the file first):** performance or PageSpeed work → `references/web-performance.md`; React / Next.js code → `references/react/README.md`; motion or smooth scroll → `references/motion-lenis.md`; "looks AI-generated" → `references/unslop-9-pass.md`; mobile apps → `references/mobile/README.md`. In the answer, name the reference you followed.
 
 ## 🧭 Routing table
 

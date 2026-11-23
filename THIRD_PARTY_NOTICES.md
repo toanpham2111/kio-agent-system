@@ -33,7 +33,7 @@ The licenses below allow modification and redistribution **on the condition that
 | 15 | [anthropics/skills](https://github.com/anthropics/skills) — `mcp-builder` | Anthropic, PBC | Apache 2.0 (text in `skills/kio-backend-cloud/references/LICENSE-APACHE-2.0.txt`) | `skills/kio-backend-cloud/references/mcp-server-builder.md` (modified by Kio) |
 | 16 | [obra/superpowers](https://github.com/obra/superpowers) | Jesse Vincent | MIT | `skills/kio-core-delivery/references/` (`brainstorming.md`, `visual-companion.md`, `writing-plans.md`, `executing-plans.md`, `dispatching-parallel-agents.md`, `git-worktrees.md`), `skills/kio-core-delivery/scripts/` (visual brainstorming companion), `skills/kio-qa-security/references/tdd-debugging/`, `scripts/find-polluter.sh`, `evals/tdd-pressure/` |
 | 17 | [pstack](https://github.com/cursor/plugins/tree/main/pstack) | Lauren Tan ("poteto") | MIT | `skills/kio-qa-security/references/deep-review/` (blast-radius, interrogate, arena, correct) |
-| 18 | [trailofbits/skills](https://github.com/trailofbits/skills) — static-analysis | Trail of Bits | See upstream repository (not yet confirmed by Kio) | `skills/kio-qa-security/references/codeql/` (workflows, references, scripts) |
+| 18 | [trailofbits/skills](https://github.com/trailofbits/skills) — static-analysis | Trail of Bits | **CC BY-SA 4.0** (not MIT; ShareAlike applies; notice and list of Kio changes in `skills/kio-qa-security/references/codeql/LICENSE`) | `skills/kio-qa-security/references/codeql/` (whole folder: SKILL.md, workflows, references, scripts) |
 | 19 | [github/spec-kit](https://github.com/github/spec-kit) | GitHub, Inc. | MIT | `skills/kio-core-delivery/references/spec-driven.md`, `skills/kio-core-delivery/assets/templates/` (`*-template.md`, `commands/*.md`) |
 | 20 | [OthmanAdi/planning-with-files](https://github.com/OthmanAdi/planning-with-files) | Ahmad Adi | MIT | `skills/kio-core-delivery/references/planning-with-files/`, `skills/kio-core-delivery/assets/templates/` (`task_plan*.md`, `findings.md`, `progress.md`, `loop.md`), `skills/kio-core-delivery/scripts/planning/` |
 
@@ -44,7 +44,7 @@ The licenses below allow modification and redistribution **on the condition that
 | [ivangfalco/ads-skills](https://github.com/ivangfalco/ads-skills) | Ivan Falco | Framework lineage of `modules/ads/references/` and `modules/ad-creative/references/awareness-headlines.md` |
 | [gooseworks-ai/gooseworks-ads-skills](https://github.com/gooseworks-ai/gooseworks-ads-skills) | Shiv Sakhuja and the Gooseworks team | `modules/ad-creative/references/imessage-video-ads.md` |
 | Cloudflare web performance audit workflow | Cloudflare | `skills/kio-frontend-craft/references/web-performance.md` (5-phase audit approach) |
-| Alibaba open-code-review (`ocr`) | Alibaba | 5-layer review checklist in `skills/kio-qa-security/references/codeql/SKILL.md` |
+| Alibaba open-code-review (`ocr`) | Alibaba | 5-layer review checklist in `skills/kio-qa-security/references/security-review.md` |
 | *Founding Marketing* (book) | Corey Haines | Cited and summarised in several `modules/` references |
 
 Books, articles and products named inside the skills keep their in-line citations; their trademarks belong to their owners.

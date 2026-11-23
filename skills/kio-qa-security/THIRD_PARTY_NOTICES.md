@@ -1,6 +1,6 @@
 # Third-Party Notices — `kio-qa-security`
 
-`kio-qa-security` is maintained by Kio. The router (`SKILL.md`, `SKILL.md`), `references/unit-testing-and-test-cases*.md`, `references/playwright-e2e.md`, `references/tdd-debugging/README*.md`, `references/deep-review/README*.md`, `references/codeql/SKILL.md` and all Kio modifications are © 2026 Toan Pham / Kio System, MIT License (repository `LICENSE`).
+`kio-qa-security` is maintained by Kio. The router (`SKILL.md`, `SKILL.md`), `references/unit-testing-and-test-cases*.md`, `references/playwright-e2e.md`, `references/tdd-debugging/README*.md`, `references/deep-review/README*.md`, `references/security-review.md` and all Kio modifications are © 2026 Toan Pham / Kio System, MIT License (repository `LICENSE`).
 
 Parts of this skill are adapted from the projects below. Keep this file and `references/deep-review/PSTACK-NOTICE.md` when redistributing.
 
@@ -8,18 +8,18 @@ Parts of this skill are adapted from the projects below. Keep this file and `ref
 | :--- | :--- | :--- | :--- |
 | [obra/superpowers](https://github.com/obra/superpowers) — systematic debugging & TDD skills | © Jesse Vincent | MIT | `references/tdd-debugging/` (`root-cause-tracing.md`, `defense-in-depth.md`, `condition-based-waiting.md`, `condition-based-waiting-example.ts`, `writing-good-tests.md`), `scripts/find-polluter.sh`, `evals/tdd-pressure/` |
 | [pstack](https://github.com/cursor/plugins/tree/main/pstack) by Lauren Tan ("poteto") | © Lauren Tan | MIT | `references/deep-review/` (`blast-radius.md`, `interrogate.md`, `arena.md`, `correct.md`); details in `PSTACK-NOTICE.md` |
-| [trailofbits/skills](https://github.com/trailofbits/skills) — static-analysis (CodeQL, Semgrep) | © Trail of Bits | See the upstream repository's license (Kio has not yet confirmed it; check before redistributing these files) | `references/codeql/workflows/`, `references/codeql/references/`, `references/codeql/scripts/` |
+| [trailofbits/skills](https://github.com/trailofbits/skills) — static-analysis (CodeQL, Semgrep) | © Trail of Bits | **CC BY-SA 4.0**, not MIT. The whole `references/codeql/` folder is ShareAlike; the notice, link and list of Kio changes are in `references/codeql/LICENSE`. Keep it when redistributing, and release your own edits of these files under CC BY-SA 4.0 | `references/codeql/` (`SKILL.md`, `workflows/`, `references/`, `scripts/`) |
 
 ### Inspirations (re-expressed, no text redistributed)
 
 | Source | Credit | Used in |
 | :--- | :--- | :--- |
-| Alibaba open-code-review (`ocr` CLI) and its five-layer review | Alibaba | The 5-layer quality checklist and the optional `ocr` step in `references/codeql/SKILL.md` |
+| Alibaba open-code-review (`ocr` CLI) and its five-layer review | Alibaba | The 5-layer quality checklist and the optional `ocr` step in `references/security-review.md` |
 | Microsoft Playwright and Playwright MCP | Microsoft | Tools documented in `references/playwright-e2e.md` (not redistributed) |
 
 ---
 
-## MIT License (applies to the MIT entries above, with each entry's copyright line)
+## MIT License (applies to the MIT entries above, with each entry's copyright line; not to `references/codeql/`, which is CC BY-SA 4.0)
 
 ```
 Permission is hereby granted, free of charge, to any person obtaining a copy

@@ -21,6 +21,7 @@ The router for Kio's specification-driven development (SDD), atomic task plannin
    - **New feature / Architectural work:** follow Brainstorming → Spec-Kit / Atomic Plan → Isolated Worktree → Disciplined Execution.
 2. **Pick one primary reference** from the [routing table](#-routing-table) and follow its process.
 3. **Never write production code before the design or plan is approved** on new features or architectural changes.
+4. **MANDATORY reads (open the file first):** writing a spec → `references/spec-kit.md`; breaking work into tasks → `references/writing-plans.md`; executing a plan → `references/executing-plans.md`; final sign-off → `references/executive-audit.md`. In the answer, name the reference you followed.
 
 ## 🧭 Routing table
 

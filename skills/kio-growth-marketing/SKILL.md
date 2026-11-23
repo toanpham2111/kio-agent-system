@@ -19,6 +19,7 @@ The router for Kio's **79 sub-skills**: 53 growth/marketing modules (`references
 4. **When a module names another module** ("see **signup**", "use the `ab-testing` skill"), read it as `references/modules/<name>/SKILL.md`; a `seo-` name that is not in `references/modules/` means `references/seo/subskills/<name>/SKILL.md`. `seo-audit` exists in both: see merge rule #1.
 5. **Multi-step jobs** (launches, a landing page from scratch, a full SEO audit…) follow the [Multi-module workflows](#-multi-module-workflows).
 6. **Tools and APIs**: `references/tools/REGISTRY.md` (index), `references/tools/integrations/<tool>.md` (106 guides), `scripts/clis/` (67 CLIs). Never invent endpoints.
+7. **MANDATORY reads:** an SEO audit → `references/seo/subskills/seo-audit/SKILL.md` and `seo-technical`; schema markup → `seo-schema`; AI search / GEO → `seo-geo`. Open the sub-skill file before answering and name it in the answer.
 
 ## 🧭 Routing table (79 sub-skills)
 

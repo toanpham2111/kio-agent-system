@@ -18,6 +18,7 @@ The router for Kio's testing, review and security work. Knowledge lives in `refe
 1. **Read the project's rules first** (`CLAUDE.md`, `AGENTS.md`, test commands in `package.json` / `pyproject.toml` / `Makefile`). Use the test framework the project already uses; do not add a new one.
 2. **Pick one primary reference** from the [routing table](#-routing-table) and follow its process.
 3. **Never report done without running it.** Every conclusion carries the command that ran and its result (exit code, pass/fail counts, report path).
+4. **MANDATORY reads (open the file before you answer, not from memory):** security review or pre-merge review → `references/security-review.md`; Semgrep/CodeQL scan → `references/codeql/SKILL.md` and the workflow it names; a bug you cannot explain → `references/tdd-debugging/root-cause-tracing.md`; a risky or > 300-line diff → `references/deep-review/blast-radius.md`; UI/E2E checks → `references/playwright-e2e.md`. In the answer, name the reference you followed.
 
 ## 🧭 Routing table
 
@@ -34,8 +35,8 @@ The router for Kio's testing, review and security work. Knowledge lives in `refe
 | Large diff (> 300 lines) needs challenge | `references/deep-review/interrogate.md` | Adversarial review |
 | Compare several solutions in parallel | `references/deep-review/arena.md` | |
 | A bug keeps coming back | `references/deep-review/correct.md` | Make it impossible |
-| Security review, 5-layer checklist, form anti-bot | `references/codeql/SKILL.md` | Two-stage review, sign-off |
-| Semgrep / CodeQL SAST | `references/codeql/SKILL.md` → `workflows/` | Scripts in `references/codeql/scripts/`, rules in `references/codeql/references/` |
+| Security review, 5-layer checklist, form anti-bot | `references/security-review.md` | Two-stage review, sign-off (MIT, Kio) |
+| Semgrep / CodeQL SAST | `references/codeql/SKILL.md` → `workflows/` (CC BY-SA 4.0, Trail of Bits) | Scripts in `references/codeql/scripts/`, rules in `references/codeql/references/` |
 | E2E tests, responsive screenshots | `references/playwright-e2e.md` | 375 / 768 / 1440 px, 1:1 against the design |
 
 ## 🔀 Selection rules for overlaps
@@ -44,7 +45,7 @@ The router for Kio's testing, review and security work. Knowledge lives in `refe
 |---|---|---|
 | "Write tests for this function" | `unit-testing-and-test-cases.md` | New feature with no code yet → `tdd-debugging/README.md` (test first) |
 | "Tests fail" | `tdd-debugging/root-cause-tracing.md` | Random failures → `condition-based-waiting.md`; only fails in the full suite → `find-polluter.sh` |
-| Review a PR | `codeql/SKILL.md` (two-stage + 5 layers) | Large diff or shared API → `deep-review/blast-radius.md`, `interrogate.md` |
+| Review a PR | `security-review.md` (two-stage + 5 layers) | Large diff or shared API → `deep-review/blast-radius.md`, `interrogate.md` |
 | "Any vulnerabilities?" | `codeql/SKILL.md` | Automated scan → Semgrep first (fast), CodeQL for deep taint tracking |
 | UI differs from the design | `playwright-e2e.md` | The bug is in UI code → `kio-frontend-craft` |
 
@@ -54,8 +55,8 @@ The router for Kio's testing, review and security work. Knowledge lives in `refe
 |---|---|
 | New feature | `unit-testing-and-test-cases.md` (matrix) → `tdd-debugging/README.md` (TDD) → `playwright-e2e.md` (if UI) → sign-off |
 | Bug fix | `root-cause-tracing.md` → failing test that reproduces it → fix → `defense-in-depth.md` → `deep-review/correct.md` if it recurred |
-| Before merging a big change | `deep-review/blast-radius.md` → `codeql/SKILL.md` (review + Semgrep) → full test suite |
-| Pre-release security audit | `codeql/SKILL.md` → `workflows/scan-workflow.md` (Semgrep) → `workflows/build-database.md` + `run-analysis.md` (CodeQL) → `merge_sarif.py` |
+| Before merging a big change | `deep-review/blast-radius.md` → `security-review.md` → `codeql/SKILL.md` (Semgrep) → full test suite |
+| Pre-release security audit | `security-review.md` → `codeql/SKILL.md` → `workflows/scan-workflow.md` (Semgrep) → `workflows/build-database.md` + `run-analysis.md` (CodeQL) → `merge_sarif.py` |
 
 Writing code belongs to `kio-frontend-craft` / `kio-backend-cloud`; planning to `kio-core-delivery`.
 

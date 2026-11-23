@@ -1,0 +1,41 @@
+Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+SPDX-License-Identifier: CC-BY-SA-4.0
+
+Scope
+-----
+Everything inside this folder (references/codeql/): SKILL.md, workflows/,
+references/ and scripts/ (including the tests), is licensed under CC BY-SA 4.0.
+This folder is NOT covered by the repository's MIT license.
+
+Kio's own review process (two-stage review, 5-layer checklist, sign-off) lives
+outside this folder, in ../security-review.md, and stays under the MIT license.
+
+Attribution
+-----------
+Original work: "static-analysis" skills from https://github.com/trailofbits/skills
+Copyright (c) Trail of Bits, licensed under CC BY-SA 4.0.
+License text: https://creativecommons.org/licenses/by-sa/4.0/legalcode
+License summary: https://creativecommons.org/licenses/by-sa/4.0/
+
+Changes by Kio System (indicated as required by CC BY-SA 4.0 section 3(a)(1)(B))
+---------------------------------------------------------------------------
+Files were imported, edited and reorganised by Kio System; the exact edits of each
+file are in this repository's git history (path skills/kio-qa-security/references/codeql/).
+Known changes:
+- Moved into kio-qa-security/references/codeql/ and re-linked to Kio's folder layout.
+- SKILL.md rewritten as a Semgrep/CodeQL entry point (database discovery, "each Bash
+  call is a fresh shell" note, Semgrep quick start); the review process was moved to
+  ../security-review.md.
+- Frontmatter reduced to name, description and metadata.
+- Semgrep invoked with --metrics=off in the quick start.
+- Scripts and tests kept; three tests that need the upstream file
+  workflows/codeql-build.js (not included) are skipped with a reason.
+
+Your obligations when you reuse or adapt files in this folder
+-------------------------------------------------------------
+- Keep this notice, give credit to Trail of Bits and link to the license.
+- Say what you changed.
+- Release your adapted versions of these files under CC BY-SA 4.0 (or a compatible license).
+
+This notice is a summary, not the license itself, and not legal advice. The
+legally binding text is at the legalcode URL above.

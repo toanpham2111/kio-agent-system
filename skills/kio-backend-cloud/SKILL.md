@@ -17,6 +17,7 @@ The router for Kio's server-side work. Knowledge lives in `references/`; this fi
 2. **Open the area overview** ("Start" column), then the deep-dive references it points to.
 3. **Payments, auth, RLS, migrations:** follow the reference checklist exactly and write a test for every failure case it lists. These are never "temporary".
 4. **Production changes** (migrations, infrastructure, secrets, DNS) need user approval and a rollback plan.
+5. **MANDATORY reads (open the file before you write code, not from memory):** payment or webhook code → `references/payments-webhooks.md`; RLS, per-user data → `references/postgres-supabase-rls.md`; migrations or DDL on live tables → `references/migrations-and-caching.md`; MCP server → `references/mcp-server-builder.md`; RAG or vector search → `references/production-rag-pipelines.md`. In the answer, name the reference you followed.
 
 ## 🧭 Routing table
 

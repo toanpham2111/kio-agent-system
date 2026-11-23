@@ -124,6 +124,10 @@ def test_flagged_invocations_were_found() -> None:
     )
 
 
+@pytest.mark.skipif(
+    not (PLUGIN_ROOT / "workflows" / "codeql-build.js").exists(),
+    reason="workflows/codeql-build.js belongs to the upstream plugin and is not shipped in Kio",
+)
 def test_the_workflow_is_in_scope() -> None:
     """The file the original bug shipped in must be one of the files scanned.
 

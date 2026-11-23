@@ -3,7 +3,7 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Release](https://img.shields.io/badge/Release-v1.4.0-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
+[![Release](https://img.shields.io/badge/Release-v1.4.1-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
 [![Supported Tools](https://img.shields.io/badge/Compatible_With-Claude_Code_|_Cursor_|_Codex_|_Antigravity_|_Windsurf-blue)](https://github.com/toanpham2111/kio-agent-system)
 [![Skills](https://img.shields.io/badge/Skills-7_Modular_Master_Skills-green)](skills/)
 [![Standard](https://img.shields.io/badge/Format-Agent_Skill_Standard-orange)](skills/)
@@ -193,7 +193,7 @@ All capabilities are organized into 7 self-contained master skills located in th
 | :--- | :--- | :--- |
 | **[`skills/kio-frontend-craft`](skills/kio-frontend-craft)** | **Frontend UI/UX & Motion** | 79 searchable styles, 192 contrast-checked palettes, 74 font pairings and 22 framework rule sets (search CLI), 64 React/Next.js performance rules, Core Web Vitals (PageSpeed 95–100) audits, the 9-pass /unslop redesign SOP, Lenis smooth scroll, PDF → responsive HTML, React Native / Expo / SwiftUI guides, **free stock photos with credits** (Unsplash, Pexels, Openverse) and a **layout check** (`layout-check.js`: no edge spill, aligned rows, no wrapped buttons, no HTML entities like `&amp;`). |
 | **[`skills/kio-backend-cloud`](skills/kio-backend-cloud)** | **Backend, DB & Cloud** | REST/GraphQL API and auth (anti-IDOR) design, payments with idempotent webhooks (Stripe, PayPal, VNPay, MoMo, PayOS, SePay — tested reference code that applies each event exactly once on PostgreSQL and SQLite), PostgreSQL / Supabase RLS, EXPLAIN-driven indexing, zero-downtime migrations, Docker, GitHub Actions, Terraform, RAG with pgvector, QLoRA fine-tuning, and MCP servers in Python or TypeScript. |
-| **[`skills/kio-qa-security`](skills/kio-qa-security)** | **Automated QA & Security** | 4-quadrant test matrices and unit-test templates (Vitest, Pytest, Go), TDD and systematic debugging (root-cause tracing, flaky-test and test-pollution tools), deep review of risky diffs (blast radius, interrogation, arena), security review with Semgrep and CodeQL SAST (scripts + tests), and Playwright E2E visual QA at 375/768/1440 px. |
+| **[`skills/kio-qa-security`](skills/kio-qa-security)** | **Automated QA & Security** | 4-quadrant test matrices and unit-test templates (Vitest, Pytest, Go), TDD and systematic debugging (root-cause tracing, flaky-test and test-pollution tools), deep review of risky diffs (blast radius, interrogation, arena), security review (two stages, 5 layers) plus Semgrep and CodeQL SAST (scripts + tests; the SAST folder is CC BY-SA 4.0), and Playwright E2E visual QA at 375/768/1440 px. |
 | **[`skills/kio-core-delivery`](skills/kio-core-delivery)** | **Planning & Delivery** | Socratic brainstorming with browser Visual Companion mockups, Spec-Kit SDD templates (`constitution.md`, `spec.md`, `plan.md`, `tasks.md`), 2–5 minute atomic task plans, persistent file-based working memory (`task_plan.md`, `findings.md`, `progress.md`), parallel subagent dispatch, Git worktrees, multi-engine AI CLI routing (`kio_router.py`), and 5-pillar executive audit sign-off. |
 | **[`skills/kio-growth-marketing`](skills/kio-growth-marketing)** | **Growth, CRO & SEO** | One router over 79 sub-skills: 53 growth modules (CRO, copywriting, pricing, email, ads, launches, analytics, RevOps…) and 26 SEO Engine sub-skills (technical SEO, schema, AI search / GEO, local SEO) with 19 agents and 60+ Python checks. |
 | **[`skills/kio-wordpress-fse`](skills/kio-wordpress-fse)** | **WordPress FSE** | Step-by-step S0-S8 industrial pipeline for turning designs or HTML mockups into clean, 100% native Gutenberg block themes without plugin bloat. |
@@ -448,6 +448,8 @@ A simple file-based memory system allowing your local tools to remember:
 ## 📄 License, Credits & Contributing
 
 Kio is open source and licensed under the **[MIT License](LICENSE)**.
+
+> **One exception:** `skills/kio-qa-security/references/codeql/` is adapted from Trail of Bits `skills` and is licensed **CC BY-SA 4.0**, not MIT (see its [LICENSE](skills/kio-qa-security/references/codeql/LICENSE)). If you reuse or adapt files from that folder, credit Trail of Bits, say what you changed and release your versions under CC BY-SA 4.0. Kio's own review process lives outside it, in `references/security-review.md`, under MIT.
 
 ### 🙏 Credits & Third-Party Open Source Acknowledgments
 
