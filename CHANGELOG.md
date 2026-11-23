@@ -4,6 +4,17 @@ All notable changes to the **Kio** project are documented here following the [Ke
 
 ---
 
+## [1.4.4] - 2026-11-23 — `/kio-update`
+
+### ⌨️ New command
+- **`/kio-update`**: compares the installed version (first `## [x.y.z]` of `~/.kio/repo/CHANGELOG.md`) with the latest release tag of `kio-agent-system`, summarises what changed and shows the update command for your system. It runs the installer only if you type `/kio-update update` or agree. Installed for Claude Code, Codex, Cursor and Gemini CLI like the other commands (19 commands in total).
+
+### 📖 README
+- Added the brand logo `assets/kio-logo.png` at the top of the README.
+- New "Staying up to date" note: `/kio-update`, re-running the installer, and GitHub **Watch → Custom → Releases**. Command counts updated (19).
+
+---
+
 ## [1.4.3] - 2026-11-23 — License Exceptions Listed & Honest Opening Claim
 
 Fixes from the v1.4.2 review.

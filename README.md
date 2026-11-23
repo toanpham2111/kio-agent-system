@@ -1,9 +1,13 @@
+<p align="center">
+  <img src="assets/kio-logo.png" alt="Kio logo" width="260" />
+</p>
+
 # 🧰 Kio — Open Source AI Skills Collection for Modern Software Engineering
 
 <div align="center">
 
 [![License](https://img.shields.io/badge/License-MIT_+_3rd--party_exceptions-yellow.svg)](#-license-credits--contributing)
-[![Release](https://img.shields.io/badge/Release-v1.4.3-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
+[![Release](https://img.shields.io/badge/Release-v1.4.4-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
 [![Supported Tools](https://img.shields.io/badge/Compatible_With-Claude_Code_|_Cursor_|_Codex_|_Antigravity_|_Windsurf-blue)](https://github.com/toanpham2111/kio-agent-system)
 [![Skills](https://img.shields.io/badge/Skills-7_Modular_Master_Skills-green)](skills/)
 
@@ -135,6 +139,7 @@ No prompts to memorise: the installer copies these commands into `~/.claude/comm
 | `/kio-growth` | `kio-growth-marketing` | CRO, copywriting, launches, ads, email |
 | `/kio-wp` | `kio-wordpress-fse` | WordPress block themes, the S0–S8 pipeline |
 | `/kio-think` | `kio-cognitive` | First-principles analysis, comparing options |
+| `/kio-update` | none | Check for a newer Kio release and update (shows versions, installs only on your yes) |
 | `/kio-spec-constitution` → `/kio-spec-specify` → `/kio-spec-clarify` → `/kio-spec-plan` → `/kio-spec-tasks` → `/kio-spec-analyze` → `/kio-spec-implement` (plus `/kio-spec-checklist`, `/kio-spec-converge`) | `kio-core-delivery` | The Spec-Kit SDD flow, **no Spec-Kit CLI needed**; artifacts live in `specs/<NNN>-<name>/` |
 
 Kio's command files carry a `kio-command:` marker; updates only overwrite files with that marker, a file of yours with the same name is left alone, and uninstall removes only Kio's files.
@@ -144,7 +149,7 @@ Kio's command files carry a `kio-command:` marker; updates only overwrite files 
 The menu mixes two kinds of entries that point to the same skills:
 
 - **7 skills** (`kio-frontend-craft`, `kio-qa-security`, ...): they trigger on their own when your request matches their description.
-- **18 commands** (`/kio`, `/kio-fe`, ... and 9 `/kio-spec-*`): shortcuts that name the skill for you. `/kio-qa` and the `kio-qa-security` skill do the same job.
+- **19 commands** (`/kio`, `/kio-fe`, ... and 9 `/kio-spec-*`): shortcuts that name the skill for you. `/kio-qa` and the `kio-qa-security` skill do the same job.
 - Some tools also list sub-skills found under `references/` (for example a "Kio Seo" entry that belongs to `kio-growth-marketing`). They are not extra skills.
 
 **You only need to remember three things:**
@@ -189,6 +194,11 @@ irm https://raw.githubusercontent.com/toanpham2111/kio-agent-system/main/setup.p
 ```
 
 > **Which version gets installed:** the one-line installer installs the **latest release** (newest `v*` tag), never unreleased work on `main`. Re-run it to update. To choose another version: `curl -fsSL .../setup.sh | KIO_REF=v1.1.0 bash` (or `KIO_REF=main`); on Windows: `$env:KIO_REF="v1.1.0"; irm .../setup.ps1 | iex`. If an update fails, the installer prints the error and exits with code `2`; your skills keep using the copy already on disk.
+
+**Staying up to date.** Kio does not update itself, so you choose when:
+1. Type `/kio-update` in your AI tool: it compares your installed version with the latest release and, only if you agree, runs the installer.
+2. Or re-run the one-line installer above; skills are links to `~/.kio/repo`, so every tool sees the new version at once. Restart the tool afterwards.
+3. To hear about releases, use GitHub **Watch → Custom → Releases** on the repository.
 
 ---
 
@@ -411,7 +421,7 @@ kio-agent-system/
 │   ├── kio-wordpress-fse/            # WordPress block theme creation pipeline
 │   └── kio-cognitive/                # Architecture rationale walkthroughs
 │        (every skill: SKILL.md, SKILL.md, THIRD_PARTY_NOTICES.md, references/, scripts/, assets/)
-├── commands/                         # 18 /kio-* slash commands (Claude Code, Codex, Cursor, Gemini CLI)
+├── commands/                         # 19 /kio-* slash commands (Claude Code, Codex, Cursor, Gemini CLI)
 ├── evaluations/                      # Skill Evaluation Framework & Live Benchmarks
 │   ├── SKILL_EVALUATION_FRAMEWORK.md # 21 verified test scenarios
 │   ├── benchmark-summary.md          # Live benchmark summary report
