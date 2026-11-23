@@ -19,7 +19,7 @@ The licenses below allow modification and redistribution **on the condition that
 | 1 | [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) | Corey Haines and contributors | MIT | `skills/kio-growth-marketing/references/modules/` (53 modules), `tools/` |
 | 2 | [AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo) | AgriciDaniel (Daniel Agrici); `seo-content-brief` by puneetindersingh; Pro Hub Challenge contributions by Lutfiya Miller (`seo-cluster`), Dan Colta (`seo-drift`), Matej Marjanovic (`seo-ecommerce`), Florian Schmitz (`seo-sxo`) | MIT | `skills/kio-growth-marketing/references/seo/` |
 | 3 | `claude-seo` by Ivan Kuznetsov (`ivankuznetsov/claude-seo`) | Ivan Kuznetsov | MIT | `skills/kio-growth-marketing/references/seo/` (as listed in v1.0.2) |
-| 4 | [AgriciDaniel/flow](https://github.com/AgriciDaniel/flow) | Daniel Agrici | CC BY 4.0 | `seo-subskills/subskills/seo-flow/` |
+| 4 | [AgriciDaniel/flow](https://github.com/AgriciDaniel/flow) | Daniel Agrici | CC BY 4.0 | `skills/kio-growth-marketing/references/seo/subskills/seo-flow/` |
 | 5 | [AgriciDaniel/claude-ads](https://github.com/AgriciDaniel/claude-ads) | Daniel Agrici | MIT | `modules/ads/references/audit-guardrails.md` |
 | 6 | [retieedra-profound/skills-marketing-library](https://github.com/retieedra-profound/skills-marketing-library) | Profound and Wispr Flow contributors | MIT | `modules/copywriting`, `modules/copy-editing`, `modules/product-marketing` references |
 | 7 | [Knowatoa/ai-visibility-skills](https://github.com/Knowatoa/ai-visibility-skills) | Knowatoa | MIT | `modules/events`, `modules/public-relations` references |

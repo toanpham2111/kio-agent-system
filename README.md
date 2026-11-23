@@ -2,17 +2,20 @@
 
 <div align="center">
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Release](https://img.shields.io/badge/Release-v1.4.2-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
+[![License](https://img.shields.io/badge/License-MIT_+_3rd--party_exceptions-yellow.svg)](#-license-credits--contributing)
+[![Release](https://img.shields.io/badge/Release-v1.4.3-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
 [![Supported Tools](https://img.shields.io/badge/Compatible_With-Claude_Code_|_Cursor_|_Codex_|_Antigravity_|_Windsurf-blue)](https://github.com/toanpham2111/kio-agent-system)
 [![Skills](https://img.shields.io/badge/Skills-7_Modular_Master_Skills-green)](skills/)
 
 **Give your AI coding tool 7 expert skills: frontend, backend, QA, planning, SEO/growth, WordPress and reasoning.**  
-*Same prompt, same model: the page built with Kio scored **86/100** in a blind test, against **75–78** without it ([results](#-real-world-test-without-skill-vs-with-kio)).*
+*On one real-world landing-page test (same prompt, same model, one run per condition) the page built with Kio scored **86/100** in a blind test, against **75–78** without it ([results](#-real-world-test-without-skill-vs-with-kio)). Across our 10-scenario benchmark the average gain is smaller, **+0.40 points**, and 4 scenarios scored lower ([benchmark](#-skill-evaluation-framework)).*
 
+**Linux / macOS / WSL:**
 ```bash
-# Linux / macOS / WSL                    # Windows PowerShell
 curl -fsSL https://raw.githubusercontent.com/toanpham2111/kio-agent-system/main/setup.sh | bash
+```
+**Windows PowerShell:**
+```powershell
 irm https://raw.githubusercontent.com/toanpham2111/kio-agent-system/main/setup.ps1 | iex
 ```
 
@@ -484,11 +487,20 @@ A simple file-based memory system allowing your local tools to remember:
 
 Kio is open source and licensed under the **[MIT License](LICENSE)**.
 
-> **One exception:** `skills/kio-qa-security/references/codeql/` is adapted from Trail of Bits `skills` and is licensed **CC BY-SA 4.0**, not MIT (see its [LICENSE](skills/kio-qa-security/references/codeql/LICENSE)). If you reuse or adapt files from that folder, credit Trail of Bits, say what you changed and release your versions under CC BY-SA 4.0. Kio's own review process lives outside it, in `references/security-review.md`, under MIT.
+> **Exceptions to MIT.** Some third-party material keeps its own license; the full list with copyright lines is in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+>
+> | Path | License | If you reuse it |
+> | :--- | :--- | :--- |
+> | `skills/kio-qa-security/references/codeql/` (Trail of Bits) | **CC BY-SA 4.0** ([LICENSE](skills/kio-qa-security/references/codeql/LICENSE)) | Credit Trail of Bits, say what you changed, release your versions under CC BY-SA 4.0 |
+> | `skills/kio-growth-marketing/references/seo/subskills/seo-flow/` (AgriciDaniel/flow) | **CC BY 4.0** | Credit the author and say what you changed |
+> | `skills/kio-backend-cloud/references/mcp-server-builder.md` (Anthropic `mcp-builder`) | **Apache 2.0** ([text](skills/kio-backend-cloud/references/LICENSE-APACHE-2.0.txt)) | Keep the notice, mark your changes |
+> | `skills/kio-frontend-craft/assets/data/google-fonts.csv` (Google Fonts metadata) | Per font family: SIL OFL 1.1, Apache 2.0 or UFL | Check the family in `google-font-licenses.json` |
+>
+> Kio's own review process (`references/security-review.md`) is outside the CC BY-SA folder and stays MIT.
 
 ### 🙏 Credits & Third-Party Open Source Acknowledgments
 
-Kio unifies, adapts, and extends open-source agent skill specifications, datasets, and tooling under the MIT License. We gratefully acknowledge the original authors and contributors of the following upstream open-source projects (full copyright notices are preserved in **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**):
+Kio unifies, adapts, and extends open-source agent skill specifications, datasets, and tooling, mostly under the MIT License (see the exceptions table above). We gratefully acknowledge the original authors and contributors of the following upstream open-source projects (full copyright notices are preserved in **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**):
 - **Marketing & CRO Frameworks**: Adapted and modularized from `marketingskills` by Corey Haines (`coreyhaines31/marketingskills`, MIT License).
 - **Technical SEO & GEO Sub-skills**: Adapted and integrated from `claude-seo` & `claude-ads` by Daniel Agrici (`AgriciDaniel/claude-seo`, MIT License), Ivan Kuznetsov (`ivankuznetsov/claude-seo`, MIT License), and `flow` framework prompts (CC BY 4.0).
 - **Frontend UI/UX Datasets**: Style, typography, and palette datasets in `skills/kio-frontend-craft/assets/data/` adapted from `ui-ux-pro-max-skill` (`nextlevelbuilder/ui-ux-pro-max-skill`, MIT License), Google Fonts metadata, and Phosphor Icons.

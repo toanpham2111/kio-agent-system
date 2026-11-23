@@ -4,6 +4,21 @@ All notable changes to the **Kio** project are documented here following the [Ke
 
 ---
 
+## [1.4.3] - 2026-11-23 — License Exceptions Listed & Honest Opening Claim
+
+Fixes from the v1.4.2 review.
+
+### ⚖️ Licensing
+- The README now has an **"Exceptions to MIT"** table instead of "One exception": `codeql/` (CC BY-SA 4.0), `seo-flow/` (CC BY 4.0), `mcp-server-builder.md` (Apache 2.0) and the Google Fonts metadata (per family), each with what to do if you reuse it.
+- The license badge reads "MIT + 3rd-party exceptions" and links to that section.
+- `THIRD_PARTY_NOTICES.md`: the `seo-flow` entry now points to its real path.
+
+### 📖 README
+- The opening claim is scoped: the 86/100 vs 75–78 result comes from **one landing-page test, one run per condition**; the 10-scenario benchmark averages **+0.40** with 4 scenarios scoring lower. Both link to their sections.
+- The install commands at the top are one block per OS (the combined block was hard to read and copied both lines).
+
+---
+
 ## [1.4.2] - 2026-11-23 — Windows Constrained Language Mode & README
 
 ### 🪟 Windows
