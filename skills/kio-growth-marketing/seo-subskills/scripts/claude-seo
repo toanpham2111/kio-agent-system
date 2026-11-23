@@ -11,7 +11,7 @@ launcher_dir="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 runtime="${launcher_dir}/runtime.py"
 
 if [[ ! -f "${runtime}" ]]; then
-    echo "Claude SEO runtime is missing. Reinstall Claude SEO." >&2
+    echo "Kio SEO runtime is missing. Reinstall Kio SEO." >&2
     exit 2
 fi
 
@@ -71,5 +71,5 @@ while (( minor >= min_minor )); do
     minor=$(( minor - 1 ))
 done
 
-echo "Claude SEO needs Python ${range_text}. Found: ${seen:-no Python}. Install Python 3.${max_minor} from python.org or set CLAUDE_SEO_PYTHON to a supported interpreter." >&2
+echo "Kio SEO needs Python ${range_text}. Found: ${seen:-no Python}. Install Python 3.${max_minor} from python.org or set CLAUDE_SEO_PYTHON to a supported interpreter." >&2
 exit 2

@@ -2,6 +2,8 @@
 name: emails
 description: When the user wants to create or optimize an email sequence, drip campaign, automated email flow, or lifecycle email program. Also use when the user mentions "email sequence," "drip campaign," "nurture sequence," "onboarding emails," "welcome sequence," "re-engagement emails," "email automation," "lifecycle emails," "trigger-based emails," "email funnel," "email workflow," "what emails should I send," "welcome series," or "email cadence." Use this for any multi-email automated flow. Emails avoid AI tells like 'it's not X, it's Y' reveals, 'no X, no Y, no Z' lists, and fake 'Re:' subject lines. For cold outreach and outbound sequences, see cold-email. For in-app onboarding, see onboarding.
 metadata:
+  author: Corey Haines
+  maintainer: Kio System
   version: 2.1.4
 ---
 
@@ -318,16 +320,16 @@ What to measure and benchmarks
 
 ## Tool Integrations
 
-For implementation, see the [tools registry](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/REGISTRY.md). Key email tools:
+For implementation, see the [tools registry](../../tools/REGISTRY.md). Key email tools:
 
 | Tool | Best For | MCP | Guide |
 |------|----------|:---:|-------|
-| **Customer.io** | Behavior-based automation | - | [customer-io.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/customer-io.md) |
-| **Mailchimp** | SMB email marketing | ✓ | [mailchimp.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/mailchimp.md) |
-| **Nitrosend** | AI-native email (sequences via prompts) | ✓ | [nitrosend.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/nitrosend.md) |
-| **Resend** | Developer-friendly transactional | ✓ | [resend.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/resend.md) |
-| **SendGrid** | Transactional email at scale | - | [sendgrid.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/sendgrid.md) |
-| **Kit** | Creator/newsletter focused | - | [kit.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/kit.md) |
+| **Customer.io** | Behavior-based automation | - | [customer-io.md](../../tools/integrations/customer-io.md) |
+| **Mailchimp** | SMB email marketing | ✓ | [mailchimp.md](../../tools/integrations/mailchimp.md) |
+| **Nitrosend** | AI-native email (sequences via prompts) | ✓ | [nitrosend.md](../../tools/integrations/nitrosend.md) |
+| **Resend** | Developer-friendly transactional | ✓ | [resend.md](../../tools/integrations/resend.md) |
+| **SendGrid** | Transactional email at scale | - | [sendgrid.md](../../tools/integrations/sendgrid.md) |
+| **Kit** | Creator/newsletter focused | - | [kit.md](../../tools/integrations/kit.md) |
 
 ---
 

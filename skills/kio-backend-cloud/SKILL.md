@@ -1,32 +1,74 @@
 ---
 name: kio-backend-cloud
-description: "Architect secure REST/GraphQL APIs, PostgreSQL schemas with Supabase RLS, idempotent payment webhooks, and multi-stage Docker deployments. Use when building backend services, databases, or cloud infrastructure."
-author: Toan Pham / Kio System
-version: 1.0.2
+description: "Kio Backend, Database, Cloud & AI/ML hub. Use for server-side work: REST/GraphQL/tRPC API design, auth (OAuth2, JWT, sessions, RBAC, anti-IDOR), payments and idempotent webhooks (Stripe, PayPal, VNPay, MoMo, PayOS/VietQR, SePay), file uploads, queues and email; PostgreSQL schema, Supabase RLS, EXPLAIN/index tuning, zero-downtime migrations, Redis caching and locks; Docker, GitHub Actions CI/CD, Terraform IaC, deployments; RAG pipelines, pgvector hybrid search, re-ranking, RAG evaluation, QLoRA fine-tuning; building MCP servers (Python, TypeScript); scaffolding new projects (Next.js, FastAPI, WordPress FSE Docker)."
+license: MIT
+metadata:
+  author: Kio System / Toan Pham
+  version: 3.0.0
 ---
 
-# ⚙️ Kio Backend, Database & Cloud Engineering (`kio-backend-cloud`)
+# ⚙️ Kio Backend, Database, Cloud & AI/ML (`kio-backend-cloud`)
 
-The server-side engineering, database, and cloud infrastructure skill of the Kio System. Integrates 6 core backend modules:
+The router for Kio's server-side work. Knowledge lives in `references/`; this file only points the way and holds the mandatory standards.
 
----
+## ⚙️ How to work
 
-## 🧭 Core 6 Backend Modules Matrix
+1. **Read the project context first:** stack, ORM, where it runs (Vercel, VPS, AWS…), the project's `CLAUDE.md`/`AGENTS.md`. Do not switch the user's stack.
+2. **Open the area overview** ("Start" column), then the deep-dive references it points to.
+3. **Payments, auth, RLS, migrations:** follow the reference checklist exactly and write a test for every failure case it lists. These are never "temporary".
+4. **Production changes** (migrations, infrastructure, secrets, DNS) need user approval and a rollback plan.
 
-| Module | Reference Guide | Core Mission & Deliverables |
-| :--- | :--- | :--- |
-| **1. Fullstack API & Payments** | `references/api-payments.md` | OWASP-compliant REST/GraphQL API design, OAuth2/JWT/RBAC authentication, payment gateways & Idempotent Webhooks (Stripe, PayPal, VietQR/PayOS, VNPay, MoMo), S3/R2 presigned URLs, and background worker queues. |
-| **2. Enterprise Database** | `references/database-rls.md` | PostgreSQL, Supabase Row-Level Security (RLS), query optimization with `EXPLAIN ANALYZE`, composite indexing, zero-downtime schema migrations, and high-performance Redis caching. |
-| **3. Cloud DevOps & IaC** | `references/devops-docker.md` | Terraform Infrastructure as Code (AWS/GCP/Azure), containerization with multi-stage Docker builds, GitHub Actions CI/CD automation, and zero-downtime deployments. |
-| **4. AI/ML & Hybrid RAG** | `references/ai-rag.md` | Production-grade RAG pipelines (Hybrid Search: BM25 + pgvector HNSW, contextual chunking, Cohere/BGE re-ranking), PEFT/QLoRA fine-tuning via Hugging Face, and vector evaluation. |
-| **5. MCP Server Builder** | `references/mcp-server.md` | Authors production Model Context Protocol (MCP) servers using Python (FastMCP) or Node/TypeScript (MCP SDK) following protocol specifications. |
-| **6. Project Scaffolding** | Port Scanning & Setup | Automated scaffolding for modern fullstack architectures (Next.js, FastAPI, WP FSE Docker) with integrated port collision detection across `8080–8999`. |
+## 🧭 Routing table
 
----
+| Area | Start | Deep dives |
+|---|---|---|
+| API, auth, uploads, email, queues | `references/api-and-payments.md` | — |
+| Payments & webhooks | `references/payments-webhooks.md` | Tested reference code: `scripts/payment_signatures.py` |
+| PostgreSQL | `references/database.md` | `postgres-supabase-rls.md` (RLS, multi-tenant), `indexing-and-optimization.md` (EXPLAIN, indexes), `migrations-and-caching.md` (safe DDL, Redis) |
+| DevOps & infrastructure | `references/devops.md` | `docker-containers.md`, `github-actions-cicd.md`, `terraform-iac.md` |
+| AI/ML & RAG | `references/ai-ml.md` | `production-rag-pipelines.md`, `vector-db-and-eval.md`, `huggingface-fine-tuning.md` |
+| MCP servers | `references/mcp-server-builder.md` | `mcp/best-practices.md`, `mcp/python-server.md`, `mcp/typescript-server.md`, `mcp/evaluation.md` |
+| New project scaffolding | `references/project-scaffolding.md` | — |
 
-## 🛡️ Architecture & Security Standards (OWASP & Kio Lean Architecture)
+All deep-dive paths are inside `references/`.
 
-1. **Zero Secret Exposure**: Zero credentials, JWT secrets, or API keys committed to source control. 100% loaded from environment variables (`.env`).
-2. **Idempotent Webhooks**: All payment webhooks must maintain an `idempotency_keys` table or transactional log to guarantee safe handling of retries and network duplicates.
-3. **Database Performance Tuning**: All tables exceeding 10,000 rows must feature composite indexes on filter/sort columns. Eliminate Sequential Scans using `EXPLAIN ANALYZE`.
-4. **Kio Lean Architecture (< 700 Lines/File)**: Strict layered architecture: `Routes/Controllers` ➔ `Services` ➔ `Repositories/Models`. No file exceeds 700 lines of code.
+## 🔀 Selection rules for overlaps
+
+| Need | Start at | Switch when |
+|---|---|---|
+| "Integrate payments" | `payments-webhooks.md` | General API/auth rules around the payment flow → `api-and-payments.md` |
+| Slow query | `indexing-and-optimization.md` | Missing cache or lock contention → `migrations-and-caching.md` |
+| Per-user data security | `postgres-supabase-rls.md` | API without Supabase → Anti-IDOR section of `api-and-payments.md` |
+| Schema change | `migrations-and-caching.md` | Adding an index → §5 of `indexing-and-optimization.md` |
+| Semantic search | `production-rag-pipelines.md` | Index/metric choice, quality measurement → `vector-db-and-eval.md` |
+| "Should we fine-tune?" | §3 of `huggingface-fine-tuning.md` | Usually RAG instead → `production-rag-pipelines.md` |
+| Deploy | `devops.md` | Image → `docker-containers.md`; pipeline → `github-actions-cicd.md`; infra → `terraform-iac.md` |
+
+## 🧩 Workflows
+
+| Job | Order |
+|---|---|
+| New SaaS | `project-scaffolding.md` → `database.md` + `postgres-supabase-rls.md` → `api-and-payments.md` → `payments-webhooks.md` → `docker-containers.md` → `github-actions-cicd.md` |
+| Add a Vietnamese payment gateway | `payments-webhooks.md` (VNPay/MoMo/PayOS/SePay) → `payment_events` table → tests from §4 → `github-actions-cicd.md` |
+| Docs Q&A chatbot | `production-rag-pipelines.md` → `vector-db-and-eval.md` (eval set first) → `api-and-payments.md` (rate limits, auth) |
+| Expose an internal API to AI | `mcp/best-practices.md` → `mcp/python-server.md` or `mcp/typescript-server.md` → `mcp/evaluation.md` |
+| Go to production | `terraform-iac.md` → `docker-containers.md` → `github-actions-cicd.md` → `migrations-and-caching.md` (backward-compatible migrations) |
+
+UI belongs to `kio-frontend-craft`; security review, test cases and Playwright to `kio-qa-security`.
+
+## 🛡️ Mandatory standards
+
+1. **No secret exposure.** Never hardcode credentials, JWT secrets or API keys; read them from environment variables or a secret manager. Commit `.env.example`, never `.env`.
+2. **Idempotent payment webhooks.** Verify signatures on the raw body with a constant-time compare, match the amount, and record `(provider, event_id)` under a unique key in the same transaction as the order update.
+3. **Server-side authorisation.** Every by-ID query checks ownership (anti-IDOR) or is covered by RLS; never trust client-sent prices, roles or statuses.
+4. **Database performance.** Large tables have indexes matching their filters and sorts, verified with `EXPLAIN (ANALYZE, BUFFERS)`; keyset pagination instead of large `OFFSET`s.
+5. **Zero-downtime migrations.** `lock_timeout`, `CREATE INDEX CONCURRENTLY`, `NOT VALID` → `VALIDATE` constraints, expand/contract for renames and type changes.
+6. **Lean architecture (< 700 lines/file).** Layers `Routes/Controllers` → `Services` → `Repositories/Models`; no file over 700 lines.
+7. **Safe errors.** Consistent JSON errors without stack traces or SQL; logs carry a request ID and never card data or secrets.
+8. **Language:** answer in the language of the user's request (an English prompt gets an English answer), even when skill documents are written in another language.
+
+## 📦 What's included
+
+- `references/` — the documents in the table above (`mcp/` for MCP servers).
+- `scripts/payment_signatures.py` — reference signature checks for Stripe, VNPay, MoMo, PayOS plus idempotent payment application; tests: `python3 -m pytest scripts/tests`.
+- `THIRD_PARTY_NOTICES.md` — credits and licenses for the open-source sources Kio uses; keep it when redistributing.

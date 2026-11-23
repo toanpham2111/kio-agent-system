@@ -1,0 +1,21 @@
+# Kio SEO engine runtime (installed by `scripts/claude-seo setup` into a managed venv).
+# Core: imported by the runtime self-check.
+requests>=2.31
+beautifulsoup4>=4.12
+lxml>=5.0
+lxml_html_clean>=0.1
+trafilatura>=1.8
+htmldate>=1.8
+playwright>=1.45
+# Google APIs (Search Console, Indexing, GA4, Keyword Planner).
+google-auth>=2.29
+google-auth-oauthlib>=1.2
+google-api-python-client>=2.120
+google-analytics-data>=0.18
+google-ads>=24.0
+# Reports (google_report.py).
+matplotlib>=3.8
+numpy>=1.26
+openpyxl>=3.1
+pypdf>=4.0
+weasyprint>=61.0

@@ -108,4 +108,4 @@ Decide these before launch and enforce them automatically where your tool allows
 | DMARC monitoring | EasyDMARC, dmarcian, Valimail |
 | List verification | Bouncer, MillionVerifier, NeverBounce, Truelist, ZeroBounce, and others |
 
-Setup guides: [tools registry](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/REGISTRY.md).
+Setup guides: [tools registry](../../../tools/REGISTRY.md).

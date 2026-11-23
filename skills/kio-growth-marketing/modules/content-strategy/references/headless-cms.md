@@ -189,6 +189,6 @@ Pull CMS content into email templates for consistent messaging across web and em
 
 ## Relevant Integration Guides
 
-- [Sanity](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/sanity.md) — GROQ queries, mutations, CLI
-- [Contentful](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/contentful.md) — Delivery/Management APIs, publishing
-- [Strapi](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/strapi.md) — REST CRUD, filters, document API
+- [Sanity](../../../tools/integrations/sanity.md) — GROQ queries, mutations, CLI
+- [Contentful](../../../tools/integrations/contentful.md) — Delivery/Management APIs, publishing
+- [Strapi](../../../tools/integrations/strapi.md) — REST CRUD, filters, document API

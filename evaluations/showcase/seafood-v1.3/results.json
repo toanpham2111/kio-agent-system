@@ -1,0 +1,390 @@
+{
+  "date": "2026-11-22",
+  "kio_version": "v1.3.0",
+  "skill": "kio-frontend-craft",
+  "prompt": "Làm website bán hải sản tươi sống cho cửa hàng \"Hải Sản Biển Xanh\" ở Đà Nẵng (giao hàng nội thành trong 2 giờ). Trang chủ cần có: hero, danh mục sản phẩm (tôm, cua ghẹ, cá, mực, ốc sò) kèm giá theo kg, sản phẩm bán chạy, cam kết tươi sống và quy trình giao hàng, đánh giá khách hàng, câu hỏi thường gặp, form đặt hàng nhanh (họ tên, số điện thoại, sản phẩm, số lượng, địa chỉ) và footer có địa chỉ, giờ mở cửa, hotline. Trang phải chuẩn SEO cho từ khóa \"hải sản tươi sống Đà Nẵng\": thẻ title và meta description, Open Graph, cấu trúc heading đúng, dữ liệu có cấu trúc JSON-LD phù hợp, nội dung có ích cho người tìm kiếm. Làm trong một file index.html duy nhất ở thư mục hiện tại (ảnh có thể để trong thư mục con), dùng Tailwind CSS qua CDN, responsive cho điện thoại và máy tính, nội dung bằng tiếng Việt.",
+  "generation": {
+    "baseline": {
+      "model": "claude-sonnet-5-5",
+      "turns": 2,
+      "duration_s": 115.2,
+      "cost_usd": 0.326,
+      "tokens": {
+        "output": 20387,
+        "input_fresh": 4,
+        "input_cache_write": 28820,
+        "input_cache_read": 68520,
+        "input_total": 97344
+      }
+    },
+    "with_skill": {
+      "model": "claude-sonnet-5-5",
+      "turns": 32,
+      "duration_s": 481.9,
+      "cost_usd": 0.864,
+      "tokens": {
+        "output": 42951,
+        "input_fresh": 48,
+        "input_cache_write": 68687,
+        "input_cache_read": 1594742,
+        "input_total": 1663477
+      }
+    }
+  },
+  "lighthouse": {
+    "version": "13.6.0",
+    "note": "Tailwind CDN replaced by the same locally built CSS for both pages; served from localhost",
+    "baseline": {
+      "mobile": {
+        "performance": 100,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 100,
+        "LCP": "0.9 s",
+        "CLS": "0"
+      },
+      "desktop": {
+        "performance": 100,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 100,
+        "LCP": "0.2 s",
+        "CLS": "0"
+      }
+    },
+    "with_skill": {
+      "mobile": {
+        "performance": 98,
+        "accessibility": 100,
+        "best-practices": 96,
+        "seo": 100,
+        "LCP": "1.8 s",
+        "CLS": "0"
+      },
+      "desktop": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 96,
+        "seo": 100,
+        "LCP": "0.5 s",
+        "CLS": "0.013"
+      }
+    },
+    "with_skill_after_fix": {
+      "mobile": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100,
+        "LCP": "1.1 s",
+        "CLS": "0"
+      },
+      "desktop": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100,
+        "LCP": "0.3 s",
+        "CLS": "0.011"
+      }
+    },
+    "why_with_skill_scored_lower": "Render-blocking Google Fonts stylesheet (~810 ms) plus 5 font files and a 115 KB hero photo delayed FCP/LCP to 1.8 s on mobile; a missing favicon logged a 404 (Best Practices 96). The baseline loaded only HTML + CSS (no photos, system fonts, emoji). Loading fonts non-blocking and adding a favicon gives 100/100/100/100; both fixes are now skill rules.",
+    "with_skill_after_fix_note": "Hand-fixed copy of the with-skill page (2 lines: non-blocking Google Fonts, favicon); see manual-fix.diff and site-with-skill-fixed/. Not a new skill run."
+  },
+  "layout_check": {
+    "baseline": {
+      "mobile": {
+        "overflow": 1,
+        "misaligned": [],
+        "wrappedButtons": []
+      },
+      "desktop": {
+        "overflow": 0,
+        "misaligned": [
+          "misaligned row → DIV.mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 (P 24px)",
+          "misaligned row → DIV.mt-8 grid gap-6 md:grid-cols-3 (FIGCAPTION 20px)"
+        ],
+        "wrappedButtons": []
+      }
+    },
+    "with_skill": {
+      "mobile": {
+        "overflow": 1,
+        "misaligned": [],
+        "wrappedButtons": []
+      },
+      "desktop": {
+        "overflow": 1,
+        "misaligned": [
+          "misaligned row → DIV.mt-10 grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 (use 6px)",
+          "misaligned row → DIV.mt-10 grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-4 (use 17px)"
+        ],
+        "wrappedButtons": []
+      }
+    },
+    "note": "with-skill mobile/desktop overflow=1 was a full-bleed hero background image; layout-check.js now ignores it (0 after the fix). Baseline mobile overflow is the footer copyright line without gutter."
+  },
+  "seo_check": {
+    "baseline": {
+      "title": "Hải Sản Tươi Sống Đà Nẵng – Giao Trong 2 Giờ | Hải Sản Biển Xanh",
+      "titleLen": 64,
+      "desc": "Mua hải sản tươi sống Đà Nẵng tại Hải Sản Biển Xanh: tôm, cua ghẹ, cá, mực, ốc sò lấy từ cảng cá mỗi sáng. Giá niêm yết theo kg, giao nội thành trong 2 giờ, đổi trả nếu không tươi.",
+      "descLen": 180,
+      "canonical": true,
+      "ogTitle": true,
+      "ogImage": true,
+      "twitter": true,
+      "lang": "vi",
+      "h1": 1,
+      "headings": 35,
+      "headingSkips": 0,
+      "jsonld": 1,
+      "jsonldValid": 1,
+      "schemaTypes": [
+        "WebSite",
+        "Store",
+        "PostalAddress",
+        "GeoCoordinates",
+        "City",
+        "OpeningHoursSpecification",
+        "OfferCatalog",
+        "ItemList",
+        "ListItem",
+        "Product",
+        "Offer",
+        "QuantitativeValue",
+        "FAQPage",
+        "Question",
+        "Answer"
+      ],
+      "kwInTitle": true,
+      "kwInH1": true,
+      "kwInDesc": true,
+      "imgs": 0,
+      "imgsAlt": 0,
+      "entities": 1,
+      "words": 1119,
+      "favicon": true
+    },
+    "with_skill": {
+      "title": "Hải sản tươi sống Đà Nẵng – Giao trong 2 giờ | Hải Sản Biển Xanh",
+      "titleLen": 64,
+      "desc": "Hải sản tươi sống Đà Nẵng: tôm, cua ghẹ, cá, mực, ốc sò chọn mới mỗi sáng, giá theo kg rõ ràng. Giao nội thành trong 2 giờ, đổi trả nếu không tươi. Đặt hàng: 0905 123 456.",
+      "descLen": 171,
+      "canonical": true,
+      "ogTitle": true,
+      "ogImage": true,
+      "twitter": true,
+      "lang": "vi",
+      "h1": 1,
+      "headings": 39,
+      "headingSkips": 0,
+      "jsonld": 2,
+      "jsonldValid": 2,
+      "schemaTypes": [
+        "Store",
+        "PostalAddress",
+        "AdministrativeArea",
+        "OpeningHoursSpecification",
+        "OfferCatalog",
+        "Offer",
+        "Product",
+        "UnitPriceSpecification",
+        "QuantitativeValue",
+        "FAQPage",
+        "Question",
+        "Answer"
+      ],
+      "kwInTitle": true,
+      "kwInH1": true,
+      "kwInDesc": true,
+      "imgs": 1,
+      "imgsAlt": 1,
+      "entities": 3,
+      "words": 1071,
+      "favicon": false
+    },
+    "source_entities": {
+      "baseline": 1,
+      "with_skill": 0
+    }
+  },
+  "blind_judge": {
+    "model": "claude-opus-5-5",
+    "blind_labels": {
+      "A": "with-skill",
+      "B": "baseline"
+    },
+    "baseline": {
+      "scores": {
+        "design": 13,
+        "layout_mobile": 12,
+        "seo": 21,
+        "content": 12,
+        "ordering": 10,
+        "accessibility": 7
+      },
+      "total": 75,
+      "strengths": [
+        "@graph JSON-LD links WebSite, Store (with geo and postalCode), an ItemList of Products with Offers marked InStock, and FAQPage",
+        "Adds geo.region and geo.placename tags, plus a section on choosing seafood by season and how to store it, which is useful long-tail content",
+        "The hero has two clear CTAs, including a hotline button with the number shown, and a row of short benefit points",
+        "The price table is easy to scan; the 'Ốc và sò' card spans 2 columns to fill the grid",
+        "Commitment section mentions sending a photo of the scale reading via Zalo; delivery steps sit on a dark background for contrast with nearby sections",
+        "Form has labels, a role=alert error area and a personalised thank-you message"
+      ],
+      "weaknesses": [
+        "Relies heavily on emoji (hero, logo, icons, product images), which looks template-like and renders differently across devices",
+        "The success message says the order was received, but the code only has a TODO and sends no data anywhere, so customers are misled and orders are lost",
+        "The floating 'Gọi ngay' button on mobile covers the hero's emoji grid; there is no 'Đặt hàng' button in the mobile bar and no Zalo link",
+        "Product offers use eligibleQuantity instead of UnitPriceSpecification to express price per kg; the products have no image; the OfferCatalog children are empty catalogs with only a name",
+        "Missing twitter:title and twitter:description",
+        "Product buttons and form inputs are only about 36-40px tall (py-2); a lot of body text is text-sm",
+        "No custom focus-visible style; white text on bg-coral-500 in the hero button likely has low contrast; the error message does not move focus to the field",
+        "The mobile screenshot is cut off before the form and footer"
+      ]
+    },
+    "with_skill": {
+      "scores": {
+        "design": 17,
+        "layout_mobile": 13,
+        "seo": 22,
+        "content": 13,
+        "ordering": 12,
+        "accessibility": 9
+      },
+      "total": 86,
+      "strengths": [
+        "The hero uses a real seafood photo with a dark overlay, two font families (Rubik and Nunito Sans) and its own SVG icons, so the page feels branded and cohesive instead of emoji-based",
+        "Clear visual hierarchy: coral is used consistently for CTAs, the category cards line up and include a 'Cần món khác?' card that leads to the hotline",
+        "Full head tags: title, description, canonical, OG with image size and alt, Twitter card, and a Google Fonts subset for Vietnamese",
+        "Store JSON-LD includes 6 served districts, opening hours and an OfferCatalog of Offers using UnitPriceSpecification per KGM, which correctly expresses price per kg; it also has FAQPage JSON-LD whose questions match the visible FAQ",
+        "Specific content: size 30 con/kg, a timeline for each delivery step (10 minutes, 30 minutes, at most 2 hours), a 30-minute window to report bad goods, an order cut-off at 19:30, and a section on how to tell seafood is fresh",
+        "Form validates each field, moves focus to the field with the error, and shows messages in an aria-live area; product buttons pre-fill the product; the honest fallback opens an SMS to the hotline",
+        "On mobile there is a fixed bottom bar with 'Gọi ngay' and 'Đặt hàng'; buttons and inputs are at least 44px tall; there is a skip link and a clear :focus-visible outline",
+        "Credits the image source under CC BY 2.0 and labels it as an illustration"
+      ],
+      "weaknesses": [
+        "No Zalo link even though this is very common for selling in Vietnam",
+        "Bestseller cards use a large icon instead of product photos; on 375px each card is very tall, so the page gets long",
+        "Store JSON-LD address has no addressRegion, postalCode or geo",
+        "In the screenshot, the fixed mobile bar sits on top of the hero stats area; the full-page capture shows it covering content",
+        "When ORDER_ENDPOINT is empty, the order goes by SMS, which is a poor experience on desktop",
+        "The mobile screenshot is cut off at about 7,500px, so the form and footer cannot be checked at 375px"
+      ]
+    },
+    "winner": "with-skill",
+    "reason": "A has a more polished visual identity with a real photo and its own icons, more accurate price-per-kg JSON-LD, more specific content, and an order form that validates input, moves focus to errors and actually sends the order, while B relies on emoji and shows a fake success message without sending any data."
+  },
+  "rerun": {
+    "note": "Same prompt and model, kio-frontend-craft after the font/favicon rules (before the v1.3.2 image-ladder fix). No hand edits. Baseline page unchanged, re-judged in the same pass.",
+    "generation": {
+      "model": "claude-sonnet-5-5",
+      "turns": 49,
+      "duration_s": 333.8,
+      "cost_usd": 1.048,
+      "tokens": {
+        "output": 49022,
+        "input_fresh": 64,
+        "input_cache_write": 83908,
+        "input_cache_read": 2222746,
+        "input_total": 2306718
+      }
+    },
+    "lighthouse": {
+      "with_skill": {
+        "mobile": {
+          "performance": 92,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 100,
+          "LCP": "3.2 s",
+          "CLS": "0"
+        },
+        "desktop": {
+          "performance": 100,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 100,
+          "LCP": "0.5 s",
+          "CLS": "0"
+        },
+        "mobile_repeat": {
+          "performance": 93,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 100,
+          "LCP": "3.2 s",
+          "CLS": "0.03"
+        }
+      },
+      "baseline": {
+        "mobile": {
+          "performance": 100,
+          "accessibility": 96,
+          "best-practices": 100,
+          "seo": 100,
+          "LCP": "0.9 s",
+          "CLS": "0"
+        },
+        "desktop": {
+          "performance": 100,
+          "accessibility": 96,
+          "best-practices": 100,
+          "seo": 100,
+          "LCP": "0.2 s",
+          "CLS": "0"
+        }
+      },
+      "experiment_768_hero": {
+        "mobile": {
+          "performance": 99,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 100,
+          "LCP": "2.3 s",
+          "CLS": "0.03"
+        },
+        "note": "Same page with a 768 px hero variant at WebP quality 60 (60 KB) added to srcset; not a skill run."
+      }
+    },
+    "judge": {
+      "model": "claude-opus-5-5",
+      "blind": true,
+      "baseline": {
+        "total": 78,
+        "scores": {
+          "design": 13,
+          "layout_mobile": 12,
+          "seo": 22,
+          "content": 13,
+          "ordering": 11,
+          "accessibility": 7
+        }
+      },
+      "with_skill": {
+        "total": 86,
+        "scores": {
+          "design": 16,
+          "layout_mobile": 12,
+          "seo": 22,
+          "content": 13,
+          "ordering": 14,
+          "accessibility": 9
+        }
+      },
+      "winner": "with_skill",
+      "reason": "B wins on design, its order form (running total, per-field errors, focus handling) and accessibility, while SEO is about even. It only loses a little on content, mainly because of its stock photos."
+    },
+    "checks": {
+      "with_skill": {
+        "layout_desktop_misaligned": 0,
+        "layout_mobile_overflow": 0,
+        "html_entities_in_source": 0,
+        "images_with_alt": "5/5",
+        "favicon": true,
+        "non_blocking_fonts": true
+      }
+    }
+  }
+}

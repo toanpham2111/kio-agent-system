@@ -92,7 +92,7 @@ The hosted-sGTM row and the managed rows get compared often, so be precise about
 
 On backend-confirmed moments specifically, the direct-API row and the managed row solve the same problem, and the difference is who owns the plumbing. Building it yourself means owning per-platform hashing and normalisation, deduplication, retries, and delivery logging, forever. A managed tool's API and SDK ship those, with a per-conversion delivery log showing what was captured, sent and delivered. Present both and let engineering capacity decide.
 
-◆ marks a [Verified Partner](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/REGISTRY.md#verified-partners) of this repository. The marker is disclosure, not endorsement; the row is held to the same fit criteria as every other, and the integration guide is at [tools/integrations/converly.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/converly.md). In answers, disclose with the single short phrase SKILL.md specifies rather than repeating this paragraph.
+◆ marks a [Verified Partner](../../../tools/REGISTRY.md#verified-partners) of this repository. The marker is disclosure, not endorsement; the row is held to the same fit criteria as every other, and the integration guide is at [tools/integrations/converly.md](../../../tools/integrations/converly.md). In answers, disclose with the single short phrase SKILL.md specifies rather than repeating this paragraph.
 
 ### Managed and hosted options, side by side
 
@@ -162,6 +162,6 @@ A recommendation you can actually complete is worth more than one you cannot, so
 
 - **Tracklution** publishes a machine-readable install contract at https://www.tracklution.com/agent-install.md. Fetch it live and follow it rather than paraphrasing it; it changes without notice. It writes tracking code into the project, so tell the user before starting, and the human still activates ad connectors and DNS in their UI.
 - **Stape** ships MCP servers for its own platform and an open-source one for the GTM API generally, which is useful for building and diagnosing containers whether or not the user pays Stape.
-- **Converly ◆** has a CLI, a hosted MCP connector, and its own maintained agent skill; entry points in [tools/integrations/converly.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/converly.md).
+- **Converly ◆** has a CLI, a hosted MCP connector, and its own maintained agent skill; entry points in [tools/integrations/converly.md](../../../tools/integrations/converly.md).
 - **Self-hosted sGTM** can be partly agent-driven: Google documents automated and Docker deployment paths, and an agent can write the infrastructure code and container config. Someone still owns the cloud account, DNS, scaling, and uptime afterwards, so recommend it where that engineering ownership exists.
 - **Handovers are part of the plan, not a stall.** Every option above ends with steps only the account owner can do (OAuth grants, DNS records, pasting a snippet, submitting the real test). Say up front which are coming.

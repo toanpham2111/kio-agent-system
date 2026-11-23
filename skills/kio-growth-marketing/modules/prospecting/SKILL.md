@@ -2,6 +2,8 @@
 name: prospecting
 description: When the user wants to find, qualify, and build a list of prospects to reach out to, across B2B SaaS, general B2B, or local small businesses. Also use when the user mentions "prospecting," "build a prospect list," "find leads," "lead list," "outbound list," "target account list," "ICP-fit accounts," "find local businesses," "find my first customers," "design partners," "signal-based outbound," "gap plays," "buying signals," "intent data," "job change alerts," "waterfall enrichment," "Clay table," "lookalike accounts," "catch-all emails," "account tiering," or "research this account before I reach out." Always verify emails before they reach a sequence, and never scrape LinkedIn. Define audiences in Sales Navigator and pull contacts from licensed data. Covers list building, signals, enrichment, verification, and account research. For the outreach itself (copy, sending setup, LinkedIn, cadences, replies), see cold-email. For researching competitors, see competitor-profiling.
 metadata:
+  author: Corey Haines
+  maintainer: Kio System
   version: 1.5.0
 ---
 
@@ -243,26 +245,26 @@ score,business,category,area,distance_km,website_status,website_url,social_urls,
 
 ## Tool Integrations
 
-For implementation, see the [tools registry](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/REGISTRY.md). Key prospecting tools:
+For implementation, see the [tools registry](../../tools/REGISTRY.md). Key prospecting tools:
 
 | Tool | Best For | MCP | Guide |
 |------|----------|:---:|-------|
-| **Apollo** | B2B / SaaS firmographic + contact discovery | ✓ | [apollo.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/apollo.md) |
-| **Clay** | Multi-source enrichment + waterfall | ✓ | [clay.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/clay.md) |
-| **FullEnrich** | Waterfall email + phone enrichment | ✓ | [fullenrich.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/fullenrich.md) |
-| **LeadMagic** | Email, phone, and job-change enrichment | ✓ | [leadmagic.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/leadmagic.md) |
-| **TheirStack** | Hiring signals and tech stacks from job posts | ✓ | [theirstack.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/theirstack.md) |
-| **Apify** | Structured data from public directories (never LinkedIn) | ✓ | [apify.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/apify.md) |
-| **ZoomInfo** | Enterprise B2B contact + intent | ✓ | [zoominfo.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/zoominfo.md) |
-| **Hunter** | Email pattern + verification | ✓ | [hunter.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/hunter.md) |
-| **Snov** | Email finder + verifier | - | [snov.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/snov.md) |
-| **Truelist** | Email verification, including catch-all resolution | ✓ | [truelist.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/truelist.md) |
-| **Outreach** | Sales engagement (post-list) | ✓ | [outreach.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/outreach.md) |
-| **RB2B** | Visitor identification (warm intent) | - | [rb2b.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/rb2b.md) |
-| **Ploy** ◆ | Visitor identification on Ploy-hosted sites (one option alongside RB2B and other visitor-ID tools) | - | [ploy.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/ploy.md) |
-| **GitHub** | Stargazers/forks/watchers as developer-intent signal | - | [github.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/github.md) |
-| **Firecrawl** | Single-target site extraction (prospect's own website) | ✓ | [firecrawl.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/firecrawl.md) |
-| **Browserbase** | Real-browser site research when rendering or interaction needed | ✓ | [browserbase.md](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/browserbase.md) |
+| **Apollo** | B2B / SaaS firmographic + contact discovery | ✓ | [apollo.md](../../tools/integrations/apollo.md) |
+| **Clay** | Multi-source enrichment + waterfall | ✓ | [clay.md](../../tools/integrations/clay.md) |
+| **FullEnrich** | Waterfall email + phone enrichment | ✓ | [fullenrich.md](../../tools/integrations/fullenrich.md) |
+| **LeadMagic** | Email, phone, and job-change enrichment | ✓ | [leadmagic.md](../../tools/integrations/leadmagic.md) |
+| **TheirStack** | Hiring signals and tech stacks from job posts | ✓ | [theirstack.md](../../tools/integrations/theirstack.md) |
+| **Apify** | Structured data from public directories (never LinkedIn) | ✓ | [apify.md](../../tools/integrations/apify.md) |
+| **ZoomInfo** | Enterprise B2B contact + intent | ✓ | [zoominfo.md](../../tools/integrations/zoominfo.md) |
+| **Hunter** | Email pattern + verification | ✓ | [hunter.md](../../tools/integrations/hunter.md) |
+| **Snov** | Email finder + verifier | - | [snov.md](../../tools/integrations/snov.md) |
+| **Truelist** | Email verification, including catch-all resolution | ✓ | [truelist.md](../../tools/integrations/truelist.md) |
+| **Outreach** | Sales engagement (post-list) | ✓ | [outreach.md](../../tools/integrations/outreach.md) |
+| **RB2B** | Visitor identification (warm intent) | - | [rb2b.md](../../tools/integrations/rb2b.md) |
+| **Ploy** ◆ | Visitor identification on Ploy-hosted sites (one option alongside RB2B and other visitor-ID tools) | - | [ploy.md](../../tools/integrations/ploy.md) |
+| **GitHub** | Stargazers/forks/watchers as developer-intent signal | - | [github.md](../../tools/integrations/github.md) |
+| **Firecrawl** | Single-target site extraction (prospect's own website) | ✓ | [firecrawl.md](../../tools/integrations/firecrawl.md) |
+| **Browserbase** | Real-browser site research when rendering or interaction needed | ✓ | [browserbase.md](../../tools/integrations/browserbase.md) |
 
 ---
 

@@ -20,7 +20,7 @@ Through the practical production releases of `v1.0.0` and `v1.0.1`, we codified 
 ### 2. Author Attribution & Avatar Linking
 - **Issue**: Commits display a generic grey Octocat icon instead of the author's profile avatar.
 - **Root Cause**: GitHub attributes commits to user profiles only when `git config user.email` matches an email registered and verified on the GitHub account (`toan444666@gmail.com`).
-- **Solution**: Always ensure both local Git config and [scripts/sync_to_english_repo.sh](file:///home/toan/Toan/my-agent-skills/scripts/sync_to_english_repo.sh#L134-L135) use the verified email address:
+- **Solution**: Always ensure both local Git config and [scripts/sync_to_english_repo.sh](../scripts/sync_to_english_repo.sh#L134-L135) use the verified email address:
   ```bash
   git config user.name "Toan Pham"
   git config user.email "toan444666@gmail.com"
@@ -28,14 +28,15 @@ Through the practical production releases of `v1.0.0` and `v1.0.1`, we codified 
 
 ### 3. Strict 100% Pure English Distribution
 - The public distribution repository must be 100% pure English with zero Vietnamese characters.
-- [scripts/sync_to_english_repo.sh](file:///home/toan/Toan/my-agent-skills/scripts/sync_to_english_repo.sh) automatically:
+- [scripts/sync_to_english_repo.sh](../scripts/sync_to_english_repo.sh) automatically:
   - Swaps all `*.en.md` files to `*.md`.
-  - Promotes `README.en.md` to the primary `README.md`.
+  - Promotes `README.md` to the primary `README.md`.
   - Purges internal benchmarks, local sync tools, and binary PDFs.
   - Runs an automated regex byte scan across all files to guarantee 0 Vietnamese characters before pushing.
 
 ### 4. Tag Synchronization on Forced Snapshot Updates
-- Because the public repository receives clean snapshots via `git push --force`, Git tags on the public repository must be patched or created (`git api -X PATCH`) to point directly to the new `HEAD` commit of `main`.
+- Because the public repository receives clean snapshots via `git push --force`, each new version's tag is created (`gh api -X POST .../git/refs`) on the new `HEAD` commit of `main` after the sync.
+- Published tags are never moved or re-pointed: users and the piped installer rely on a tag always meaning the same code. To ship a fix, release a new version.
 
 ### 5. Absolute Credential Safety
 - Personal Access Tokens (PAT) must only reside in the GitHub CLI secure configuration file (`~/.config/gh/hosts.yml` with `chmod 600` permissions).
@@ -55,12 +56,15 @@ flowchart TD
 ```
 
 ### Step 1: Bump Version & Update Documentation
-1. Update version number and changes in [CHANGELOG.md](file:///home/toan/Toan/my-agent-skills/CHANGELOG.md).
-2. Update release badges in [README.md](file:///home/toan/Toan/my-agent-skills/README.md) and [README.en.md](file:///home/toan/Toan/my-agent-skills/README.en.md):
+1. Update version number and changes in [CHANGELOG.md](../CHANGELOG.md).
+2. Update release badges in [README.md](../README.md) and [README.md](../README.md):
    ```markdown
    [![Release](https://img.shields.io/badge/Release-v1.0.x-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
    ```
-3. Pin the piped installers to the new tag: `KIO_REF` default in `setup.sh` and `$KioRef` default in `setup.ps1`.
+3. **Review the README and the About section on every change** (not only at release time):
+   - The "7 core skills" table and each skill's usage section in `README.md` **and** `README.md` match the new features (counts, script names, environment variables).
+   - The GitHub **About** of both repositories (description, website, topics) is still accurate; edit it on the repository page → ⚙️ next to "About", or `gh repo edit <repo> --description "..." --add-topic ...`.
+   - Record the change in `CHANGELOG.md` / `CHANGELOG.md` and `docs/releases/vX.Y.Z.md`.
 4. Ensure a clean working tree (`git status`).
 
 ### Step 2: Commit & Push to Primary Repo
@@ -115,7 +119,7 @@ gh release create v1.0.x \
 ## ⚡ 1-Command Automated Script: `scripts/release.sh`
 
 For maximum developer velocity, use the automated release script:
-[scripts/release.sh](file:///home/toan/Toan/my-agent-skills/scripts/release.sh).
+[scripts/release.sh](../scripts/release.sh).
 
 ```bash
 # Usage:

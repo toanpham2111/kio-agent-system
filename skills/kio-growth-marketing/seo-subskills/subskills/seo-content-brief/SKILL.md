@@ -13,6 +13,7 @@ license: MIT
 metadata:
   author: puneetindersingh
   original_author: puneetindersingh
+  maintainer: Kio System
   version: "1.0.0"
   category: seo
 ---

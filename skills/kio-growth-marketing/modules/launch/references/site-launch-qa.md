@@ -37,7 +37,7 @@ Run it in three passes: before the switch, at the switch, and in the first two w
 - [ ] You know how to roll back on this platform, and someone has done it once. Examples: Vercel and Netlify promote a previous deployment; Webflow restores a site backup; WordPress restores from a backup plugin or host snapshot; Ploy ◆ promotes a previous deploy from its Deploys screen (its CLI always publishes to production, with no staging target, so preview before publishing).
 - [ ] DNS TTL lowered a day ahead if the switch involves DNS changes
 
-◆ marks a [Verified Partner](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/REGISTRY.md#verified-partners) of this repository: disclosure, not endorsement.
+◆ marks a [Verified Partner](../../../tools/REGISTRY.md#verified-partners) of this repository: disclosure, not endorsement.
 
 ## At the switch
 

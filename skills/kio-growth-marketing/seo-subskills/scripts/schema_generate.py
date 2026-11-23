@@ -34,10 +34,10 @@ Usage::
         --date 2026-05-12T14:00:00Z
 
     python scripts/schema_generate.py profile \\
-        --name "Kio SEO Engine" \\
-        --url https://agricidaniel.com/about \\
-        --same-as https://github.com/toanpham2111 \\
-                  https://twitter.com/agricidaniel \\
+        --name "Jane Doe" \\
+        --url https://example.com/about \\
+        --same-as https://github.com/janedoe \\
+                  https://x.com/janedoe \\
         --knows-about "SEO" "Schema markup" "Core Web Vitals"
 
 All generators emit JSON-LD with ``@context: https://schema.org`` and

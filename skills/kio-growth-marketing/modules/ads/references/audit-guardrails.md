@@ -90,4 +90,4 @@ Benchmarks are comparison evidence, not pass/fail thresholds. When quoting one:
 
 ---
 
-*Scoring semantics, recommendation-safety rules, and the benchmark-evidence ladder are distilled and remixed into [kio-growth-marketing](https://github.com/toanpham2111/kio-agent-system) by Kio SEO Engine (MIT), reused with credit (see root `THIRD_PARTY_NOTICES.md`). The facts/hypotheses/missing-data ending is re-expressed from Marek Dąbrowski's "The Paid Ads Operator's Guide to Claude" (Adlume, 2026-07-16).*
+*Scoring semantics, recommendation-safety rules, and the benchmark-evidence ladder are distilled and remixed from [claude-ads](https://github.com/AgriciDaniel/claude-ads) by Daniel Agrici (MIT), reused with credit. The facts/hypotheses/missing-data ending is re-expressed from Marek Dąbrowski's "The Paid Ads Operator's Guide to Claude" (Adlume, 2026-07-16).*

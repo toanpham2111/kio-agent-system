@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Moz Link Explorer API client for Claude SEO.
+Moz Link Explorer API client for Kio SEO.
 
 Queries the Moz v2 REST API for Domain Authority, Page Authority,
 Spam Score, link counts, and referring domain data. Uses a conservative
@@ -346,7 +346,7 @@ def get_top_pages(domain: str, api_key: str, limit: int = 50) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Moz Link Explorer API client for Claude SEO"
+        description="Moz Link Explorer API client for Kio SEO"
     )
     parser.add_argument(
         "command",

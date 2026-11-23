@@ -10,7 +10,8 @@ user-invocable: true
 argument-hint: "[url or generate] [competitor]"
 license: MIT
 metadata:
-  author: toanpham2111
+  author: AgriciDaniel
+  maintainer: Kio System
   version: "2.5.0"
   category: seo
 ---

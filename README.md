@@ -3,7 +3,7 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Release](https://img.shields.io/badge/Release-v1.0.2-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
+[![Release](https://img.shields.io/badge/Release-v1.3.1-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
 [![Supported Tools](https://img.shields.io/badge/Compatible_With-Claude_Code_|_Cursor_|_Codex_|_Antigravity_|_Windsurf-blue)](https://github.com/toanpham2111/kio-agent-system)
 [![Skills](https://img.shields.io/badge/Skills-7_Modular_Master_Skills-green)](skills/)
 [![Standard](https://img.shields.io/badge/Format-Agent_Skill_Standard-orange)](skills/)
@@ -35,6 +35,43 @@ Instead, Kio provides ready-to-use skill packages following the standard `SKILL.
 - **Structured Delivery**: Atomic task planning (2-5 minute steps) and specification-driven development (SDD) before writing code.
 - **Growth & Marketing**: 53 conversion rate optimization (CRO) frameworks and technical SEO/GEO guidelines optimized for modern AI search engines.
 - **WordPress FSE**: Full Site Editing workflows for clean, 100% native Gutenberg block theme creation without third-party page builder bloat.
+
+---
+
+## 🧪 Real-World Test: Without Skill vs With Kio
+
+Same request *"a fresh-seafood shop website in Da Nang with proper SEO"*, same model **Claude Sonnet 5.5**, one run without a skill and one with `kio-frontend-craft` (2026-11-22, Kio v1.3.0).
+
+| Desktop 1440 px | Mobile 375 px |
+|:---:|:---:|
+| ![Desktop: left without skill, right with Kio](evaluations/showcase/seafood-v1.3/images/desktop-compare.jpg) | ![Mobile: left without skill, right with Kio](evaluations/showcase/seafood-v1.3/images/mobile-compare.jpg) |
+
+| | Without skill | With Kio |
+|---|:---:|:---:|
+| **Blind judge score** (Opus 5.5, out of 100) | 75 | **86** |
+| Lighthouse mobile — Perf / A11y / Best Practices / SEO | 100 / 96 / 100 / 100 | 98 / **100** / 96 / 100 ¹ |
+| Contrast failures | main order button 2.8:1 | **0** |
+| Order form | shows success but sends nothing | validates and sends the order |
+| Mobile edge overflow / `&amp;` entities | 1 / 1 | **0 / 0** |
+| Time | **1 min 55 s** | 8 min 2 s |
+| Output / input tokens | **20,387 / 97,344** | 42,951 / 1,663,477 (96% cache reads) |
+| Cost | **US$0.33** | US$0.86 |
+
+¹ **Why is there also a 100 / 100 / 100 / 100?** The table shows the real result of this run. The Kio page lost points for 2 issues: a render-blocking Google Fonts stylesheet (Performance 98) and a missing favicon (Best Practices 96); the baseline scored 100 because it was only HTML + CSS with emoji and no photos. To confirm the cause, we **hand-fixed exactly those 2 lines** on the same Kio page (nothing else changed, see [`manual-fix.diff`](evaluations/showcase/seafood-v1.3/manual-fix.diff)) and re-ran Lighthouse: **100 / 100 / 100 / 100**. That number belongs to the hand-fixed page, **not** to a new skill run. Both fixes became mandatory skill rules in v1.3.0; the re-run below shows what the skill does on its own. Both versions of the page are in the [showcase](evaluations/showcase/seafood-v1.3/README.md) so you can run Lighthouse yourself.
+
+**Re-run with the updated skill (same day, same prompt, same Sonnet 5.5, no hand edits):** the skill now loaded fonts without blocking and added a favicon on its own. This page used 5 real photos instead of 1, which exposed a new issue: on phones the hero downloaded the 1024 px file (184 KB), pushing mobile LCP to 3.2 s.
+
+| Re-run | Without skill | With Kio |
+|---|:---:|:---:|
+| **Blind judge score** (Opus 5.5, both pages re-scored) | 78 | **86** |
+| Lighthouse mobile | 100 / 96 / 100 / 100 | 92 / **100 / 100 / 100** |
+| Lighthouse desktop | 100 / 96 / 100 / 100 | **100 / 100 / 100 / 100** |
+| Misaligned rows desktop / mobile edge overflow | 2 / 1 | **0 / 0** |
+| Time / cost | — | 5 min 35 s / US$1.05 |
+
+The cause of Performance 92 was confirmed: adding a 768 px image step at ~60 KB lifts the same page to **99**. That fix is now in `stock_images.py` (480 / 768 px steps, harder compression for the hero) and is the "mobile LCP image ≤ ~80 KB" rule as of v1.3.2. Details: [showcase, re-run section](evaluations/showcase/seafood-v1.3/README.md#re-run-with-the-updated-skill).
+
+Kio produced a clearly better page on design, accessibility and form reliability, at roughly 2.6–4× the time and tokens. One run per condition. Details, full-page screenshots, source code and data: [`evaluations/showcase/seafood-v1.3`](evaluations/showcase/seafood-v1.3/README.md).
 
 ---
 
@@ -92,6 +129,8 @@ curl -fsSL https://raw.githubusercontent.com/toanpham2111/kio-agent-system/main/
 irm https://raw.githubusercontent.com/toanpham2111/kio-agent-system/main/setup.ps1 | iex
 ```
 
+> **Which version gets installed:** the one-line installer installs the **latest release** (newest `v*` tag), never unreleased work on `main`. Re-run it to update. To choose another version: `curl -fsSL .../setup.sh | KIO_REF=v1.1.0 bash` (or `KIO_REF=main`); on Windows: `$env:KIO_REF="v1.1.0"; irm .../setup.ps1 | iex`. If an update fails, the installer prints the error and exits with code `2`; your skills keep using the copy already on disk.
+
 ---
 
 ### Method 2: Granular Installation & CLI Options
@@ -131,11 +170,11 @@ All capabilities are organized into 7 self-contained master skills located in th
 
 | Skill Directory | Focus Area | What It Gives Your AI Assistant |
 | :--- | :--- | :--- |
-| **[`skills/kio-frontend-craft`](skills/kio-frontend-craft)** | **Frontend UI/UX & Motion** | Library of 79 aesthetic styles, 192 product-tested color palettes, 3-layer Design Tokens, Lenis 60fps smooth scroll setup, and guidelines to avoid generic AI gradients and edge-bleed bugs. |
-| **[`skills/kio-backend-cloud`](skills/kio-backend-cloud)** | **Backend, DB & Cloud** | Practical REST/GraphQL patterns, PostgreSQL index tuning, Supabase Row-Level Security rules, Docker multi-stage setups, and idempotent webhook handling for Stripe/PayPal. |
-| **[`skills/kio-qa-security`](skills/kio-qa-security)** | **Automated QA & Security** | Automated 4-quadrant test case generation, multi-language unit test boilerplates (Vitest, Pytest, Go test), TDD Red-Green-Refactor workflows, and Playwright headless browser layout inspection. |
-| **[`skills/kio-core-delivery`](skills/kio-core-delivery)** | **Planning & Delivery** | Decomposes vague prompts into 2-5 minute atomic tasks, creates technical specifications (Specification-Driven Development), and manages multi-engine task routing. |
-| **[`skills/kio-growth-marketing`](skills/kio-growth-marketing)** | **Growth, CRO & SEO** | 53 growth frameworks (AARRR funnel, behavioral pricing, conversion copywriting) plus 25 technical SEO modules targeting modern search and AI Overviews (GEO). |
+| **[`skills/kio-frontend-craft`](skills/kio-frontend-craft)** | **Frontend UI/UX & Motion** | 79 searchable styles, 192 contrast-checked palettes, 74 font pairings and 22 framework rule sets (search CLI), 64 React/Next.js performance rules, Core Web Vitals (PageSpeed 95–100) audits, the 9-pass /unslop redesign SOP, Lenis smooth scroll, PDF → responsive HTML, React Native / Expo / SwiftUI guides, **free stock photos with credits** (Unsplash, Pexels, Openverse) and a **layout check** (`layout-check.js`: no edge spill, aligned rows, no wrapped buttons, no HTML entities like `&amp;`). |
+| **[`skills/kio-backend-cloud`](skills/kio-backend-cloud)** | **Backend, DB & Cloud** | REST/GraphQL API and auth (anti-IDOR) design, payments with idempotent webhooks (Stripe, PayPal, VNPay, MoMo, PayOS, SePay — tested reference code), PostgreSQL / Supabase RLS, EXPLAIN-driven indexing, zero-downtime migrations, Docker, GitHub Actions, Terraform, RAG with pgvector, QLoRA fine-tuning, and MCP servers in Python or TypeScript. |
+| **[`skills/kio-qa-security`](skills/kio-qa-security)** | **Automated QA & Security** | 4-quadrant test matrices and unit-test templates (Vitest, Pytest, Go), TDD and systematic debugging (root-cause tracing, flaky-test and test-pollution tools), deep review of risky diffs (blast radius, interrogation, arena), security review with Semgrep and CodeQL SAST (scripts + tests), and Playwright E2E visual QA at 375/768/1440 px. |
+| **[`skills/kio-core-delivery`](skills/kio-core-delivery)** | **Planning & Delivery** | Socratic brainstorming with browser Visual Companion mockups, Spec-Kit SDD templates (`constitution.md`, `spec.md`, `plan.md`, `tasks.md`), 2–5 minute atomic task plans, persistent file-based working memory (`task_plan.md`, `findings.md`, `progress.md`), parallel subagent dispatch, Git worktrees, multi-engine AI CLI routing (`kio_router.py`), and 5-pillar executive audit sign-off. |
+| **[`skills/kio-growth-marketing`](skills/kio-growth-marketing)** | **Growth, CRO & SEO** | One router over 79 sub-skills: 53 growth modules (CRO, copywriting, pricing, email, ads, launches, analytics, RevOps…) and 26 SEO Engine sub-skills (technical SEO, schema, AI search / GEO, local SEO) with 19 agents and 60+ Python checks. |
 | **[`skills/kio-wordpress-fse`](skills/kio-wordpress-fse)** | **WordPress FSE** | Step-by-step S0-S8 industrial pipeline for turning designs or HTML mockups into clean, 100% native Gutenberg block themes without plugin bloat. |
 | **[`skills/kio-cognitive`](skills/kio-cognitive)** | **Deep Thinking & Rationale** | First-principles analysis methods, architectural decision walkthroughs ("Why & How"), and post-mortem failure analysis for continuous learning. |
 
@@ -147,6 +186,7 @@ Each skill is designed to activate on demand when given a relevant prompt. Use t
 
 ### 1. `kio-frontend-craft`
 - **When to Use**: Building web interfaces, mobile layouts, fixing alignment bugs, removing generic AI styling, or auditing color contrast.
+- **Stock photos**: when you have no real photos, the skill fetches free stock images with credits. Set `UNSPLASH_ACCESS_KEY` (unsplash.com/developers) or `PEXELS_API_KEY` (pexels.com/api) for the best results; without a key it uses Openverse (openly licensed, smaller images).
 - **Prompt Example**:
   ```text
   "Build a responsive SaaS analytics dashboard in React + Tailwind CSS with MRR metric cards, a recent transactions table, dark mode support, and an empty state."
@@ -179,6 +219,7 @@ Each skill is designed to activate on demand when given a relevant prompt. Use t
 
 ### 4. `kio-core-delivery`
 - **When to Use**: Breaking down large epics into small steps, writing technical specification documents, or coordinating multi-engine task delivery.
+- **Long tasks**: for work with 5+ steps the skill keeps a plan on disk (`.planning/<date>-<task>/task_plan.md`, `findings.md`, `progress.md`) via `scripts/planning/init-session.sh`, and `check-complete.sh` reports unfinished phases before you stop.
 - **Prompt Example**:
   ```text
   "I want to build an automated PDF invoice export service. Create an SDD specification document and break it down into 2-5 minute atomic tasks."
@@ -233,6 +274,8 @@ Kio validates capability through transparent, reproducible benchmarks and live e
 | **`kio-wordpress-fse`** | 2 | Native Gutenberg block patterns, Zero external builder dependency | 🟢 2/2 Scenarios Defined | [`results/wordpress/`](evaluations/results/wordpress/) |
 | **`kio-cognitive`** | 2 | First-principles trade-off analysis, Root cause post-mortems | 🟢 2/2 Scenarios Defined | [`results/cognitive/`](evaluations/results/cognitive/) |
 
+> **Latest A/B re-run (v1.2.0, Claude Code, blind judge, n = 1):** average 7.61 → 8.01 (+0.40) across 10 scenarios; largest gain FE-01 (+3.8), 4 scenarios scored lower. Details and caveats in [`benchmark-summary.md`](evaluations/benchmark-summary.md); per-scenario evidence in [`results-v1.2.0/`](evaluations/results-v1.2.0/).
+
 📖 **Review full evaluation framework and live logs**:  
 👉 **[Read the Skill Evaluation Framework (SKILL_EVALUATION_FRAMEWORK.md)](evaluations/SKILL_EVALUATION_FRAMEWORK.md)**  
 👉 **[Read Live Benchmark Summary & Evidence Logs (benchmark-summary.md)](evaluations/benchmark-summary.md)**
@@ -245,11 +288,13 @@ Kio adopts the standard `SKILL.md` format. Verification statuses across major AI
 
 | AI Coding Tool | Auto-Discovery Path | Linux | macOS | Windows / WSL | Compatibility & Verification Tier |
 | :--- | :--- | :---: | :---: | :---: | :--- |
-| **Claude Code** | `~/.claude/skills/` or `<project>/.claude/skills/` | ✅ | ✅ | ✅ | 🟢 **Tested & Verified** (Full test evidence available) |
-| **Google Antigravity** | `~/.gemini/config/skills/` | ✅ | ✅ | ✅ | 🟢 **Tested & Verified** (Full test evidence available) |
-| **Cursor IDE** | `~/.cursor/skills/` or `<project>/.cursor/skills/` | ✅ | ✅ | ✅ | 🟡 **Tested** (Installation and basic discovery verified) |
-| **Codex CLI** | `~/.codex/skills/` or `<project>/.codex/skills/` | ✅ | ✅ | ✅ | 🟡 **Tested** (Installation and basic discovery verified) |
+| **Claude Code** | `~/.claude/skills/` or `<project>/.claude/skills/` | ✅ | ✅ | 🟡 | 🟢 **Tested & Verified** (Full test evidence available) |
+| **Google Antigravity** | `~/.gemini/config/skills/` | ✅ | ✅ | 🟡 | 🟢 **Tested & Verified** (Full test evidence available) |
+| **Cursor IDE** | `~/.cursor/skills/` or `<project>/.cursor/skills/` | ✅ | ✅ | 🟡 | 🟡 **Tested** (Installation and basic discovery verified) |
+| **Codex CLI** | `~/.codex/skills/` or `<project>/.codex/skills/` | ✅ | ✅ | 🟡 | 🟡 **Tested** (Installation and basic discovery verified) |
 | **Windsurf / Cascade** | `<project>/.windsurf/skills/` | 🔄 | 🔄 | 🔄 | 🔵 **Supported** (Requires manual copy into project directory) |
+
+> **Windows note:** 🟡 until `setup.ps1` (changed in v1.1.0 and v1.2.0) has been run on a real Windows machine again. `setup.sh` was re-tested on Linux for v1.2.0.
 
 > **Verification Tier Definitions**:
 > - 🟢 **Tested & Verified**: Fully tested in production environments with benchmark logs available in `evaluations/results/`.
@@ -308,9 +353,7 @@ kio-agent-system/
 │   └── kio-cognitive/                # Architecture rationale walkthroughs
 ├── evaluations/                      # Skill Evaluation Framework & Live Benchmarks
 │   ├── SKILL_EVALUATION_FRAMEWORK.md # 21 verified test scenarios
-│   ├── SKILL_EVALUATION_FRAMEWORK.en.md # English reference
 │   ├── benchmark-summary.md          # Live benchmark summary report
-│   ├── benchmark-summary.en.md       # English benchmark report
 │   └── results/                      # Raw evidence logs per scenario (FE, BE, QA...)
 ├── agents/                           # Optional: 6 Role-specialized agent personas
 │   ├── kio.md                        # Coordinator persona for task triage & review
@@ -324,6 +367,7 @@ kio-agent-system/
 │   ├── user_profile.md               # User preferences & tech stack notes
 │   └── projects_registry.md          # Active local dev ports registry
 ├── docs/                             # Engineering guides & operational SOPs
+│   ├── releases/                     # Release notes per version
 │   └── RELEASE_WORKFLOW.md           # Dual-repository release & synchronization SOP
 ├── rules/                            # Optional: Global coding guidelines
 │   ├── GLOBAL_RULE.md                # General code quality & safety rules
@@ -388,7 +432,12 @@ Kio unifies, adapts, and extends open-source agent skill specifications, dataset
 - **Marketing & CRO Frameworks**: Adapted and modularized from `marketingskills` by Corey Haines (`coreyhaines31/marketingskills`, MIT License).
 - **Technical SEO & GEO Sub-skills**: Adapted and integrated from `claude-seo` & `claude-ads` by Daniel Agrici (`AgriciDaniel/claude-seo`, MIT License), Ivan Kuznetsov (`ivankuznetsov/claude-seo`, MIT License), and `flow` framework prompts (CC BY 4.0).
 - **Frontend UI/UX Datasets**: Style, typography, and palette datasets in `skills/kio-frontend-craft/data/` adapted from `ui-ux-pro-max-skill` (`nextlevelbuilder/ui-ux-pro-max-skill`, MIT License), Google Fonts metadata, and Phosphor Icons.
-- **SDD & Agent Workflows**: Inspired by `superpowers` by Jesse Vincent (`obra/superpowers`, MIT License) and GitHub Spec-Kit (`github/spec-kit`, MIT License).
+- **SDD & Agent Workflows**: Adapted and extended from `superpowers` by Jesse Vincent (`obra/superpowers`, MIT License), GitHub Spec-Kit (`github/spec-kit`, MIT License), and `planning-with-files` by Ahmad Adi (`OthmanAdi/planning-with-files`, MIT License).
+- **React & Next.js Performance Rules**: The 64 rules in `skills/kio-frontend-craft/references/react/` are adapted from Vercel's React Best Practices (`vercel-labs/agent-skills`, MIT License).
+- **MCP Server Builder**: `skills/kio-backend-cloud/references/mcp-server-builder.md` is adapted from Anthropic's `mcp-builder` skill (`anthropics/skills`, Apache License 2.0).
+- **Copywriting, AI-visibility, conversion-tracking and RevOps references**: Profound (`retieedra-profound/skills-marketing-library`), Knowatoa (`Knowatoa/ai-visibility-skills`), ConversionKit (`ConversionKit/conversion-tracking`), Elias Stravik (`eliasstravik/rowbound`) and Ploy AI (`Ploy-AI/ploy-tools`), all MIT License.
+- **Practitioner inspirations** (re-expressed, no text copied): Ivan Falco (`ivangfalco/ads-skills`) and Shiv Sakhuja / Gooseworks (`gooseworks-ai/gooseworks-ads-skills`).
+- Every sub-skill keeps its original `author` in its frontmatter, with `maintainer: Kio System`. File-level detail lives in each skill's `THIRD_PARTY_NOTICES.md`.
 
 Contributions, new skill modules, and bug fixes are welcome via GitHub pull requests:
 - **Repository**: [https://github.com/toanpham2111/kio-agent-system](https://github.com/toanpham2111/kio-agent-system)

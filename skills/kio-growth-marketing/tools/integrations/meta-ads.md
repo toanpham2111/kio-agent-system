@@ -27,7 +27,7 @@ Meta hosts an official ads MCP server, part of **Meta Ads AI Connectors** (open 
 - **Tools:** 29 at launch, across performance and insights, campaign creation and management, catalog management, accounts and assets, and dataset/signal diagnostics. Meta adds tools as products leave beta, so treat any count as a floor.
 - **Cost:** free during the beta, within normal Marketing API rate limits.
 
-**Start read-only.** The connector includes write tools (create campaigns, edit budgets and status). Run reporting and diagnostics for the first few weeks and check the answers against Ads Manager before allowing any write. After that, apply changes only as a reviewed plan (current state → change → expected effect → rollback) with explicit approval of that specific change. See the ads skill's [audit guardrails](../../skills/ads/references/audit-guardrails.md).
+**Start read-only.** The connector includes write tools (create campaigns, edit budgets and status). Run reporting and diagnostics for the first few weeks and check the answers against Ads Manager before allowing any write. After that, apply changes only as a reviewed plan (current state → change → expected effect → rollback) with explicit approval of that specific change. See the ads skill's [audit guardrails](../../modules/ads/references/audit-guardrails.md).
 
 Use the Marketing API below when you need endpoints the connector doesn't expose, scheduled jobs without a chat client, or the repository CLI.
 

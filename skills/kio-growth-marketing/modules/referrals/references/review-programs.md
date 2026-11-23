@@ -88,7 +88,7 @@ Return a concise program or response packet with:
 
 ## Tools and Handoffs
 
-For configured API access, consult [Trustpilot](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/trustpilot.md), [G2](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/integrations/g2.md), and the [tool registry](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/tools/REGISTRY.md#reviews). These guides describe different capabilities; do not infer that a read API can create invitations or public replies. Dashboard workflows and a simple private spreadsheet can be sufficient. Do not require a paid tool for a single response.
+For configured API access, consult [Trustpilot](../../../tools/integrations/trustpilot.md), [G2](../../../tools/integrations/g2.md), and the [tool registry](../../../tools/REGISTRY.md#reviews). These guides describe different capabilities; do not infer that a read API can create invitations or public replies. Dashboard workflows and a simple private spreadsheet can be sufficient. Do not require a paid tool for a single response.
 
 - **customer-research** — mine themes and language from existing reviews; do not turn research selection into invitation gating.
 - **cro / copywriting** — present permissioned proof on conversion pages.

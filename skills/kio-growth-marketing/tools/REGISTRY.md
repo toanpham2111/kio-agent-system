@@ -20,7 +20,7 @@ Quick reference for AI agents to discover tool capabilities and integration meth
 - **Disclosed + vetted for fit.** Each carries a disclosure header in its integration guide and is marked ◆ in the index below.
 - **Additive, never biasing.** A partner is listed *alongside* the neutral options for the same job, never instead of them. Partner status never removes or demotes another tool and **never changes what any skill recommends** — if a non-partner is the right answer, that's the answer. The badge means "paid, disclosed, vetted for fit," not "best in category."
 
-Anyone — including tool makers and partners — may contribute content that names a tool, as long as it makes an agent *aware* of the right option without manufacturing a recommendation. The bar is the [integrity rubric in CONTRIBUTING.md](../CONTRIBUTING.md#mentioning-tools-the-integrity-rubric) (options not one answer, disclosed, passes the swap test).
+Anyone — including tool makers and partners — may contribute content that names a tool, as long as it makes an agent *aware* of the right option without manufacturing a recommendation. The bar is the integrity rubric in CONTRIBUTING.md (options not one answer, disclosed, passes the swap test).
 
 <!-- PARTNERS:START -->
 | Partner | Category | Guide |
@@ -393,7 +393,7 @@ Programmatic page extraction for **individual public business sites** — not fo
 
 ### Reviews
 
-Review management and social proof platforms. For honest invitation programs, response triage, and permissioned testimonial reuse, use the referrals skill's [review programs reference](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/modules/referrals/references/review-programs.md). Platform incentive and collection rules differ; consult its conditional policy reference before a campaign.
+Review management and social proof platforms. For honest invitation programs, response triage, and permissioned testimonial reuse, use the referrals skill's [review programs reference](../modules/referrals/references/review-programs.md). Platform incentive and collection rules differ; consult its conditional policy reference before a campaign.
 
 | Tool | Best For | Notes |
 |------|----------|-------|
@@ -585,7 +585,7 @@ E-commerce platforms and content management systems.
 | **contentful** | Enterprise headless CMS, multi-locale | ✓ |
 | **strapi** | Open-source headless CMS, self-hosted | ✓ |
 
-**Agent recommendation**: Shopify for e-commerce. Webflow for marketing sites. WordPress for blogs. For headless CMS: Sanity for developer-flexible content, Contentful for enterprise multi-locale, Strapi for self-hosted/budget-conscious. See [headless CMS guide](../skills/content-strategy/references/headless-cms.md) for selection criteria.
+**Agent recommendation**: Shopify for e-commerce. Webflow for marketing sites. WordPress for blogs. For headless CMS: Sanity for developer-flexible content, Contentful for enterprise multi-locale, Strapi for self-hosted/budget-conscious. See [headless CMS guide](../modules/content-strategy/references/headless-cms.md) for selection criteria.
 
 ---
 

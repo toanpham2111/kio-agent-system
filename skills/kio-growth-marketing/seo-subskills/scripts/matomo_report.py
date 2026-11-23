@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Matomo Reporting API client for Claude SEO.
+Matomo Reporting API client for Kio SEO.
 
 Queries the Matomo Reporting API for organic traffic, top landing pages,
 device and country breakdowns, and referrer analysis. Self-hosted Matomo

@@ -1,0 +1,18 @@
+/*
+ * Kio layout check — paste into the browser console (or run with Playwright's page.evaluate)
+ * at 375 px and at 1440 px. Every list must be empty before delivery.
+ *
+ *   overflow        text, media or controls inside the 16 px gutters, or anything past the viewport
+ *   misaligned      siblings in one row whose matching parts sit at different heights
+ *                   (e.g. a stat label wraps and pushes its number down, card prices at uneven heights)
+ *   wrappedButtons  button / link labels that broke onto two lines
+ */
+(() => {
+  const overflow = [...document.querySelectorAll('body *')].filter(e => { const s = getComputedStyle(e), r = e.getBoundingClientRect(); if (r.width <= 1 || s.position === 'fixed' || s.visibility === 'hidden' || s.pointerEvents === 'none' && !e.textContent.trim()) return false; if (/^(img|svg|video|picture|canvas)$/i.test(e.tagName) && s.position === 'absolute' && e.parentElement && r.width >= e.parentElement.getBoundingClientRect().width - 1) return false; if (r.right > innerWidth + 0.5 && !(s.position === 'absolute' && !e.textContent.trim())) return true; const boxes = /^(img|svg|button|input|select|textarea|video|table)$/i.test(e.tagName) ? [r] : [...e.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim()).map(n => { const g = document.createRange(); g.selectNodeContents(n); return g.getBoundingClientRect(); }); return boxes.some(b => b.width && (b.left < 16 || b.right > innerWidth - 16)); }).map(e => e.tagName + '.' + (e.getAttribute('class') || ''));
+  const rest = (() => { const out = [], seen = new Set(); const vis = e => { const r = e.getBoundingClientRect(); return r.width > 1 && r.height > 1; }; document.querySelectorAll('body *').forEach(p => { const d = getComputedStyle(p).display; if (!/flex|grid/.test(d) || getComputedStyle(p).flexDirection === 'column') return; const kids = [...p.children].filter(vis); if (kids.length < 2) return; const rows = {}; kids.forEach(k => { const t = Math.round(k.getBoundingClientRect().top / 6); (rows[t] = rows[t] || []).push(k); }); Object.values(rows).forEach(row => { if (row.length < 2) return; const sig = k => [...k.querySelectorAll('*')].filter(vis).map(x => x.tagName).join(); if (new Set(row.map(sig)).size !== 1) return; const parts = row.map(k => [...k.querySelectorAll('*')].filter(vis)); for (let i = 0; i < parts[0].length; i++) { const tops = row.map((k, j) => parts[j][i].getBoundingClientRect().top - k.getBoundingClientRect().top); if (Math.max(...tops) - Math.min(...tops) > 4) { const key = 'row:' + (p.getAttribute('class') || p.tagName); if (!seen.has(key)) { seen.add(key); out.push('misaligned row → ' + p.tagName + '.' + (p.getAttribute('class') || '') + ' (' + parts[0][i].tagName + ' ' + Math.round(Math.max(...tops) - Math.min(...tops)) + 'px)'); } break; } } }); }); document.querySelectorAll('button, a, [role=button]').forEach(b => { const s = getComputedStyle(b); if (!vis(b) || s.display === 'inline') return; const tw = document.createTreeWalker(b, NodeFilter.SHOW_TEXT); let n; while ((n = tw.nextNode())) { if (!n.textContent.trim()) continue; const g = document.createRange(); g.selectNodeContents(n); const lines = new Set([...g.getClientRects()].filter(r => r.width > 1).map(r => Math.round(r.top / 4))); if (lines.size > 1 && n.textContent.trim().length < 40) { out.push('wrapped button → ' + b.tagName + ': ' + n.textContent.trim().slice(0, 30)); break; } } }); return out; })();
+  const misaligned = rest.filter(s => s.startsWith('misaligned'));
+  const wrappedButtons = rest.filter(s => s.startsWith('wrapped'));
+  const report = { viewport: innerWidth, overflow, misaligned, wrappedButtons };
+  console.log(JSON.stringify(report, null, 2));
+  return report;
+})();

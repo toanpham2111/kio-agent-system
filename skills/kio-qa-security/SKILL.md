@@ -1,32 +1,79 @@
 ---
 name: kio-qa-security
-description: "Generate 4-quadrant test matrices, write unit tests (Vitest, Pytest, Go) with disciplined mocking, run Playwright E2E checks, and perform security reviews. Use when writing tests, debugging, or auditing code."
-author: Toan Pham / Kio System
-version: 1.0.2
+description: "Kio QA, Testing, Code Review & Security hub. Use for: 4-quadrant test case matrices; unit tests (Vitest/Jest, Pytest, Go, PHPUnit) with disciplined mocking; TDD red-green-refactor; systematic debugging and root-cause tracing (flaky tests, test pollution, race conditions); evidence-based 'done' verification; deep review of risky diffs (blast radius, adversarial interrogation, solution arena, make-recurring-bugs-impossible); security review, OWASP checks, anti-bot form defense, Semgrep and CodeQL SAST with SARIF; Playwright E2E and responsive visual QA (375/768/1440)."
+license: MIT
+metadata:
+  author: Kio System / Toan Pham
+  version: 3.0.0
 ---
 
-# 🧪 Kio QA, Code Review & Security Verification (`kio-qa-security`)
+# 🧪 Kio QA, Code Review & Security (`kio-qa-security`)
 
-The quality assurance, code review, and security testing skill of the Kio System. Integrates 5 core verification modules:
+The router for Kio's testing, review and security work. Knowledge lives in `references/`; this file only points the way and holds the mandatory quality gates.
 
----
+`KIO_QA_ROOT` = this skill's install directory (e.g. `~/.claude/skills/kio-qa-security`).
 
-## 🧭 Core 5 Verification Modules Matrix
+## ⚙️ How to work
 
-| Module | Reference / Methodology | Core Mission & Deliverables |
-| :--- | :--- | :--- |
-| **1. Unit Test & Test Cases**| `references/unit-testing-and-test-cases.md` | Automated **4-Quadrant Test Case Matrix** generation (Happy Path, Boundary Value, Edge Case, Failure Mode, Security Auth). Automated **standardized Unit Tests** (Vitest/Jest, Pytest, Go test, PHPUnit) enforcing Disciplined Mocking (mock only external side-effects, never mock the unit under test). |
-| **2. TDD & Root-Cause QA** | TDD & Systematic Debugging | TDD Red-Green-Refactor, Systematic Debugging (`NO FIXES WITHOUT ROOT CAUSE FIRST`), **Zero-False-Completion** gate (absolute ban on declaring tasks done without live test execution), **Mandatory Feature Test Cases** (100% of new features must ship with comprehensive test suites). |
-| **3. Deep Code Review** | Blast Radius & Adversarial Review | Blast radius impact analysis outside the git diff (**`blast-radius`**), adversarial review on diffs >300 lines (**`interrogate`**), multi-solution performance comparisons (**`arena`**), and permanent bug elimination across architecture and types (**`correct`**). |
-| **4. Security & SAST Audit** | OWASP & SAST Verification | Two-stage code review (Spec Compliance ➔ Code Quality), SAST static analysis (Semgrep & CodeQL taint tracking), **4-Layer Anti-Bot Spam Defense** (Honeypot, Timestamp <3s check, IP Rate Limiting, Nonce/Turnstile). |
-| **5. Playwright Browser E2E** | Headless Chromium Visual QA | Real headless Chromium browser simulating user journeys E2E, side-by-side 1:1 visual diffing against design mockups, and responsive defensive spacing checks across 3 viewports: **Desktop (1440px), Tablet (768px), Mobile (375px)**. |
+1. **Read the project's rules first** (`CLAUDE.md`, `AGENTS.md`, test commands in `package.json` / `pyproject.toml` / `Makefile`). Use the test framework the project already uses; do not add a new one.
+2. **Pick one primary reference** from the [routing table](#-routing-table) and follow its process.
+3. **Never report done without running it.** Every conclusion carries the command that ran and its result (exit code, pass/fail counts, report path).
 
----
+## 🧭 Routing table
 
-## 🛡️ Strict Quality Verification Gates
+| Task | Open | Notes |
+|---|---|---|
+| Build a test case matrix, write unit tests | `references/unit-testing-and-test-cases.md` | 4 quadrants: happy path, boundaries, edge cases, failure/security; Vitest, Pytest, Go templates |
+| Work test-first, prove "done" | `references/tdd-debugging/README.md` | Red → Green → Refactor; Zero-False-Completion gate |
+| Hard bug, find the root cause | `references/tdd-debugging/root-cause-tracing.md` | No fix without a root cause; stop after 3 failed attempts |
+| Flaky tests from timing / races | `references/tdd-debugging/condition-based-waiting.md` | Example: `condition-based-waiting-example.ts` |
+| One test pollutes another's state | `scripts/find-polluter.sh` | Bisects to the polluting test |
+| Harden after a fix | `references/tdd-debugging/defense-in-depth.md` | Validate at every layer the data crosses |
+| Write good tests, avoid anti-patterns | `references/tdd-debugging/writing-good-tests.md` | Never mock the unit under test |
+| A change might break something elsewhere | `references/deep-review/blast-radius.md` | Prove it with code that runs |
+| Large diff (> 300 lines) needs challenge | `references/deep-review/interrogate.md` | Adversarial review |
+| Compare several solutions in parallel | `references/deep-review/arena.md` | |
+| A bug keeps coming back | `references/deep-review/correct.md` | Make it impossible |
+| Security review, 5-layer checklist, form anti-bot | `references/codeql/SKILL.md` | Two-stage review, sign-off |
+| Semgrep / CodeQL SAST | `references/codeql/SKILL.md` → `workflows/` | Scripts in `references/codeql/scripts/`, rules in `references/codeql/references/` |
+| E2E tests, responsive screenshots | `references/playwright-e2e.md` | 375 / 768 / 1440 px, 1:1 against the design |
 
-1. **Zero Unverified Completion**: Every declaration of completion must cite fresh terminal command outputs, exit code 0, and 0 failing tests.
-2. **Blast Radius Analysis Before Merge**: For any architectural or API refactoring, inspect and test consumers outside the git diff to prove zero cascading regressions.
-3. **👁️ Visual Side-by-Side Verification (1:1 Ground Truth)**:
-   - When a design source exists (HTML / PDF / Image mockup): Open real Playwright screenshots and design files side-by-side.
-   - If AI deviates from the design, invents colors, or changes typography ➔ **REJECT IMMEDIATELY and require a minimal fix loop**.
+## 🔀 Selection rules for overlaps
+
+| Need | Start at | Switch when |
+|---|---|---|
+| "Write tests for this function" | `unit-testing-and-test-cases.md` | New feature with no code yet → `tdd-debugging/README.md` (test first) |
+| "Tests fail" | `tdd-debugging/root-cause-tracing.md` | Random failures → `condition-based-waiting.md`; only fails in the full suite → `find-polluter.sh` |
+| Review a PR | `codeql/SKILL.md` (two-stage + 5 layers) | Large diff or shared API → `deep-review/blast-radius.md`, `interrogate.md` |
+| "Any vulnerabilities?" | `codeql/SKILL.md` | Automated scan → Semgrep first (fast), CodeQL for deep taint tracking |
+| UI differs from the design | `playwright-e2e.md` | The bug is in UI code → `kio-frontend-craft` |
+
+## 🧩 Workflows
+
+| Job | Order |
+|---|---|
+| New feature | `unit-testing-and-test-cases.md` (matrix) → `tdd-debugging/README.md` (TDD) → `playwright-e2e.md` (if UI) → sign-off |
+| Bug fix | `root-cause-tracing.md` → failing test that reproduces it → fix → `defense-in-depth.md` → `deep-review/correct.md` if it recurred |
+| Before merging a big change | `deep-review/blast-radius.md` → `codeql/SKILL.md` (review + Semgrep) → full test suite |
+| Pre-release security audit | `codeql/SKILL.md` → `workflows/scan-workflow.md` (Semgrep) → `workflows/build-database.md` + `run-analysis.md` (CodeQL) → `merge_sarif.py` |
+
+Writing code belongs to `kio-frontend-craft` / `kio-backend-cloud`; planning to `kio-core-delivery`.
+
+## 🛡️ Mandatory quality gates
+
+1. **No "done" without a real run:** quote the command, exit code 0, 0 failing tests. Without evidence, say it is unverified.
+2. **Every new feature has tests** for the happy path, boundaries, edge cases and failures.
+3. **No fix without a root cause.** After 3 failed attempts, stop and revisit the hypothesis.
+4. **Never mock the unit under test;** mock only external effects (network, time, filesystem, paid services).
+5. **Never disable, skip or delete tests to get green.**
+6. **Measure the blast radius** before merging architecture or shared-API changes.
+7. **1:1 visual match** when a design exists (HTML/PDF/image): Playwright screenshots at 3 sizes; wrong colours, layout or fonts are rejected.
+8. **Security:** run SAST with `--metrics=off`; never send a client's code to outside services without permission.
+9. **Language:** answer in the language of the user's request (an English prompt gets an English answer), even when skill documents are written in another language.
+
+## 📦 What's included
+
+- `references/` — the documents in the table above (`tdd-debugging/`, `deep-review/`, `codeql/`).
+- `scripts/find-polluter.sh`; `references/codeql/scripts/` (build log, database discovery, query suites, SARIF merge) with tests: `python3 -m pytest references/codeql/scripts`.
+- `evals/tdd-pressure/` — scenarios checking the skill keeps TDD discipline under deadline pressure.
+- `THIRD_PARTY_NOTICES.md` — credits and licenses for the open-source sources Kio uses; keep it when redistributing.

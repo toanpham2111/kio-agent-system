@@ -6,7 +6,7 @@ Load this when enrichment changes the next step after a demo/contact form or rou
 
 Accept and record a valid submission before depending on a third-party lookup. Preserve submitted values and attribution. Enrichment failure must not erase a lead, create a false rejection, or block an otherwise valid account signup.
 
-Use the fields needed for qualification and routing. Reuse verified CRM data and fresh exact cache hits before another paid call. For multi-provider lookup rules and cache keys, see [the prospecting playbook](https://github.com/toanpham2111/kio-agent-system/blob/main/skills/kio-growth-marketing/modules/prospecting/references/enrichment-playbook.md).
+Use the fields needed for qualification and routing. Reuse verified CRM data and fresh exact cache hits before another paid call. For multi-provider lookup rules and cache keys, see [the prospecting playbook](../../prospecting/references/enrichment-playbook.md).
 
 Record a stable submission ID and matched CRM identity. Replayed webhooks should not create another contact, task, notification, or booking. A personal-email domain cannot establish a company; ask for the minimum missing company information or route to a human queue.
 

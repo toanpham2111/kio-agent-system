@@ -110,6 +110,26 @@ echo "================================================================="
 
 cd "$REPO_ROOT"
 
+# 1.5 Refuse to release a stale or diverged checkout (the tag must point at origin/main)
+echo "🔍 Checking that local main matches origin/main..."
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$CURRENT_BRANCH" != "main" ]; then
+  echo "❌ Error: releases are cut from 'main' (current branch: $CURRENT_BRANCH)."
+  exit 1
+fi
+git fetch --quiet origin main
+if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+  if git merge-base --is-ancestor HEAD origin/main; then
+    echo "❌ Error: local main is behind origin/main. Run 'git pull --ff-only' first."
+  else
+    echo "❌ Error: local main has diverged from origin/main. Reconcile before releasing."
+  fi
+  echo "   local:  $(git log --oneline -1 HEAD)"
+  echo "   origin: $(git log --oneline -1 origin/main)"
+  exit 1
+fi
+echo "✅ main is up to date with origin/main."
+
 # 2. Check GitHub CLI Authentication
 echo "🔍 Checking GitHub authentication..."
 if ! "$GH_CMD" auth status >/dev/null 2>&1; then
@@ -141,18 +161,10 @@ if git rev-parse -q --verify "refs/tags/$VERSION" >/dev/null; then
   echo "ℹ️  Tag $VERSION already points to HEAD — resuming release."
 fi
 
-# 4. Check & Update Version Badges and Installer Release Ref
+# 4. Check & Update Version Badges in Documentation
 echo "📝 Updating release badges in README files..."
 sed -i -E "s/Release-v[0-9]+\.[0-9]+\.[0-9]+-blue\.svg/Release-$VERSION-blue.svg/g" README.md 2>/dev/null || true
 sed -i -E "s/Release-v[0-9]+\.[0-9]+\.[0-9]+-blue\.svg/Release-$VERSION-blue.svg/g" README.en.md 2>/dev/null || true
-
-echo "📝 Pinning installers to $VERSION..."
-sed -i -E 's/^KIO_REF="\$\{KIO_REF:-[^}]*\}"/KIO_REF="${KIO_REF:-'"$VERSION"'}"/' setup.sh
-sed -i -E 's/^(\$KioRef = if \(\$env:KIO_REF\) \{ \$env:KIO_REF \} else \{ )"[^"]*"/\1"'"$VERSION"'"/' setup.ps1
-if ! grep -qF "KIO_REF=\"\${KIO_REF:-$VERSION}\"" setup.sh || ! grep -qF "else { \"$VERSION\" }" setup.ps1; then
-  echo "❌ Error: Could not pin KIO_REF to $VERSION in setup.sh / setup.ps1."
-  exit 1
-fi
 
 # 5. Commit pending release metadata (tracked files only — untracked files are never released)
 git add -u
