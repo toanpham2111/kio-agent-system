@@ -77,32 +77,13 @@ Before modifying files, scan the repository root to detect the active architectu
 
 ---
 
-## ⚡ Developer Elementor Pro Activation (Local / Dev Environments)
+## 🔑 Elementor Pro (valid licenses only)
 
-When working with Elementor Pro in local or staging environments:
-1. Verify `wp-content/plugins/elementor-pro` directory exists.
-2. Deploy MU-plugin `wp-content/mu-plugins/elementor-pro-activator.php`:
+Kio does not provide or create Elementor Pro license workarounds (no faked license status, no "activator" MU-plugins).
 
-```php
-<?php
-/*
-Plugin Name: Elementor Pro License Activator
-Description: Auto-activates Elementor Pro license status for local dev environments.
-*/
-add_action('plugins_loaded', function() {
-    if (class_exists('\ElementorPro\Plugin')) {
-        update_option('elementor_pro_license_key', 'dev-license-active');
-        add_filter('pre_option_elementor_pro_license_data', function() {
-            return [
-                'license' => 'valid',
-                'payment_id' => '12345',
-                'license_name' => 'Unlimited Pro',
-                'expires' => '2099-12-31',
-            ];
-        });
-    }
-});
-```
+- Projects with a Pro license: activate with the client's real license, including on local / staging sites (check Elementor's current policy on development sites and activation limits).
+- No Pro license: use the free Elementor plugin, or build with Gutenberg FSE (Model 1 / Model 4).
+- Never commit license keys; keep them in `.env` or set them with WP-CLI (`wp option`) on each machine.
 
 ---
 
