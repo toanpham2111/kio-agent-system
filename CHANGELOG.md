@@ -12,7 +12,7 @@ All notable changes to the **Kio** project are documented here following the [Ke
 - `test_stock_images.py` now checks the image steps and compression quality; all 150 frontend tests pass.
 
 ### 🧩 `kio-wordpress-fse`
-- **Removed the Elementor Pro activation MU-plugin** (it faked the license status). Replaced with guidance to use a valid license, the free Elementor plugin or Gutenberg FSE. Also removed the `active-elementor-pro` entries from `KNOWLEDGE_BASE.md` and `so_do_kio.html`.
+- **Removed the Elementor Pro activation MU-plugin** (it faked the license status). Also removed the `active-elementor-pro` entries from `KNOWLEDGE_BASE.md` and `so_do_kio.html`.
 
 ### 🧪 Seafood site re-run (no hand edits)
 - The skill loaded fonts without blocking and added a favicon on its own. Lighthouse desktop 100/100/100/100, mobile 92/100/100/100; blind judge 86 vs 78 for the baseline; 0 misaligned rows, 0 edge overflow.

@@ -77,16 +77,6 @@ Before modifying files, scan the repository root to detect the active architectu
 
 ---
 
-## 🔑 Elementor Pro (valid licenses only)
-
-Kio does not provide or create Elementor Pro license workarounds (no faked license status, no "activator" MU-plugins).
-
-- Projects with a Pro license: activate with the client's real license, including on local / staging sites (check Elementor's current policy on development sites and activation limits).
-- No Pro license: use the free Elementor plugin, or build with Gutenberg FSE (Model 1 / Model 4).
-- Never commit license keys; keep them in `.env` or set them with WP-CLI (`wp option`) on each machine.
-
----
-
 ## 🛑 15 Non-Negotiable Engineering Rules
 
 1. **Strict Gate Passing**: Never declare a gate passed without fresh terminal output or screenshot evidence.
