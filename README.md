@@ -315,7 +315,7 @@ Kio adopts the standard `SKILL.md` format. Verification statuses across major AI
 | **Codex CLI** | `~/.codex/skills/` or `<project>/.codex/skills/` | ✅ | ✅ | 🟡 | 🟡 **Tested** (Installation and basic discovery verified) |
 | **Windsurf / Cascade** | `<project>/.windsurf/skills/` | 🔄 | 🔄 | 🔄 | 🔵 **Supported** (Requires manual copy into project directory) |
 
-> **Windows note:** 🟡 until `setup.ps1` (changed in v1.1.0 and v1.2.0) has been run on a real Windows machine again. `setup.sh` was re-tested on Linux for v1.2.0.
+> **Windows note:** the installers are tested on every push ([CI](https://github.com/toanpham2111/kio-agent-system/actions/workflows/installers.yml)): `setup.ps1` install, update, uninstall and `irm | iex` on Windows PowerShell 5.1 and PowerShell 7; `setup.sh` on Ubuntu and macOS. The Windows column stays 🟡 because each AI tool loading the skills on Windows has not been checked on a real machine.
 
 > **Verification Tier Definitions**:
 > - 🟢 **Tested & Verified**: Fully tested in production environments with benchmark logs available in `evaluations/results/`.
