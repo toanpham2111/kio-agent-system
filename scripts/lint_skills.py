@@ -2,7 +2,7 @@
 """Kio skill linter: one layout and one frontmatter shape for every skill.
 
 Checks, per skills/<name>/:
-  * SKILL.md and SKILL.en.md exist; frontmatter has exactly the Kio shape:
+  * SKILL.md and (in the bilingual source repo) SKILL.en.md exist; frontmatter has exactly the Kio shape:
       name (== folder), description, license, metadata.{author, version}
     and nothing else at the top level (author/version belong in metadata).
   * only the standard top-level entries exist:
@@ -66,7 +66,10 @@ def check_links(md: Path, problems: list[str]) -> None:
 
 def lint_skill(skill: Path, problems: list[str]) -> None:
     rel = skill.relative_to(ROOT)
-    for f in ("SKILL.md", "SKILL.en.md"):
+    # The bilingual source repo ships SKILL.md (Vietnamese) + SKILL.en.md; the English
+    # distribution (kio-agent-system) ships a single English SKILL.md.
+    bilingual = (ROOT / "README.en.md").exists()
+    for f in ("SKILL.md", "SKILL.en.md") if bilingual else ("SKILL.md",):
         p = skill / f
         if not p.exists():
             problems.append(f"{rel}: missing {f}")

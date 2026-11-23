@@ -70,7 +70,6 @@ jobs:
         run: |
           $env:KIO_REPO_URL = "file:///" + ($PWD.Path -replace '\\', '/')
           $env:KIO_REF = "${{ github.ref_name }}"
-          git branch -f "${{ github.ref_name }}" HEAD 2>$null
           $text = Get-Content .\setup.ps1 -Raw
           Push-Location $env:TEMP
           Invoke-Expression $text
