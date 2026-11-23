@@ -4,6 +4,19 @@ All notable changes to the **Kio** project are documented here following the [Ke
 
 ---
 
+## [1.4.2] - 2026-11-23 — Windows Constrained Language Mode & README
+
+### 🪟 Windows
+- **`setup.ps1` now runs in Constrained Language Mode** (AppLocker/WDAC on managed PCs). It used to fail with `Cannot invoke method. Method invocation is supported only on core types in this language mode`. The installer detects the mode and uses cmdlets (`Resolve-Path`, `Set-Content`) and `cmd /c rmdir` instead of .NET calls (`[System.IO.Path]`, `[System.Environment]`, `New-Object`). Normal mode behaves as before.
+- CI gains an install, update and uninstall step under Constrained Language Mode on PowerShell 5.1 and 7.
+
+### 📖 README
+- Added the `assets/kio-how-it-works.svg` diagram (/kio → skill → mandatory reference → result with evidence) to the Quickstart; shortened "What is Kio?" (dropped 6 bullets that repeated the 7-skill table).
+- README top: an opening line with the concrete result (86/100 vs 75–78 blind-scored), the one-line install right below it, a 10-second "Why use Kio?" section (with the honest time and cost), and 3 redundant badges removed.
+- The Quick Commands section explains why the `/` menu is long (7 skills + 18 overlapping commands), a "remember three things" table and per-tool notes (Codex uses `/prompts:kio`, Windows Constrained Language Mode).
+
+---
+
 ## [1.4.1] - 2026-11-23 — Trail of Bits License Fix & Mandatory Reads
 
 Addresses the findings of the v1.4.0 review.

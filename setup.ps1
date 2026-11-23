@@ -26,6 +26,43 @@ $script:KioExitCode = 0
 
 try {
 
+# Constrained Language Mode (AppLocker / WDAC / corporate policy) forbids method calls on
+# .NET types such as [System.IO.Path] and [System.Environment]. Under it the installer uses
+# cmdlets and native tools instead, so the same script works in both modes.
+$script:KioConstrained = $false
+try { $script:KioConstrained = ($ExecutionContext.SessionState.LanguageMode -ne 'FullLanguage') } catch { $script:KioConstrained = $true }
+
+function Get-KioHomeDir {
+    if (-not $script:KioConstrained) { return [System.Environment]::GetFolderPath('UserProfile') }
+    if ($env:USERPROFILE) { return $env:USERPROFILE }
+    return $env:HOME
+}
+
+function Get-KioFullPath ([string]$Path) {
+    if (-not $script:KioConstrained) { return [System.IO.Path]::GetFullPath($Path) }
+    $Resolved = Resolve-Path -LiteralPath $Path -ErrorAction SilentlyContinue
+    if ($Resolved) { return @($Resolved)[0].ProviderPath }
+    $Parent = Split-Path -Parent $Path
+    $Leaf = Split-Path -Leaf $Path
+    if ($Parent -and ($Parent -ne $Path) -and $Leaf) { return (Join-Path (Get-KioFullPath $Parent) $Leaf) }
+    return $Path
+}
+
+function Test-KioReparse ($Item) {
+    return [bool]($Item.Attributes -match 'ReparsePoint')
+}
+
+function Write-KioTextFile ([string]$Path, [string]$Text) {
+    if (-not $script:KioConstrained) {
+        $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+        [System.IO.File]::WriteAllText($Path, $Text, $Utf8NoBom)
+        return
+    }
+    # Kio command files are plain ASCII, so ASCII output is identical to UTF-8 without a BOM.
+    $Enc = if ($Text -match '[^\x00-\x7F]') { 'UTF8' } else { 'ASCII' }
+    Set-Content -LiteralPath $Path -Value $Text -Encoding $Enc -NoNewline
+}
+
 $AllKioSkills = @(
     "kio-core-delivery",
     "kio-frontend-craft",
@@ -76,7 +113,7 @@ if ($List) {
     Exit-Kio 0
 }
 
-$HomeDir = [System.Environment]::GetFolderPath('UserProfile')
+$HomeDir = Get-KioHomeDir
 $KioConfigDir = Join-Path $HomeDir ".kio"
 $KioRepoDir = Join-Path $KioConfigDir "repo"
 $KioRepoUrl = if ($env:KIO_REPO_URL) { $env:KIO_REPO_URL } else { "https://github.com/toanpham2111/kio-agent-system.git" }
@@ -93,16 +130,16 @@ if ($ScriptPath -and (Test-Path $ScriptPath)) {
     $CandidateSkills = Join-Path $CandidateDir "skills"
     if (Test-Path (Join-Path $CandidateSkills "kio-frontend-craft")) {
         $ScriptDir = $CandidateDir
-        $SkillsSrcDir = [System.IO.Path]::GetFullPath($CandidateSkills)
+        $SkillsSrcDir = Get-KioFullPath $CandidateSkills
     } else {
         $UsingManagedRepo = $true
         $ScriptDir = $KioRepoDir
-        $SkillsSrcDir = [System.IO.Path]::GetFullPath((Join-Path $KioRepoDir "skills"))
+        $SkillsSrcDir = Get-KioFullPath (Join-Path $KioRepoDir "skills")
     }
 } else {
     $UsingManagedRepo = $true
     $ScriptDir = $KioRepoDir
-    $SkillsSrcDir = [System.IO.Path]::GetFullPath((Join-Path $KioRepoDir "skills"))
+    $SkillsSrcDir = Get-KioFullPath (Join-Path $KioRepoDir "skills")
 }
 
 $script:KioUpdateFailed = $false
@@ -182,7 +219,9 @@ function Ensure-KioRepoSource {
             $TempExtract = Join-Path $KioConfigDir "kio-extract"
             if (Test-Path $TempExtract) { Remove-Item -LiteralPath $TempExtract -Recurse -Force }
             try {
-                [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+                if (-not $script:KioConstrained) {
+                    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+                }
                 Invoke-WebRequest -Uri $ZipUrl -OutFile $TempZip -UseBasicParsing -ErrorAction Stop
                 Expand-Archive -Path $TempZip -DestinationPath $TempExtract -Force -ErrorAction Stop
                 $InnerFolder = Get-ChildItem -Path $TempExtract -Directory | Select-Object -First 1
@@ -239,8 +278,16 @@ function Remove-SafeLink ([string]$Path) {
     # files of its TARGET on Windows PowerShell 5.1, i.e. the Kio repo, so it is never used.
     $Item = Get-Item -LiteralPath $Path -Force -ErrorAction SilentlyContinue
     if (-not $Item) { return }
-    if (-not ($Item.Attributes -band [System.IO.FileAttributes]::ReparsePoint)) {
+    if (-not (Test-KioReparse $Item)) {
         throw "Refusing to remove '$Path': it is not a link."
+    }
+    if ($script:KioConstrained) {
+        # No .NET calls allowed: rmdir removes a junction/symlink directory (and del a file
+        # link) without touching its target.
+        cmd /c rmdir "$Path" 2>$null | Out-Null
+        if (Test-Path -LiteralPath $Path) { cmd /c del /f /q "$Path" 2>$null | Out-Null }
+        if (Test-Path -LiteralPath $Path) { throw "Could not remove link '$Path'." }
+        return
     }
     try {
         [System.IO.Directory]::Delete($Path, $false)
@@ -268,8 +315,8 @@ function Record-Manifest ([string]$LinkPath, [string]$TargetPath) {
     Init-Manifest
     try {
         $Json = Get-Content $ManifestFile -Raw -Encoding UTF8 | ConvertFrom-Json
-        $NormalizedLink = [System.IO.Path]::GetFullPath($LinkPath)
-        $NormalizedTarget = [System.IO.Path]::GetFullPath($TargetPath)
+        $NormalizedLink = Get-KioFullPath $LinkPath
+        $NormalizedTarget = Get-KioFullPath $TargetPath
         
         $Filtered = @()
         if ($Json.managed_links) {
@@ -287,7 +334,7 @@ function Remove-From-Manifest ([string]$LinkPath) {
     if (-not (Test-Path $ManifestFile)) { return }
     try {
         $Json = Get-Content $ManifestFile -Raw -Encoding UTF8 | ConvertFrom-Json
-        $NormalizedLink = [System.IO.Path]::GetFullPath($LinkPath)
+        $NormalizedLink = Get-KioFullPath $LinkPath
         if ($Json.managed_links) {
             $Json.managed_links = @($Json.managed_links | Where-Object { $_.link -ne $NormalizedLink })
             $Json | ConvertTo-Json -Depth 5 | Set-Content $ManifestFile -Encoding UTF8
@@ -301,7 +348,7 @@ function Test-In-Manifest ([string]$LinkPath) {
     if (-not (Test-Path $ManifestFile)) { return $false }
     try {
         $Json = Get-Content $ManifestFile -Raw -Encoding UTF8 | ConvertFrom-Json
-        $NormalizedLink = [System.IO.Path]::GetFullPath($LinkPath)
+        $NormalizedLink = Get-KioFullPath $LinkPath
         if ($Json.managed_links) {
             $Match = $Json.managed_links | Where-Object { $_.link -eq $NormalizedLink }
             return ($null -ne $Match)
@@ -315,15 +362,15 @@ function Test-In-Manifest ([string]$LinkPath) {
 function Get-JunctionTarget ([string]$Path) {
     if (-not (Test-Path $Path)) { return $null }
     $Item = Get-Item $Path -Force
-    if ($Item.Attributes -match "ReparsePoint" -or [System.IO.File]::GetAttributes($Path).HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
+    if (Test-KioReparse $Item) {
         if ($Item.Target) {
             if ($Item.Target -is [array]) {
-                return [System.IO.Path]::GetFullPath($Item.Target[0])
+                return (Get-KioFullPath ($Item.Target[0]))
             }
-            return [System.IO.Path]::GetFullPath($Item.Target)
+            return (Get-KioFullPath ($Item.Target))
         }
         if ($Item.LinkTarget) {
-            return [System.IO.Path]::GetFullPath($Item.LinkTarget)
+            return (Get-KioFullPath ($Item.LinkTarget))
         }
     }
     return $null
@@ -333,12 +380,12 @@ function Test-RecordedKioTarget ([string]$LinkPath, [string]$ActualTarget, [stri
     if (-not (Test-Path $ManifestFile)) { return $false }
     try {
         $Json = Get-Content $ManifestFile -Raw -Encoding UTF8 | ConvertFrom-Json
-        $NormalizedLink = [System.IO.Path]::GetFullPath($LinkPath)
-        $NormalizedActual = [System.IO.Path]::GetFullPath($ActualTarget).TrimEnd('\', '/')
+        $NormalizedLink = Get-KioFullPath $LinkPath
+        $NormalizedActual = (Get-KioFullPath $ActualTarget).TrimEnd('\', '/')
         if ($Json.managed_links) {
             foreach ($Entry in $Json.managed_links) {
                 if ($Entry.link -eq $NormalizedLink -and $Entry.target) {
-                    $RecTarget = [System.IO.Path]::GetFullPath($Entry.target).TrimEnd('\', '/')
+                    $RecTarget = (Get-KioFullPath $Entry.target).TrimEnd('\', '/')
                     $Leaf = Split-Path -Leaf $NormalizedActual
                     if ($RecTarget -eq $NormalizedActual -and $Leaf -eq $SkillName) {
                         return $true
@@ -358,16 +405,16 @@ function Test-RecordedKioTarget ([string]$LinkPath, [string]$ActualTarget, [stri
 function Verify-KioOwnership ([string]$LinkPath, [string]$SkillName) {
     if (-not (Test-Path $LinkPath)) { return $false }
     $Item = Get-Item $LinkPath -Force
-    if (-not ($Item.Attributes -match "ReparsePoint" -or [System.IO.File]::GetAttributes($LinkPath).HasFlag([System.IO.FileAttributes]::ReparsePoint))) {
+    if (-not (Test-KioReparse $Item)) {
         return $false
     }
     
     $ActualTarget = Get-JunctionTarget $LinkPath
     if (-not $ActualTarget) { return $false }
     
-    $ExpectedSkillPath = [System.IO.Path]::GetFullPath((Join-Path $SkillsSrcDir $SkillName))
-    $ManagedSkillPath = [System.IO.Path]::GetFullPath((Join-Path (Join-Path $KioRepoDir "skills") $SkillName))
-    $NormalizedActual = [System.IO.Path]::GetFullPath($ActualTarget).TrimEnd('\', '/')
+    $ExpectedSkillPath = Get-KioFullPath (Join-Path $SkillsSrcDir $SkillName)
+    $ManagedSkillPath = Get-KioFullPath (Join-Path (Join-Path $KioRepoDir "skills") $SkillName)
+    $NormalizedActual = (Get-KioFullPath $ActualTarget).TrimEnd('\', '/')
     $NormalizedExpected = $ExpectedSkillPath.TrimEnd('\', '/')
     $NormalizedManaged = $ManagedSkillPath.TrimEnd('\', '/')
     
@@ -441,10 +488,10 @@ function Convert-KioCommandToToml ([string]$Src) {
     $Lines = Get-Content -LiteralPath $Src -Encoding UTF8
     $Desc = ($Lines | Where-Object { $_ -like 'description: *' } | Select-Object -First 1) -replace '^description: ', ''
     $Seen = 0
-    $Body = New-Object System.Collections.Generic.List[string]
+    $Body = @()
     foreach ($L in $Lines) {
         if ($Seen -ge 2) {
-            if ($L -notlike "*$KioCmdMark*") { $Body.Add(($L -replace '\$ARGUMENTS', '{{args}}')) }
+            if ($L -notlike "*$KioCmdMark*") { $Body += ($L -replace '\$ARGUMENTS', '{{args}}') }
         } elseif ($L -match '^---\s*$') { $Seen++ }
     }
     $Out = @("# $KioCmdMark managed by the Kio installer; local edits are replaced on update",
@@ -464,12 +511,11 @@ function Install-KioCommands {
     }
     $Sources = @(Get-ChildItem -LiteralPath $SrcDir -Filter "*.md" -File)
     $Installed = 0; $Kept = 0
-    $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
     foreach ($Dir in ($TargetCommandDirs + $GeminiCommandDir)) {
         if (-not (Test-Path $Dir)) { New-Item -ItemType Directory -Path $Dir -Force | Out-Null }
         $Ext = if ($Dir -eq $GeminiCommandDir) { "toml" } else { "md" }
         foreach ($Old in @(Get-ChildItem -LiteralPath $Dir -Filter "kio*.$Ext" -File -ErrorAction SilentlyContinue)) {
-            $Name = [System.IO.Path]::GetFileNameWithoutExtension($Old.Name)
+            $Name = $Old.BaseName
             if (-not (Test-Path (Join-Path $SrcDir "$Name.md")) -and (Test-KioCommandFile $Old.FullName)) {
                 Remove-Item -LiteralPath $Old.FullName -Force
             }
@@ -478,7 +524,7 @@ function Install-KioCommands {
             $Dest = Join-Path $Dir ($Src.BaseName + "." + $Ext)
             if ((Test-Path $Dest) -and -not (Test-KioCommandFile $Dest)) { $Kept++; continue }
             if ($Ext -eq "toml") {
-                [System.IO.File]::WriteAllText($Dest, (Convert-KioCommandToToml $Src.FullName), $Utf8NoBom)
+                Write-KioTextFile $Dest (Convert-KioCommandToToml $Src.FullName)
             } else {
                 Copy-Item -LiteralPath $Src.FullName -Destination $Dest -Force
             }
@@ -517,7 +563,7 @@ if ($Uninstall) {
             $TargetSkill = Join-Path $TargetDir $SkillName
             if (Test-Path $TargetSkill) {
                 $Item = Get-Item $TargetSkill -Force
-                if ($Item.Attributes -match "ReparsePoint" -or [System.IO.File]::GetAttributes($TargetSkill).HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
+                if (Test-KioReparse $Item) {
                     if (Verify-KioOwnership $TargetSkill $SkillName) {
                         Remove-SafeLink $TargetSkill
                         Remove-From-Manifest $TargetSkill
@@ -590,7 +636,7 @@ foreach ($TargetDir in $TargetSkillsDirs) {
 
         if (Test-Path $TargetSkill) {
             $Item = Get-Item $TargetSkill -Force
-            if ($Item.Attributes -match "ReparsePoint" -or [System.IO.File]::GetAttributes($TargetSkill).HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
+            if (Test-KioReparse $Item) {
                 if (Verify-KioOwnership $TargetSkill $SkillName) {
                     Remove-SafeLink $TargetSkill
                     New-SafeLink $TargetSkill $SourceSkillPath

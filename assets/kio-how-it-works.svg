@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 250" width="960" height="250" role="img" aria-labelledby="t d">
+  <title id="t">How a request flows through Kio</title>
+  <desc id="d">You type /kio and a request. Kio picks one skill and names it. The skill router sends the agent to the exact reference it must read. The agent returns a result with the checks it ran.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+  </defs>
+  <rect width="960" height="250" rx="14" fill="#f8fafc" stroke="#d1d5db"/>
+  <g font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif" fill="#111827">
+    <text x="480" y="34" text-anchor="middle" font-size="18" font-weight="700">How a request flows through Kio</text>
+
+    <rect x="24" y="62" width="200" height="130" rx="10" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+    <text x="124" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">1. You ask</text>
+    <text x="124" y="116" text-anchor="middle" font-size="13" font-family="ui-monospace,Menlo,Consolas,monospace">/kio landing page</text>
+    <text x="124" y="136" text-anchor="middle" font-size="13" font-family="ui-monospace,Menlo,Consolas,monospace">for a nail salon</text>
+    <text x="124" y="168" text-anchor="middle" font-size="12" fill="#4b5563">or just describe the task</text>
+
+    <rect x="260" y="62" width="200" height="130" rx="10" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+    <text x="360" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">2. Kio picks one skill</text>
+    <text x="360" y="116" text-anchor="middle" font-size="13">and says which:</text>
+    <text x="360" y="138" text-anchor="middle" font-size="13" font-family="ui-monospace,Menlo,Consolas,monospace">kio-frontend-craft</text>
+    <text x="360" y="168" text-anchor="middle" font-size="12" fill="#4b5563">7 skills, 1 router each</text>
+
+    <rect x="496" y="62" width="200" height="130" rx="10" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+    <text x="596" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">3. Router sends the agent</text>
+    <text x="596" y="116" text-anchor="middle" font-size="13">to the reference it must</text>
+    <text x="596" y="136" text-anchor="middle" font-size="13">read, then the scripts</text>
+    <text x="596" y="168" text-anchor="middle" font-size="12" fill="#4b5563">design system, rules, checklist</text>
+
+    <rect x="732" y="62" width="204" height="130" rx="10" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+    <text x="834" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#16a34a">4. Result + evidence</text>
+    <text x="834" y="116" text-anchor="middle" font-size="13">checked at 375 / 768 / 1440 px,</text>
+    <text x="834" y="136" text-anchor="middle" font-size="13">tests and commands quoted</text>
+    <text x="834" y="168" text-anchor="middle" font-size="12" fill="#4b5563">no "done" without a real run</text>
+
+    <g stroke="#6b7280" stroke-width="2" marker-end="url(#a)">
+      <line x1="226" y1="127" x2="256" y2="127"/>
+      <line x1="462" y1="127" x2="492" y2="127"/>
+      <line x1="698" y1="127" x2="728" y2="127"/>
+    </g>
+    <text x="480" y="228" text-anchor="middle" font-size="12" fill="#4b5563">Diagram of the flow, not a screenshot. Other skills follow the same path: /kio-be, /kio-qa, /kio-plan, /kio-seo ...</text>
+  </g>
+</svg>

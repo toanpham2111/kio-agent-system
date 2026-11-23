@@ -66,6 +66,21 @@ jobs:
           if (-not (Test-Path (Join-Path $d "kio-cognitive"))) { throw "foreign link removed" }
           if (Test-Path (Join-Path $HOME ".claude\commands\kio-fe.md")) { throw "Kio command left behind" }
 
+      - name: Install, update and uninstall under Constrained Language Mode
+        run: |
+          $ExecutionContext.SessionState.LanguageMode = 'ConstrainedLanguage'
+          if ($ExecutionContext.SessionState.LanguageMode -ne 'ConstrainedLanguage') { throw "could not enter Constrained Language Mode" }
+          .\setup.ps1
+          if ($LASTEXITCODE -ne 0) { throw "CLM install exit $LASTEXITCODE" }
+          $link = Get-Item (Join-Path $HOME ".claude\skills\kio-frontend-craft") -Force
+          if (-not ($link.Attributes -match 'ReparsePoint')) { throw "not a link" }
+          if (-not (Test-Path (Join-Path $HOME ".gemini\commands\kio-fe.toml"))) { throw "gemini command not installed" }
+          .\setup.ps1
+          if ($LASTEXITCODE -ne 0) { throw "CLM update exit $LASTEXITCODE" }
+          .\setup.ps1 -Uninstall
+          if ($LASTEXITCODE -ne 0) { throw "CLM uninstall exit $LASTEXITCODE" }
+          if (Test-Path (Join-Path $HOME ".claude\skills\kio-frontend-craft")) { throw "Kio link left behind" }
+
       - name: Piped install (irm | iex) does not close the session
         run: |
           $env:KIO_REPO_URL = "file:///" + ($PWD.Path -replace '\\', '/')

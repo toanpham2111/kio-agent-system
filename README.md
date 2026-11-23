@@ -3,15 +3,18 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Release](https://img.shields.io/badge/Release-v1.4.1-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
+[![Release](https://img.shields.io/badge/Release-v1.4.2-blue.svg)](https://github.com/toanpham2111/kio-agent-system/releases)
 [![Supported Tools](https://img.shields.io/badge/Compatible_With-Claude_Code_|_Cursor_|_Codex_|_Antigravity_|_Windsurf-blue)](https://github.com/toanpham2111/kio-agent-system)
 [![Skills](https://img.shields.io/badge/Skills-7_Modular_Master_Skills-green)](skills/)
-[![Standard](https://img.shields.io/badge/Format-Agent_Skill_Standard-orange)](skills/)
-[![Evaluation](https://img.shields.io/badge/Evaluation-Framework_Ready-success)](evaluations/SKILL_EVALUATION_FRAMEWORK.md)
-[![License](https://img.shields.io/badge/Open_Source-MIT-lightgrey)](LICENSE)
 
-**A modular, open-source collection of engineering skills designed for AI coding tools.**  
-*Plug-and-play skills for Frontend UI/UX, Backend APIs, Automated QA Testing, Marketing CRO, and WordPress FSE.*
+**Give your AI coding tool 7 expert skills: frontend, backend, QA, planning, SEO/growth, WordPress and reasoning.**  
+*Same prompt, same model: the page built with Kio scored **86/100** in a blind test, against **75–78** without it ([results](#-real-world-test-without-skill-vs-with-kio)).*
+
+```bash
+# Linux / macOS / WSL                    # Windows PowerShell
+curl -fsSL https://raw.githubusercontent.com/toanpham2111/kio-agent-system/main/setup.sh | bash
+irm https://raw.githubusercontent.com/toanpham2111/kio-agent-system/main/setup.ps1 | iex
+```
 
 [🚀 Installation Guide](#-installation-guide) • [⚡ 2-Minute Quickstart](#-2-minute-quickstart) • [⌨️ Quick Commands](#️-quick-commands-slash-commands) • [🧰 The 7 Core Skills](#-the-7-core-engineering-skills) • [📖 Per-Skill Usage Guide](#-per-skill-usage-guide-prompts--expected-outputs) • [🧪 Skill Evaluation Framework](#-skill-evaluation-framework) • [🧩 Compatibility Matrix](#-compatibility-matrix) • [❓ Troubleshooting & FAQ](#-troubleshooting--faq)
 
@@ -23,18 +26,24 @@
 
 ---
 
+## 🎯 Why use Kio? (the 10-second version)
+
+| Without a skill | With Kio |
+|---|---|
+| Generic, "AI-looking" layouts; the main order button failed contrast (2.8:1) | 0 contrast failures, 0 mobile overflow |
+| The order form showed "success" but sent nothing | The form validates and sends the order |
+| Blind judge score **75–78** | Blind judge score **86** |
+| Faster and cheaper: 1 min 55 s, US$0.33 | Slower and costlier: 8 min 2 s, US$0.86 (and ~2.6–4× the tokens) |
+
+One run per condition, scored blind by another model; details, screenshots and source are in the [real-world test](#-real-world-test-without-skill-vs-with-kio) below. Kio runs inside the AI tool you already use: no server, no daemon, no API key.
+
+---
+
 ## 💡 What is Kio?
 
-**Kio is an open-source collection of specialized AI coding skills.** It is not a heavy framework that requires deploying servers, running background daemons, or setting up complex infrastructure.
+Kio is a set of **7 ready-to-use skill packages** (`SKILL.md` format) for AI coding tools such as **Claude Code**, **Cursor**, **Codex** and **Google Antigravity**. Each skill gives your assistant the process, reference material, scripts and checklists of one field: frontend, backend, QA, planning, growth/SEO, WordPress FSE and first-principles reasoning. You link them once; the assistant then follows them when your request matches, or when you call `/kio`.
 
-Instead, Kio provides ready-to-use skill packages following the standard `SKILL.md` format. When you link or copy these skills into your preferred AI coding tool (**Claude Code**, **Cursor**, **Codex**, or **Google Antigravity**), your AI assistant instantly gains focused domain knowledge, structured engineering workflows, and concrete checklists:
-
-- **Frontend Craft**: 79 design styles, 192 contrast-tested color palettes, 60fps Lenis smooth scroll conventions, defensive spacing, and rules to eliminate generic AI layouts.
-- **Backend & Cloud**: Practical REST/GraphQL patterns, PostgreSQL indexing strategies, Supabase Row-Level Security (RLS), idempotent webhook processing, and Docker multi-stage builds.
-- **QA & Testing**: Automated 4-quadrant test case matrices, multi-language unit test boilerplates (Vitest, Pytest, Go), and headless browser visual checks via Playwright.
-- **Structured Delivery**: Atomic task planning (2-5 minute steps) and specification-driven development (SDD) before writing code.
-- **Growth & Marketing**: 53 conversion rate optimization (CRO) frameworks and technical SEO/GEO guidelines optimized for modern AI search engines.
-- **WordPress FSE**: Full Site Editing workflows for clean, 100% native Gutenberg block theme creation without third-party page builder bloat.
+There is nothing to host: no server, no background daemon, no API key. See [The 7 Core Engineering Skills](#-the-7-core-engineering-skills) for what each one covers.
 
 ---
 
@@ -102,6 +111,8 @@ Try pasting one of these tested prompts into your AI:
 > **QA & Testing Test Prompt**:  
 > *"Generate a 4-quadrant test case matrix (Happy Path, Boundary, Edge Case, Failure Mode) and write complete Vitest unit tests for a shopping cart checkout function with coupon discounts and tax calculations."*
 
+<p align="center"><img src="assets/kio-how-it-works.svg" alt="How a request flows through Kio: you ask, Kio picks one skill, the router sends the agent to the reference it must read, the result comes with evidence" width="900" /></p>
+
 **Immediate Result**: Your AI tool automatically detects and activates the matching Kio skill, producing clean, production-grade output without messy templates or generic AI styling.
 
 ---
@@ -124,6 +135,30 @@ No prompts to memorise: the installer copies these commands into `~/.claude/comm
 | `/kio-spec-constitution` → `/kio-spec-specify` → `/kio-spec-clarify` → `/kio-spec-plan` → `/kio-spec-tasks` → `/kio-spec-analyze` → `/kio-spec-implement` (plus `/kio-spec-checklist`, `/kio-spec-converge`) | `kio-core-delivery` | The Spec-Kit SDD flow, **no Spec-Kit CLI needed**; artifacts live in `specs/<NNN>-<name>/` |
 
 Kio's command files carry a `kio-command:` marker; updates only overwrite files with that marker, a file of yours with the same name is left alone, and uninstall removes only Kio's files.
+
+### 🤔 Why is the `/` menu so long?
+
+The menu mixes two kinds of entries that point to the same skills:
+
+- **7 skills** (`kio-frontend-craft`, `kio-qa-security`, ...): they trigger on their own when your request matches their description.
+- **18 commands** (`/kio`, `/kio-fe`, ... and 9 `/kio-spec-*`): shortcuts that name the skill for you. `/kio-qa` and the `kio-qa-security` skill do the same job.
+- Some tools also list sub-skills found under `references/` (for example a "Kio Seo" entry that belongs to `kio-growth-marketing`). They are not extra skills.
+
+**You only need to remember three things:**
+
+| You want | Type |
+| :--- | :--- |
+| Not sure which skill | `/kio <your request>` (it picks one and says which) |
+| You know the area | `/kio-fe`, `/kio-be`, `/kio-qa`, `/kio-seo`, `/kio-growth`, `/kio-wp`, `/kio-think` |
+| A multi-step change | `/kio-plan`; the `/kio-spec-*` steps are only for the Spec-Kit flow |
+
+`/kio` picks one skill and follows its router; it does not run a whole chain by itself. For the full spec → plan → tasks → implement chain use `/kio-plan` or the `/kio-spec-*` steps in order.
+
+**Tool notes**
+- **Claude Code, Cursor, Gemini CLI:** commands appear in the `/` menu.
+- **Codex:** commands are installed to `~/.codex/prompts` and are called `/prompts:kio`, `/prompts:kio-fe`, ... Some Codex versions or apps do not list custom prompts ("No commands"). The skills still work: pick one from the skill menu or just describe the task.
+- **Windows with AppLocker / WDAC (PowerShell in Constrained Language Mode):** use v1.4.2 or later. Older versions stop with `Cannot invoke method. Method invocation is supported only on core types in this language mode`. Check the mode with `$ExecutionContext.SessionState.LanguageMode`, and run `.\setup.ps1` from a checkout if the piped `irm ... | iex` install fails.
+- Commands are copied in the last installer step: if the installer stopped early you will see skills but no commands. Re-run it and restart the tool.
 
 ---
 
